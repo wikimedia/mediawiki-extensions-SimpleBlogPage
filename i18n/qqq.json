@@ -6,6 +6,12 @@
 		]
 	},
 	"simpleblogpage-desc": "{{desc|name=SimpleBlogPage|url=https://www.mediawiki.org/wiki/Extension:SimpleBlogPage}}",
+	"simpleblogpage-editor-blog-select": "Field label",
+	"simpleblogpage-editor-blog-select-new": "Warning message when selected blog doesnt exist",
+	"simpleblogpage-editor-title": "Field label",
+	"simpleblogpage-editor-content": "Field label",
+	"simpleblogpage-editor-title-exists": "Error message if selected blog title already exists",
+
 	"blog-and": "A word combination word",
 	"blog-anonymous-name": "A user name",
 	"blog-author-comments": "A list item",

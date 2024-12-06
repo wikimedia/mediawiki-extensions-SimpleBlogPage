@@ -1,35 +1,41 @@
 {
 	"name": "SimpleBlogPage",
-	"version": "3.0.1",
+	"version": "4.0.0",
 	"author": [
 		"Universal Omega",
 		"David Pean",
 		"Jack Phoenix",
-		"1f604"
+		"1f604",
+		"HalloWelt! GmbH"
 	],
 	"license-name": "GPL-3.0-or-later",
 	"url": "https://www.mediawiki.org/wiki/Extension:SimpleBlogPage",
 	"descriptionmsg": "simpleblogpage-desc",
 	"requires": {
-		"MediaWiki": ">= 1.39.0"
+		"MediaWiki": ">= 1.39.0",
+		"extensions": {
+			"OOJSPlus": ">= 2.1.0"
+		}
 	},
 	"type": "other",
-	"callback": "SimpleBlogPageHooks::onRegistration",
 	"MessagesDirs": {
 		"SimpleBlogPage": [
 			"i18n"
 		]
 	},
-	"ExtensionMessagesFiles": {
-		"SimpleBlogPageAliases": "includes/specials/SimpleBlogPageAliases.php",
-		"SimpleBlogPageNamespaces": "includes/SimpleBlogPageNamespaces.php"
+	"attributes": {
+		"BlueSpiceFoundation": {
+			"PermissionRegistry": {
+				"createblogpost": {
+					"type": "global",
+					"roles": [ "editor" ]
+				}
+			}
+		}
 	},
-	"AutoloadClasses": {
-		"SimpleBlogPage": "includes/SimpleBlogPage.php",
-		"ArticlesHome": "includes/specials/SpecialArticlesHome.php",
-		"BlogTagCloud": "includes/BlogTagCloud.php",
-		"SpecialCreateBlogPost": "includes/specials/SpecialCreateBlogPost.php",
-		"SimpleBlogPageHooks": "includes/SimpleBlogPageHooks.php"
+	"ExtensionMessagesFiles": {
+		"SimpleBlogPageAliases": "SimpleBlogPageAliases.php",
+		"SimpleBlogPageNamespaces": "SimpleBlogPageNamespaces.php"
 	},
 	"GroupPermissions": {
 		"user": {
@@ -39,6 +45,11 @@
 	"AvailableRights": [
 		"createblogpost"
 	],
+	"callback": "mwsInitComponents",
+	"AutoloadNamespaces": {
+		"MediaWiki\\Extension\\SimpleBlogPage\\": "src/",
+		"MediaWiki\\Extension\\SimpleBlogPage\\tests\\": "tests/phpunit/"
+	},
 	"namespaces": [
 		{
 			"id": 502,
@@ -52,65 +63,106 @@
 			"constant": "NS_USER_BLOG_TALK",
 			"name": "User_blog_talk",
 			"subpages": true
+		},
+		{
+			"id": 1502,
+			"constant": "NS_BLOG",
+			"name": "Blog",
+			"subpages": true
+		},
+		{
+			"id": 1503,
+			"constant": "NS_BLOG_TALK",
+			"name": "Blog_talk",
+			"subpages": true
 		}
 	],
 	"SpecialPages": {
-		"ArticlesHome": "ArticlesHome",
-		"CreateBlogPost": "SpecialCreateBlogPost"
+		"CreateBlogPost": {
+			"class": "MediaWiki\\Extension\\SimpleBlogPage\\Special\\CreateBlogPost",
+			"services": [
+				"SimpleBlogPage.BlogFactory"
+			]
+		}
 	},
 	"ResourceModules": {
-		"ext.simpleBlogPage": {
-			"styles": [
-				"resources/css/ext.simpleblogpage.simpleblogpage.css",
-				"resources/css/ext.simpleblogpage.hideContentsub.css"
-			]
-		},
-		"ext.simpleBlogPage.articlesHome": {
-			"styles": [
-				"resources/css/ext.simpleblogpage.articleshome.css",
-				"resources/css/ext.simpleblogpage.hideContentsub.css"
-			]
-		},
-		"ext.simpleBlogPage.create.css": {
-			"styles": [
-				"resources/css/ext.simpleblogpage.createblogpost.css"
-			]
-		},
-		"ext.simpleBlogPage.create.js": {
+		"ext.simpleBlogPage.bootstrap": {
 			"scripts": [
-				"resources/js/ext.simpleblogpage.createblogpost.js",
-				"resources/js/AddMoreButton.js"
+				"ext.simpleBlogPage.bootstrap.js"
+			]
+		},
+		"ext.simpleBlogPage.blogSelector": {
+			"scripts": [
+				"ui/widget/BlogSelector.js"
 			],
 			"dependencies": [
-				"mediawiki.api"
+				"ext.simpleBlogPage.bootstrap",
+				"oojs-ui",
+				"ext.oOJSPlus.widgets"
+			]
+		},
+		"ext.simpleBlogPage.editor": {
+			"scripts": [
+				"ui/panel/Editor.js"
+			],
+			"dependencies": [
+				"ext.simpleBlogPage.bootstrap",
+				"ext.simpleBlogPage.blogSelector",
+				"oojs-ui",
+				"ext.oOJSPlus.widgets"
+			],
+			"messages": [
+				"simpleblogpage-editor-blog-select",
+				"simpleblogpage-editor-blog-select-new",
+				"simpleblogpage-editor-title",
+				"simpleblogpage-editor-content",
+				"simpleblogpage-editor-title-exists"
+			]
+		},
+		"ext.simpleBlogPage.create.special": {
+			"scripts": [
+				"ext.simpleBlogPage.create.special.js"
+			],
+			"dependencies": [
+				"ext.simpleBlogPage.editor",
+				"ext.oOJSPlus.managerPanel"
 			]
 		}
 	},
 	"ResourceFileModulePaths": {
-		"localBasePath": "",
-		"remoteExtPath": "SimpleBlogPage"
+		"localBasePath": "resources/",
+		"remoteExtPath": "SimpleBlogPage/resources"
 	},
 	"config": {
-		"SimpleBlogPageDisplay": {
-			"value": {
-				"leftcolumn": true,
-				"rightcolumn": true,
-				"author": true,
-				"author_articles": true,
-				"recent_editors": true,
-				"recent_voters": true,
-				"popular_articles": true,
-				"in_the_news": true,
-				"comments_of_day": false,
-				"games": true,
-				"new_articles": true
-			}
-		}
 	},
 	"Hooks": {
-		"AlternateEdit": "SimpleBlogPageHooks::onAlternateEdit",
-		"ArticleFromTitle": "SimpleBlogPageHooks::onArticleFromTitle",
-		"CosmosRailBuilder": "SimpleBlogPageHooks::onCosmosRailBuilder"
+		"ContentHandlerDefaultModelFor": "setDefaultModel"
 	},
+	"HookHandlers": {
+		"setDefaultModel": {
+			"class": "MediaWiki\\Extension\\SimpleBlogPage\\Hook\\SetDefaultContentModel"
+		}
+	},
+	"ServiceWiringFiles": [
+		"includes/ServiceWiring.php"
+	],
+	"ContentHandlers": {
+		"blog_post": {
+			"class": "MediaWiki\\Extension\\SimpleBlogPage\\ContentHandler\\BlogPostHandler",
+			"services": [ "TitleFactory", "ParserFactory", "GlobalIdGenerator", "LanguageNameUtils", "LinkRenderer", "MagicWordFactory", "ParsoidParserFactory", "SimpleBlogPage.BlogFactory" ]
+		},
+		"blog_root": {
+			"class": "MediaWiki\\Extension\\SimpleBlogPage\\ContentHandler\\BlogRootHandler",
+			"services": [ "TitleFactory", "ParserFactory", "GlobalIdGenerator", "LanguageNameUtils", "LinkRenderer", "MagicWordFactory", "ParsoidParserFactory" ]
+		}
+	},
+	"RestRoutes": [
+		{
+			"path": "/simpleblogpage/v1/blog",
+			"method": "PUT",
+			"class": "MediaWiki\\Extension\\SimpleBlogPage\\Rest\\CreateBlogHandler",
+			"services": [ "SimpleBlogPage.BlogFactory", "TitleFactory" ]
+		}
+	],
 	"manifest_version": 2
 }

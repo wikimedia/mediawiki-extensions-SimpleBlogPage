@@ -25,7 +25,8 @@ class SpecialCreateBlogPost extends FormSpecialPage {
 		$out->addModuleStyles( [ 'ext.simpleBlogPage.create.css' ] );
 		$out->addModules( [ 'ext.simpleBlogPage.create.js' ] );
 
-		if ( ExtensionRegistry::getInstance()->isLoaded( 'WikiEditor' ) && $this->getContext()->getUser()->getOption( 'usebetatoolbar' ) ) {
+		$uom = MediaWikiServices::getInstance()->getUserOptionsLookup();
+		if ( ExtensionRegistry::getInstance()->isLoaded( 'WikiEditor' ) && $uom->getOption( $this->getUser(), 'usebetatoolbar' ) ) {
 			$out->addModules( [ 'ext.wikiEditor' ] );
 		}
 

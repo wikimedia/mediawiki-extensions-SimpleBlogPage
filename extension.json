@@ -127,10 +127,26 @@
 				"ext.simpleBlogPage.editor",
 				"ext.oOJSPlus.managerPanel"
 			]
+		},
+		"ext.simpleBlogPage.entry.styles": {
+			"styles": [
+				"ext.simpleBlogPage.entry.less"
+			]
+		},
+		"ext.simpleBlogPage.render.entry.native": {
+			"scripts": [
+				"ui/panel/EntryHeader.js",
+				"ext.simpleBlogPage.render.entry.native.js"
+			],
+			"dependencies": [
+				"oojs-ui",
+				"ext.simpleBlogPage.bootstrap",
+				"ext.oOJSPlus.widgets"
+			]
 		}
 	},
 	"ResourceFileModulePaths": {
-		"localBasePath": "resources/",
+		"localBasePath": "/resources",
 		"remoteExtPath": "SimpleBlogPage/resources"
 	},
 	"config": {

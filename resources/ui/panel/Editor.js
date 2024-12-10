@@ -96,12 +96,12 @@ ext.simpleBlogPage.ui.panel.Editor.prototype.onTitleChange = function() {
 };
 
 ext.simpleBlogPage.ui.panel.Editor.prototype.onBlogChange = async function( value ) {
-	var title = this.blogSelector.getMWTitle();
+	var title = this.blogSelector.selectedTitle;
+	console.log( value, title );
+	this.blogSelectorLayout.setWarnings( [] );
 	if ( value )  {
 		if ( !title ) {
 			this.blogSelectorLayout.setWarnings( [ mw.message( 'simpleblogpage-editor-blog-select-new' ).text() ] );
-		} else {
-			this.blogSelectorLayout.setWarnings( [] );
 		}
 		this.blog = value;
 		if ( title ) {
@@ -152,7 +152,7 @@ ext.simpleBlogPage.ui.panel.Editor.prototype.composeEntryTitle = async function(
 		this.blogSelector.getValidity()
 	];
 	$.when( ...promises ).done( () => {
-		dfd.resolve( 'Blog:' + this.blog + '/' + this.titleField.getValue() );
+		dfd.resolve( 'Blog:' + this.blog + '/' + this.titleField.getValue().ucFirst() );
 	} ).fail( () => { dfd.reject(); } );
 	return dfd.promise();
 };

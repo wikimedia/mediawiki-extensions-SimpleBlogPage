@@ -2,15 +2,20 @@
 
 namespace MediaWiki\Extension\SimpleBlogPage;
 
+use Html;
 use InvalidArgumentException;
 use MediaWiki\CommentStore\CommentStoreComment;
 use MediaWiki\Extension\SimpleBlogPage\Content\BlogPostContent;
 use MediaWiki\Extension\SimpleBlogPage\Content\BlogRootContent;
+use MediaWiki\Extension\SimpleBlogPage\Widget\BlogEntryWidget;
 use MediaWiki\Language\Language;
 use MediaWiki\Message\Message;
 use MediaWiki\Page\PageReference;
 use MediaWiki\Page\WikiPageFactory;
+use MediaWiki\Parser\ParserOptions;
 use MediaWiki\Permissions\Authority;
+use MediaWiki\Revision\RevisionRecord;
+use MediaWiki\Revision\RevisionRenderer;
 use MediaWiki\Revision\RevisionStore;
 use MediaWiki\Revision\SlotRecord;
 use MediaWiki\Storage\PageUpdateStatus;
@@ -21,6 +26,7 @@ use PermissionsError;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
+use RuntimeException;
 
 class BlogFactory implements LoggerAwareInterface {
 
@@ -39,19 +45,25 @@ class BlogFactory implements LoggerAwareInterface {
 	/** @var Language */
 	private $language;
 
+	/** @var RevisionRenderer */
+	private $revisionRenderer;
+
 	/**
 	 * @param WikiPageFactory $wikiPageFactory
 	 * @param RevisionStore $revisionStore
 	 * @param TitleFactory $titleFactory
 	 * @param Language $language
+	 * @param RevisionRenderer $revisionRenderer
 	 */
 	public function __construct(
-		WikiPageFactory $wikiPageFactory, RevisionStore $revisionStore, TitleFactory $titleFactory, Language $language
+		WikiPageFactory $wikiPageFactory, RevisionStore $revisionStore, TitleFactory $titleFactory,
+		Language $language, RevisionRenderer $revisionRenderer
 	) {
 		$this->wikiPageFactory = $wikiPageFactory;
 		$this->revisionStore = $revisionStore;
 		$this->titleFactory = $titleFactory;
 		$this->language = $language;
+		$this->revisionRenderer = $revisionRenderer;
 		$this->logger = new NullLogger();
 	}
 
@@ -81,27 +93,12 @@ class BlogFactory implements LoggerAwareInterface {
 			$error = $status->getMessages()[0];
 			$msg = Message::newFromSpecifier( $error )->text();
 			$this->logger->error( 'Create post entry failed: ' . $msg );
-			throw new \RuntimeException( $msg );
+			throw new RuntimeException( $msg );
 		}
 	}
 
 	public function setLogger( $logger ) {
 		$this->logger = $logger;
-	}
-
-	/**
-	 * @param Title $page
-	 * @return Title|null
-	 */
-	public function getBlogRootPage( Title $page ) {
-		$rootPage = $page;
-		while ( $rootPage->isSubpage() ) {
-			$rootPage = $rootPage->getBaseTitle();
-		}
-		if ( !$rootPage || $rootPage->getContentModel() !== 'blog_root' ) {
-			throw new InvalidArgumentException( Message::newFromKey( 'simpleblogpage-error-invalid-root-page' ) );
-		}
-		return $rootPage;
 	}
 
 	/**
@@ -122,12 +119,11 @@ class BlogFactory implements LoggerAwareInterface {
 	 * @param BlogPostContent $content
 	 * @param PageReference $page
 	 * @param int|null $revisionId
-	 * @param UserIdentity|null $forUser
-	 * @return void
+	 * @return BlogEntry
 	 */
-	public function newFromContent(
-		BlogPostContent $content, PageReference $page, ?int $revisionId = null, ?UserIdentity $forUser = null
-	) {
+	public function getEntryFromContent(
+		BlogPostContent $content, PageReference $page, ?int $revisionId = null
+	): BlogEntry {
 		$title = $this->titleFactory->castFromPageReference( $page );
 		$revision = $revisionId ?
 			$this->revisionStore->getRevisionById( $revisionId ) :
@@ -135,8 +131,78 @@ class BlogFactory implements LoggerAwareInterface {
 		if ( !$revision ) {
 			throw new InvalidArgumentException( 'Revision not found' );
 		}
+		return $this->constructBlogEntry( $content, $revision );
+	}
 
-		$data = ;
+	/**
+	 * @param RevisionRecord $revision
+	 * @param Authority $forUser
+	 * @return BlogEntry
+	 */
+	public function getBlogFromRevision( RevisionRecord $revision, Authority $forUser ): BlogEntry {
+		$content = $revision->getContent( SlotRecord::MAIN );
+		if ( !( $content instanceof BlogPostContent ) ) {
+			throw new InvalidArgumentException( Message::newFromKey( 'simpleblogpage-error-invalid-content' ) );
+		}
+		return $this->constructBlogEntry( $content, $revision );
+
+	}
+
+	/**
+	 * Data for API - client-side-rendering
+	 *
+	 * @param BlogEntry $entry
+	 * @param Authority $forUser
+	 * @return array
+	 */
+	public function serializeForOutput( BlogEntry $entry, Authority $forUser ): array {
+		$rendered = $this->renderText( $entry, $forUser );
+
+		return [
+			'text' => $rendered,
+			'meta' => $entry->getMeta( $this->language, $forUser ),
+		];
+	}
+
+	/**
+	 * Rendering on the blog page itself
+	 *
+	 * @param BlogEntry $entry
+	 * @param Authority $forUser
+	 * @param string $rendered
+	 * @return string
+	 */
+	public function getOutputForContentHandler( BlogEntry $entry, Authority $forUser, string $rendered ): string {
+		$widget = new BlogEntryWidget( $rendered, $entry->getMeta( $this->language, $forUser ) );
+		return $widget->toString();
+	}
+
+	/**
+	 * @param BlogPostContent $content
+	 * @param RevisionRecord $revisionRecord
+	 * @return BlogEntry
+	 */
+	private function constructBlogEntry( BlogPostContent $content, RevisionRecord $revisionRecord ): BlogEntry {
+		$title = $this->titleFactory->castFromPageReference( $revisionRecord->getPage() );
+		$root = $this->getBlogRootPage( $title );
+		// Remove $root->getText() from $title->getText() to get the name of the blog entry
+		$name = substr( $title->getText(), strlen( $root->getText() . '/' ) );
+		return new BlogEntry( $name, $title, $content->getText(), $revisionRecord, $root );
+	}
+
+	/**
+	 * @param Title $page
+	 * @return Title
+	 */
+	private function getBlogRootPage( Title $page ): Title {
+		$rootPage = $page;
+		while ( $rootPage->isSubpage() ) {
+			$rootPage = $rootPage->getBaseTitle();
+		}
+		if ( $rootPage->getContentModel() !== 'blog_root' ) {
+			throw new InvalidArgumentException( Message::newFromKey( 'simpleblogpage-error-invalid-root-page' ) );
+		}
+		return $rootPage;
 	}
 
 	/**
@@ -204,5 +270,33 @@ class BlogFactory implements LoggerAwareInterface {
 			throw new PermissionsError( 'createblogpost' );
 		}
 	}
+
+	/**
+	 * @param BlogEntry $entry
+	 * @param Authority|null $forAuthority
+	 * @return string|null
+	 */
+	private function renderText( BlogEntry $entry, ?Authority $forAuthority ): ?string {
+		$rr = $this->revisionRenderer->getRenderedRevision( $entry->getRevision(), null, $forAuthority );
+		if ( !$rr ) {
+			$this->logger->error( 'Failed to render blog entry', [
+				'page' => $entry->getRevision()->getPage()->getDBkey(),
+				'namespace' => $entry->getRevision()->getPage()->getNamespace(),
+				'revid' => $entry->getRevision()->getId(),
+			] );
+			throw new RuntimeException( Message::newFromKey( 'simpleblogpage-error-rendering-failed' ) );
+		}
+		$po = $rr->getRevisionParserOutput();
+		if ( !$po ) {
+			$this->logger->error( 'Failed to render blog entry', [
+				'page' => $entry->getRevision()->getPage()->getDBkey(),
+				'namespace' => $entry->getRevision()->getPage()->getNamespace(),
+				'revid' => $entry->getRevision()->getId(),
+			] );
+			throw new RuntimeException( Message::newFromKey( 'simpleblogpage-error-rendering-failed' ) );
+		}
+		return $po->getRawText();
+	}
+
 
 }

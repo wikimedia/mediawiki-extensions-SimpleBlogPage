@@ -6,7 +6,13 @@ use MediaWiki\MediaWikiServices;
 
 return [
 	'SimpleBlogPage.BlogFactory' => static function( MediaWikiServices $services ) {
-		$factory = new BlogFactory( $services->getWikiPageFactory() );
+		$factory = new BlogFactory(
+			$services->getWikiPageFactory(),
+			$services->getRevisionStore(),
+			$services->getTitleFactory(),
+			$services->getContentLanguage(),
+			$services->getRevisionRenderer()
+		);
 		$factory->setLogger( LoggerFactory::getInstance( 'SimpleBlogPage' ) );
 		return $factory;
 	},

@@ -33,11 +33,8 @@ $( function() {
 		toolbar.connect( this, {
 			save: async function() {
 				try {
-					console.log( "I" );
 					await editor.submit();
-					console.log( "II" );
 					const overview = mw.Title.makeTitle( -1, 'ArticlesHome' );
-					console.log( "III" );
 					window.location.href = overview.getUrl();
 				} catch ( e ) {
 					console.log( e );

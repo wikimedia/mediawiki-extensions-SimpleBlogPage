@@ -143,6 +143,41 @@
 				"ext.simpleBlogPage.bootstrap",
 				"ext.oOJSPlus.widgets"
 			]
+		},
+		"ext.simpleBlogPage.entry": {
+			"scripts": [
+				"ui/panel/EntryHeader.js",
+				"ui/panel/Entry.js"
+			],
+			"dependencies": [
+				"oojs-ui",
+				"ext.simpleBlogPage.bootstrap",
+				"ext.oOJSPlus.widgets"
+			]
+		},
+		"ext.simpleBlogPage.list": {
+			"scripts": [
+				"ui/panel/BlogList.js"
+			],
+			"styles": [
+				"ext.simpleBlogPage.blogList.less"
+			],
+			"dependencies": [
+				"oojs-ui",
+				"ext.simpleBlogPage.bootstrap",
+				"ext.oOJSPlus.widgets",
+				"ext.oOJSPlus.data",
+				"ext.simpleBlogPage.entry"
+			]
+		},
+		"ext.simpleBlogPage.render.rootPage": {
+			"scripts": [
+				"ext.simpleBlogPage.render.rootPage.js"
+			],
+			"dependencies": [
+				"ext.simpleBlogPage.bootstrap",
+				"ext.simpleBlogPage.list"
+			]
 		}
 	},
 	"ResourceFileModulePaths": {
@@ -178,6 +213,11 @@
 			"method": "PUT",
 			"class": "MediaWiki\\Extension\\SimpleBlogPage\\Rest\\CreateBlogHandler",
 			"services": [ "SimpleBlogPage.BlogFactory", "TitleFactory" ]
+		}, {
+			"path": "/simpleblogpage/v1/list",
+			"method": "GET",
+			"class": "MediaWiki\\Extension\\SimpleBlogPage\\Rest\\ListHandler",
+			"services": [ "HookContainer", "DBLoadBalancer" ]
 		}
 	],
 	"manifest_version": 2

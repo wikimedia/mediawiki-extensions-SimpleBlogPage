@@ -2,32 +2,43 @@
 	config = config || {};
 	config.expanded = false;
 	ext.simpleBlogPage.ui.panel.Entry.parent.call( this, config );
-	this.title = config.title;
+	this.wikiTitle = config.wikiTitle;
 	this.revision = config.revision || 0;
 
 	this.isNative = config.native || false;
 	this.$element.addClass( 'blog-entry' );
+	this.setLoading( true );
 
 	this.loadData().done( function( data ) {
 		this.data = data;
 		this.render();
+		this.setLoading( false );
 	}.bind( this ) ).fail( function( e ) {
 		this.showError( e );
+		this.setLoading( false );
 	}.bind( this ) );
-
-	this.render( config );
 };
 
 OO.inheritClass( ext.simpleBlogPage.ui.panel.Entry, OO.ui.PanelLayout );
 
 ext.simpleBlogPage.ui.panel.Entry.prototype.render = function() {
-	this.header = new ext.simpleBlogPage.ui.panel.EntryHeader( this.data.meta );
+	this.header = new ext.simpleBlogPage.ui.panel.EntryHeader( this.data.meta, this.wikiTitle );
 	this.content = new OO.ui.PanelLayout( {
 		padded: true,
 		expanded: false,
 		classes: [ 'blog-entry-body' ]
 	} );
-	this.content.$element.append( new OO.ui.HtmlSnippet( this.data.text ) );
+	this.content.$element.append( this.data.text );
+	if ( this.data.meta.hasMoreText ) {
+		const readMoreBtn = new OO.ui.ButtonWidget( {
+			label: mw.message( 'simpleblogpage-readmore' ).text(),
+			flags: [ 'progressive' ],
+			framed: false,
+			classes: [ 'read-more-button' ],
+			href: this.wikiTitle.getUrl( { returnto: mw.config.get( 'wgPageName' ) } )
+		} );
+		this.content.$element.append( readMoreBtn.$element );
+	}
 
 	this.$element.append( this.header.$element, this.content.$element );
 };
@@ -37,8 +48,8 @@ ext.simpleBlogPage.ui.panel.Entry.prototype.loadData = function() {
 	$.ajax( {
 		url: mw.util.wikiScript( 'rest' ) + '/simpleblogpage/v1/entry',
 		data: {
-			title: this.title,
-			revision: this.revision
+			title: this.wikiTitle.getPrefixedDb(),
+			revision: this.revision || 0
 		},
 		method: 'GET'
 	} ).done( function( data ) {
@@ -54,4 +65,13 @@ ext.simpleBlogPage.ui.panel.Entry.prototype.showError = function( e ) {
 		type: 'error',
 		label: e
 	} ).$element );
+};
+
+ext.simpleBlogPage.ui.panel.Entry.prototype.setLoading = function( loading ) {
+	if ( loading ) {
+		this.$element.empty();
+		this.$element.addClass( 'loading' );
+	} else {
+		this.$element.removeClass( 'loading' );
+	}
 };

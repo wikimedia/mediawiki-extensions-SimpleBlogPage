@@ -6,7 +6,6 @@ use MediaWiki\Language\Language;
 use MediaWiki\Permissions\Authority;
 use MediaWiki\Revision\RevisionRecord;
 use MediaWiki\Title\Title;
-use MediaWiki\User\UserIdentity;
 
 class BlogEntry {
 
@@ -31,25 +30,18 @@ class BlogEntry {
 	private Title $root;
 
 	/**
-	 * @var string
-	 */
-	private string $name;
-
-	/**
-	 * @param string $name
 	 * @param Title $entryTitle
 	 * @param string $text
 	 * @param RevisionRecord $revision
 	 * @param Title $root
 	 */
 	public function __construct(
-		string $name, Title $entryTitle, string $text, RevisionRecord $revision, Title $root
+		Title $entryTitle, string $text, RevisionRecord $revision, Title $root
 	) {
 		$this->text = $text;
 		$this->revision = $revision;
 		$this->entryTitle = $entryTitle;
 		$this->root = $root;
-		$this->name = $name;
 	}
 
 	/**
@@ -64,13 +56,6 @@ class BlogEntry {
 	 */
 	public function getTitle(): Title {
 		return $this->entryTitle;
-	}
-
-	/**
-	 * @return string
-	 */
-	public function getName(): string {
-		return $this->name;
 	}
 
 	/**
@@ -98,10 +83,10 @@ class BlogEntry {
 			'userTimestamp' => $language->userTimeAndDate(
 				$this->revision->getTimestamp(), $forUser->getUser(), [ 'timecorrection' => true ]
 			),
-			'name' => $this->name,
 			'revisionId' => $this->revision->getId(),
-			'author' =>  $this->revision->getUser()->getName(),
+			'author' => $this->revision->getUser()->getName(),
 			'root' => $this->getRoot()->getText(),
+			'rootPage' => $this->getRoot()->getPrefixedDBkey(),
 			'entryPage' => $this->entryTitle->getPrefixedDBkey()
 		];
 	}

@@ -1,0 +1,18 @@
+<svg width="100%" height="200" xmlns="http://www.w3.org/2000/svg">
+    <style>
+        @keyframes colorChange {
+        0% { fill: #ececec; }
+        50% { fill: #dcdcdc; }
+        100% { fill: #ececec; }
+        }
+
+        .loading-rect {
+        animation: colorChange 1.5s infinite;
+        }
+    </style>
+    <!-- Title line -->
+    <rect x="0" y="20" rx="5" ry="5" width="100%" height="40" class="loading-rect" />
+
+    <!-- Content box -->
+    <rect x="0" y="80" rx="5" ry="5" width="100%" height="100" class="loading-rect" />
+</svg>

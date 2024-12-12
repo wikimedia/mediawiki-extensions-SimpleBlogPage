@@ -4,10 +4,8 @@ namespace MediaWiki\Extension\SimpleBlogPage\Rest;
 
 use MediaWiki\Extension\SimpleBlogPage\QueryStore\BlogEntryStore;
 use MediaWiki\HookContainer\HookContainer;
-use MediaWiki\Rest\Response;
 use MWStake\MediaWiki\Component\CommonWebAPIs\Rest\QueryStore;
 use MWStake\MediaWiki\Component\DataStore\IStore;
-use MWStake\MediaWiki\Component\DataStore\ResultSet;
 use Wikimedia\Rdbms\ILoadBalancer;
 
 class ListHandler extends QueryStore {
@@ -25,7 +23,6 @@ class ListHandler extends QueryStore {
 		parent::__construct( $hookContainer );
 		$this->lb = $lb;
 	}
-
 
 	/**
 	 * @return IStore

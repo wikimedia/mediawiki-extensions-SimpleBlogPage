@@ -1,0 +1,69 @@
+<?php
+
+namespace MediaWiki\Extension\SimpleBlogPage\Hook;
+
+use MediaWiki\Content\Renderer\ContentParseParams;
+use MediaWiki\Extension\SimpleBlogPage\BlogFactory;
+use MediaWiki\Extension\SimpleBlogPage\Content\BlogRootContent;
+use MediaWiki\Extension\SimpleBlogPage\ContentHandler\BlogRootHandler;
+use MediaWiki\Page\Hook\BeforeDisplayNoArticleTextHook;
+use MediaWiki\Parser\ParserOutput;
+
+class HandleNonExistingBlogPages implements BeforeDisplayNoArticleTextHook {
+
+	/**
+	 * @var BlogFactory
+	 */
+	private $blogFactory;
+
+	/**
+	 * @param BlogFactory $blogFactory
+	 */
+	public function __construct( BlogFactory $blogFactory ) {
+		$this->blogFactory = $blogFactory;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function onBeforeDisplayNoArticleText( $article ) {
+		if ( $article->getPage()->getNamespace() !== NS_BLOG ) {
+			return true;
+		}
+		if ( !$article->getContext()->getUser()->isAllowed( 'createblogpost' ) ) {
+			$article->getContext()->getOutput()->addWikiTextAsContent(
+				'simpleblogpage-no-blog-no-create'
+			);
+			return false;
+		}
+		$isRoot = !$article->getContext()->getTitle()->isSubpage();
+		if ( $isRoot ) {
+			// On blog root page
+			$hasPosts = $this->blogFactory->hasPosts( $article->getPage() );
+			if ( $hasPosts ) {
+				// Root doesnt exist, but there are posts as subpages of it, show them - edge case, should not happen
+				$contentHandler = $article->getPage()->getContentHandler();
+				if ( $contentHandler instanceof BlogRootHandler ) {
+					$po = new ParserOutput();
+					$contentHandler->fillParserOutputInternal(
+						new BlogRootContent( '' ),
+						new ContentParseParams( $article->getPage() ),
+						$po
+					);
+					$article->getContext()->getOutput()->addParserOutput( $po );
+					return false;
+				}
+			}
+			$article->getContext()->getOutput()->addHTML(
+				$article->getContext()->msg(
+					'simpleblogpage-no-blog-create-root',
+					$article->getPage()->getDBkey(),
+					$article->getContext()->getUser()
+				)->parseAsBlock()
+			);
+			return false;
+		}
+
+		return true;
+	}
+}

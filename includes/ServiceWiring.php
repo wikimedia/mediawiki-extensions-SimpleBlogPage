@@ -5,13 +5,14 @@ use MediaWiki\Logger\LoggerFactory;
 use MediaWiki\MediaWikiServices;
 
 return [
-	'SimpleBlogPage.BlogFactory' => static function( MediaWikiServices $services ) {
+	'SimpleBlogPage.BlogFactory' => static function ( MediaWikiServices $services ) {
 		$factory = new BlogFactory(
 			$services->getWikiPageFactory(),
-			$services->getRevisionStore(),
+			$services->getDBLoadBalancer(),
 			$services->getTitleFactory(),
 			$services->getContentLanguage(),
-			$services->getRevisionRenderer()
+			$services->getRevisionRenderer(),
+			$services->getPageProps()
 		);
 		$factory->setLogger( LoggerFactory::getInstance( 'SimpleBlogPage' ) );
 		return $factory;

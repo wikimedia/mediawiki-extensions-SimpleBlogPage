@@ -45,7 +45,7 @@
 	"AvailableRights": [
 		"createblogpost"
 	],
-	"callback": "mwsInitComponents",
+	"callback": "MediaWiki\\Extension\\SimpleBlogPage\\Setup::callback",
 	"AutoloadNamespaces": {
 		"MediaWiki\\Extension\\SimpleBlogPage\\": "src/",
 		"MediaWiki\\Extension\\SimpleBlogPage\\tests\\": "tests/phpunit/"
@@ -80,6 +80,12 @@
 	"SpecialPages": {
 		"CreateBlogPost": {
 			"class": "MediaWiki\\Extension\\SimpleBlogPage\\Special\\CreateBlogPost",
+			"services": [
+				"SimpleBlogPage.BlogFactory"
+			]
+		},
+		"Blog": {
+			"class": "MediaWiki\\Extension\\SimpleBlogPage\\Special\\Blog",
 			"services": [
 				"SimpleBlogPage.BlogFactory"
 			]
@@ -149,10 +155,15 @@
 				"ui/panel/EntryHeader.js",
 				"ui/panel/Entry.js"
 			],
+			"messages": [
+				"simpleblogpage-readmore",
+				"simpleblogpage-entry-blog-root-link"
+			],
 			"dependencies": [
 				"oojs-ui",
 				"ext.simpleBlogPage.bootstrap",
-				"ext.oOJSPlus.widgets"
+				"ext.oOJSPlus.widgets",
+				"ext.simpleBlogPage.entry.styles"
 			]
 		},
 		"ext.simpleBlogPage.list": {
@@ -161,6 +172,11 @@
 			],
 			"styles": [
 				"ext.simpleBlogPage.blogList.less"
+			],
+			"messages": [
+				"simpleblogpage-create-entry",
+				"simpleblogpage-filter-all",
+				"simpleblogpage-filter-root"
 			],
 			"dependencies": [
 				"oojs-ui",
@@ -178,6 +194,15 @@
 				"ext.simpleBlogPage.bootstrap",
 				"ext.simpleBlogPage.list"
 			]
+		},
+		"ext.simpleBlogPage.home.special": {
+			"scripts": [
+				"ext.simpleBlogPage.home.special.js"
+			],
+			"dependencies": [
+				"ext.simpleBlogPage.bootstrap",
+				"ext.simpleBlogPage.list"
+			]
 		}
 	},
 	"ResourceFileModulePaths": {
@@ -187,11 +212,16 @@
 	"config": {
 	},
 	"Hooks": {
-		"ContentHandlerDefaultModelFor": "setDefaultModel"
+		"ContentHandlerDefaultModelFor": "setDefaultModel",
+		"BeforeDisplayNoArticleText": "handleNonExistingBlogPages"
 	},
 	"HookHandlers": {
 		"setDefaultModel": {
 			"class": "MediaWiki\\Extension\\SimpleBlogPage\\Hook\\SetDefaultContentModel"
+		},
+		"handleNonExistingBlogPages": {
+			"class": "MediaWiki\\Extension\\SimpleBlogPage\\Hook\\HandleNonExistingBlogPages",
+			"services": [ "SimpleBlogPage.BlogFactory"]
 		}
 	},
 	"ServiceWiringFiles": [
@@ -200,7 +230,7 @@
 	"ContentHandlers": {
 		"blog_post": {
 			"class": "MediaWiki\\Extension\\SimpleBlogPage\\ContentHandler\\BlogPostHandler",
-			"services": [ "TitleFactory", "ParserFactory", "GlobalIdGenerator", "LanguageNameUtils", "LinkRenderer", "MagicWordFactory", "ParsoidParserFactory", "SimpleBlogPage.BlogFactory" ]
+			"services": [ "TitleFactory", "ParserFactory", "GlobalIdGenerator", "LanguageNameUtils", "LinkRenderer", "MagicWordFactory", "ParsoidParserFactory" ]
 		},
 		"blog_root": {
 			"class": "MediaWiki\\Extension\\SimpleBlogPage\\ContentHandler\\BlogRootHandler",
@@ -218,6 +248,16 @@
 			"method": "GET",
 			"class": "MediaWiki\\Extension\\SimpleBlogPage\\Rest\\ListHandler",
 			"services": [ "HookContainer", "DBLoadBalancer" ]
+		}, {
+			"path": "/simpleblogpage/v1/entry",
+			"method": "GET",
+			"class": "MediaWiki\\Extension\\SimpleBlogPage\\Rest\\GetEntryHandler",
+			"services": [ "SimpleBlogPage.BlogFactory", "TitleFactory", "RevisionLookup" ]
+		}, {
+			"path": "/simpleblogpage/v1/helper/root_pages",
+			"method": "GET",
+			"class": "MediaWiki\\Extension\\SimpleBlogPage\\Rest\\GetAvailableBlogRootPagesHandler",
+			"services": [ "SimpleBlogPage.BlogFactory" ]
 		}
 	],
 	"manifest_version": 2

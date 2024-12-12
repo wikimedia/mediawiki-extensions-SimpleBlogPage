@@ -22,15 +22,19 @@ ext.simpleBlogPage.ui.panel.Editor.prototype.render = function() {
 	if ( !this.blogEntryPage ) {
 		// Creation, offer selection of blog
 		this.blogSelector = new ext.simpleBlogPage.ui.widget.BlogSelector( { required: true } );
-		this.blogSelector.connect( this, { change: 'onBlogChange' } );
+		this.blogSelector.connect( this, {
+			change: 'onBlogChange',
+			initialized: function() {
+				if ( this.blog ) {
+					this.blogSelector.setValue( this.blog );
+				}
+			}
+		} );
 		this.blogSelectorLayout = new OO.ui.FieldLayout( this.blogSelector, {
 			label: mw.message( 'simpleblogpage-editor-blog-select' ).text(),
 			align: 'top'
 		} );
 		formItems.push( this.blogSelectorLayout );
-		if ( this.blog ) {
-			this.blogSelector.setValue( this.blog );
-		}
 	}
 	this.titleField = new OO.ui.TextInputWidget( {
 		required: true,
@@ -96,17 +100,25 @@ ext.simpleBlogPage.ui.panel.Editor.prototype.onTitleChange = function() {
 };
 
 ext.simpleBlogPage.ui.panel.Editor.prototype.onBlogChange = async function( value ) {
-	var title = this.blogSelector.selectedTitle;
-	console.log( value, title );
+	if ( !this.blogSelector.initialized ) {
+		return;
+	}
+	value = this.blogSelector.getValue();
+
 	this.blogSelectorLayout.setWarnings( [] );
 	if ( value )  {
-		if ( !title ) {
-			this.blogSelectorLayout.setWarnings( [ mw.message( 'simpleblogpage-editor-blog-select-new' ).text() ] );
-		}
 		this.blog = value;
-		if ( title ) {
-			this.blog = title.getMainText();
+		if ( this.blogTypingTimer ) {
+			clearTimeout( this.blogTypingTimer );
 		}
+		this.blogTypingTimer = setTimeout( async () => {
+			const title = mw.Title.makeTitle( 1502, value );
+			const exists = await this.doCheckExists( title.getPrefixedDb() );
+			if ( !exists ) {
+				this.blogSelectorLayout.setWarnings( [ mw.message( 'simpleblogpage-editor-blog-select-new' ).text() ] );
+			}
+		}, 500 );
+		this.blog = value;
 	}
 	try {
 		await this.checkValidity();

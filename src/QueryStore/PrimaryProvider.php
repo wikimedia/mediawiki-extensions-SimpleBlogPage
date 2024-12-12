@@ -15,10 +15,16 @@ class PrimaryProvider extends PrimaryDatabaseDataProvider implements IBucketProv
 	 */
 	private $buckets = [];
 
+	/**
+	 * @return string[]
+	 */
 	protected function getTableNames() {
 		return [ 'page', 'revision', 'actor', 'user' ];
 	}
 
+	/**
+	 * @return string[]
+	 */
 	protected function getFields() {
 		return [
 			'page_id', 'page_title as root', 'page_namespace as namespace',
@@ -26,6 +32,11 @@ class PrimaryProvider extends PrimaryDatabaseDataProvider implements IBucketProv
 		];
 	}
 
+	/**
+	 * @param array &$conds
+	 * @param Filter $filter
+	 * @return void
+	 */
 	protected function appendPreFilterCond( &$conds, Filter $filter ) {
 		if ( $filter->getField() === 'root' ) {
 			$value = $filter->getValue();
@@ -36,12 +47,15 @@ class PrimaryProvider extends PrimaryDatabaseDataProvider implements IBucketProv
 			foreach ( $value as $root ) {
 				$rootFilter[] = "page_title LIKE '$root/%'";
 			}
-			$conds[] = '(' . $this->db->makeList( $rootFilter, IDatabase::LIST_OR ). ')';
+			$conds[] = '(' . $this->db->makeList( $rootFilter, IDatabase::LIST_OR ) . ')';
 			$filter->setApplied( true );
 		}
 	}
 
-
+	/**
+	 * @param ReaderParams $params
+	 * @return array[]
+	 */
 	protected function getJoinConds( ReaderParams $params ) {
 		return [
 			'revision' => [
@@ -59,19 +73,26 @@ class PrimaryProvider extends PrimaryDatabaseDataProvider implements IBucketProv
 		];
 	}
 
-
+	/**
+	 * @param \stdClass $row
+	 * @return void
+	 */
 	protected function appendRowToData( \stdClass $row ) {
-		$item = new BlogEntryQueryRecord( (object) [
-			BlogEntryQueryRecord::BLOG_ENTRY_PAGE => $this->getBlogName( $row->root ),
+		$item = new BlogEntryQueryRecord( (object)[
+			BlogEntryQueryRecord::BLOG_ENTRY_NAME => $this->getBlogName( $row->root ),
 			BlogEntryQueryRecord::BLOG_ENTRY_NAMESPACE => $row->namespace,
 			BlogEntryQueryRecord::BLOG_ENTRY_AUTHOR => $row->author,
 			BlogEntryQueryRecord::BLOG_ENTRY_TIMESTAMP => $row->timestamp,
-			BlogEntryQueryRecord::BLOG_ENTRY_ROOT => $this->getBlogRoot( $row->root )
+			BlogEntryQueryRecord::BLOG_ENTRY_ROOT => $this->getBlogRoot( $row->root ),
+			BlogEntryQueryRecord::BLOG_ENTRY_WIKI_PAGE => $row->root
 		] );
 		$this->addToBuckets( $item );
 		$this->data[] = $item;
 	}
 
+	/**
+	 * @return string[]
+	 */
 	protected function getDefaultConds() {
 		return [
 			"page_namespace = 502 OR (page_namespace = 1502 AND page_content_model = 'blog_post')",

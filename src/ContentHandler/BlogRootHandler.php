@@ -8,22 +8,28 @@ use MediaWiki\Content\WikitextContentHandler;
 use MediaWiki\Context\RequestContext;
 use MediaWiki\Extension\SimpleBlogPage\Content\BlogRootContent;
 use MediaWiki\Html\Html;
-use MediaWiki\Output\OutputPage;
 use MediaWiki\Parser\ParserOutput;
-use OOUI\MessageWidget;
 
 class BlogRootHandler extends WikitextContentHandler {
 
-	protected function fillParserOutput( Content $content, ContentParseParams $cpoParams, ParserOutput &$parserOutput ) {
-		OutputPage::setupOOUI();
-		$parserOutput->setEnableOOUI( true );
+	/**
+	 * @inheritDoc
+	 */
+	protected function fillParserOutput(
+		Content $content, ContentParseParams $cpoParams, ParserOutput &$parserOutput
+	) {
+		parent::fillParserOutput( $content, $cpoParams, $parserOutput );
 		$parserOutput->addModules( [ 'ext.simpleBlogPage.render.rootPage' ] );
-		$parserOutput->setRawText( Html::element( 'div', [
+		$parserOutput->setRawText( $parserOutput->getRawText() . Html::element( 'div', [
 			'id' => 'blog-root',
 			'data-blog' => $cpoParams->getPage()->getDBkey(),
+			'data-creatable' => RequestContext::getMain()->getUser()->isAllowed( 'createblogpost' ),
 		] ) );
 	}
 
+	/**
+	 * @return string
+	 */
 	protected function getContentClass() {
 		return BlogRootContent::class;
 	}

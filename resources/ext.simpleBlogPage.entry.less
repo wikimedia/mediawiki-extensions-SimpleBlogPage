@@ -1,12 +1,24 @@
 .blog-entry {
   background-color: #ececec;
+  margin-bottom: 10px;
+  padding-bottom: 1px;
+  &.loading {
+    background-image: url('./asset/postLoader.svg');
+    background-repeat: no-repeat;
+    background-color: transparent;
+    height: 180px;
+  }
   .blog-entry-header {
+    padding: 10px;
     min-height: 50px;
     &.non-native {
       display: flex;
-      .blog-entry-name {
+      .blog-entry-title {
         flex: 1;
         font-size: 1.5rem;
+        .blog-entry-blog {
+          font-size: 1rem;
+        }
       }
       .oojsplus-contribution-widget {
         width: unset;
@@ -16,6 +28,6 @@
   }
   .blog-entry-body {
     background-color: white;
-    margin-top: 10px;
+    margin: 10px;
   }
 }

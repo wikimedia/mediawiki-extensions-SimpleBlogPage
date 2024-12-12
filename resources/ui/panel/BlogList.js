@@ -8,27 +8,43 @@ ext.simpleBlogPage.ui.panel.BlogList = function( cfg ) {
 	this.blog = cfg.blog || false;
 	this.isNative = cfg.native || false;
 	this.allowCreation = cfg.allowCreation || false;
-	this.total = 0;
-	this.offset = 0;
 	this.limit = cfg.limit || 10;
+	this.filtersInitialized = false;
 
 	this.store = new OOJSPlus.ui.data.store.RemoteRestStore( {
 		path: 'simpleblogpage/v1/list',
 		remoteFilter: true,
 		remoteSort: true,
+		pageSize: this.limit,
 		filter: this.blog ? { root: { value: this.blog, operator: 'eq' } } : {},
 		sorter: { timestamp: { direction: 'DESC' } },
 	} );
 
 	this.renderHeader();
-	this.store.loadRaw().done( function( response ) {
-		console.log( response );
-	}.bind( this ) ).fail( function ( xhr, status, error ) {
+	this.itemPanel = new OO.ui.PanelLayout( {
+		expanded: false,
+		classes: [ 'blog-list-items' ]
+	} );
+	this.paginator = new OOJSPlus.ui.data.grid.Paginator( {
+		store: this.store,
+		grid: this
+	} );
+
+	this.store.load().done( function() {
+		this.paginator.init();
+		if ( !this.filtersInitialized ) {
+			this.buckets = this.store.getBuckets() || {};
+			this.filtersInitialized = true;
+			this.renderFilters();
+		}
+	}.bind( this ) ).fail( function( xhr, status, error ) {
 		this.$element.html( new OO.ui.MessageWidget(  {
 			type: 'error',
 			label: xhr.hasOwnProperty( 'responseJSON' ) ? xhr.responseJSON.message : error
 		} ).$element );
 	}.bind( this ) );
+
+	this.$element.append( this.itemPanel.$element, this.paginator.$element );
 };
 
 OO.inheritClass( ext.simpleBlogPage.ui.panel.BlogList, OO.ui.PanelLayout );
@@ -56,36 +72,26 @@ ext.simpleBlogPage.ui.panel.BlogList.prototype.renderHeader = function() {
 	}
 };
 
-ext.simpleBlogPage.ui.panel.BlogList.prototype.renderItems = function( data ) {
-	for ( var i = 0; i < data.length; i++ ) {
-		console.log( data[i] );
-	}
+ext.simpleBlogPage.ui.panel.BlogList.prototype.clearItems = function() {
+	this.itemPanel.$element.empty();
 };
 
-ext.simpleBlogPage.ui.panel.BlogList.prototype.loadData = async function() {
-	const deferred = $.Deferred();
-	try {
-		const data = {
-			limit: this.limit,
-			offset: this.offset
-		};
-		if ( this.blog ) {
-			data.blog = this.blog;
+ext.simpleBlogPage.ui.panel.BlogList.prototype.setItems = function( data ) {
+	this.itemPanel.$element.empty();
+	for ( let index in data ) {
+		if ( !data.hasOwnProperty( index ) ) {
+			continue;
 		}
-		const res = await $.ajax( {
-			url: mw.util.wikiScript( 'rest' ) + '/simpleblogpage/v1/list',
-			data: data,
-			method: 'GET'
+		const item = data[index];
+		const entry = new ext.simpleBlogPage.ui.panel.Entry({
+			wikiTitle: mw.Title.makeTitle( item.namespace, item.wikipage )
 		} );
-		deferred.resolve( res.results, res.total );
-	} catch ( e ) {
-		deferred.reject( e );
+		this.itemPanel.$element.append( entry.$element );
 	}
-	return deferred;
 };
 
 ext.simpleBlogPage.ui.panel.BlogList.prototype.onCreateClick = function() {
-	const targetPage = 'CreateBlogPost';
+	let targetPage = 'CreateBlogPost';
 	if ( this.blog ) {
 		targetPage += '/' + this.blog;
 	}
@@ -93,4 +99,53 @@ ext.simpleBlogPage.ui.panel.BlogList.prototype.onCreateClick = function() {
 
 	window.location.href = title.getUrl( { returnto: mw.config.get( 'wgPageName' ) } );
 	// Optionally: Open dialog
+};
+
+ext.simpleBlogPage.ui.panel.BlogList.prototype.renderFilters = async function() {
+	if ( !this.isNative && !this.blog ) {
+		// Native means that we are on a blog root page, which forces root filter, so we dont offer it
+		if ( this.buckets.hasOwnProperty( 'root' ) ) {
+			var blogNames = await this.loadBlogNames();
+			let options = [ { data: '', label: mw.msg( 'simpleblogpage-filter-all' ) } ];
+			this.buckets.root.forEach( function( i ) {
+				options.push( { data: i, label: blogNames[i] || i } );
+			} );
+			this.rootFilter = new OO.ui.DropdownInputWidget( { options: options } );
+			this.rootFilter.connect( this, {
+				change: function( value ) {
+					this.onFilter( 'root', value );
+				}
+			} );
+			/*this.$filters.append( new OO.ui.FieldLayout( this.rootFilter,  {
+				align: 'left',
+				label: mw.msg( 'simpleblogpage-filter-root' )
+			} ).$element );*/
+			this.$filters.append( this.rootFilter.$element );
+		}
+	}
+};
+
+ext.simpleBlogPage.ui.panel.BlogList.prototype.onFilter = function( field, value ) {
+	let filter = null;
+	if ( value ) {
+		filter = new OOJSPlus.ui.data.filter.String( {
+			value: value,
+			operator: 'eq'
+		} );
+	}
+	this.store.filter( filter, field );
+};
+
+ext.simpleBlogPage.ui.panel.BlogList.prototype.loadBlogNames = async function() {
+	var deferred = $.Deferred();
+	$.ajax( {
+		url: mw.util.wikiScript( 'rest' ) + '/simpleblogpage/v1/helper/root_pages',
+		method: 'GET'
+	} ).done( function( data ) {
+		deferred.resolve( data );
+	} ).fail( function( xhr, s, e ) {
+		console.error( xhr.hasOwnProperty( 'responseJSON' ) ? xhr.responseJSON.message : e );
+		deferred.resolve( {} );
+	} );
+	return deferred;
 };

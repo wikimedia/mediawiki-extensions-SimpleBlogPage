@@ -2,31 +2,32 @@
 
 namespace MediaWiki\Extension\SimpleBlogPage;
 
-use Html;
 use InvalidArgumentException;
 use MediaWiki\CommentStore\CommentStoreComment;
+use MediaWiki\Content\WikitextContent;
 use MediaWiki\Extension\SimpleBlogPage\Content\BlogPostContent;
 use MediaWiki\Extension\SimpleBlogPage\Content\BlogRootContent;
-use MediaWiki\Extension\SimpleBlogPage\Widget\BlogEntryWidget;
+use MediaWiki\Extension\SimpleBlogPage\Util\HtmlSnippetCreator;
 use MediaWiki\Language\Language;
 use MediaWiki\Message\Message;
-use MediaWiki\Page\PageReference;
+use MediaWiki\Page\PageIdentity;
+use MediaWiki\Page\PageProps;
 use MediaWiki\Page\WikiPageFactory;
-use MediaWiki\Parser\ParserOptions;
 use MediaWiki\Permissions\Authority;
 use MediaWiki\Revision\RevisionRecord;
 use MediaWiki\Revision\RevisionRenderer;
-use MediaWiki\Revision\RevisionStore;
 use MediaWiki\Revision\SlotRecord;
 use MediaWiki\Storage\PageUpdateStatus;
 use MediaWiki\Title\Title;
 use MediaWiki\Title\TitleFactory;
-use MediaWiki\User\UserIdentity;
 use PermissionsError;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use RuntimeException;
+use Throwable;
+use Wikimedia\Rdbms\ILoadBalancer;
+use Wikimedia\Rdbms\IResultWrapper;
 
 class BlogFactory implements LoggerAwareInterface {
 
@@ -36,8 +37,8 @@ class BlogFactory implements LoggerAwareInterface {
 	/** @var WikiPageFactory */
 	private $wikiPageFactory;
 
-	/** @var RevisionStore */
-	private $revisionStore;
+	/** @var ILoadBalancer */
+	private $lb;
 
 	/** @var TitleFactory */
 	private $titleFactory;
@@ -48,22 +49,27 @@ class BlogFactory implements LoggerAwareInterface {
 	/** @var RevisionRenderer */
 	private $revisionRenderer;
 
+	/** @var PageProps */
+	private $pageProps;
+
 	/**
 	 * @param WikiPageFactory $wikiPageFactory
-	 * @param RevisionStore $revisionStore
+	 * @param ILoadBalancer $lb
 	 * @param TitleFactory $titleFactory
 	 * @param Language $language
 	 * @param RevisionRenderer $revisionRenderer
+	 * @param PageProps $pageProps
 	 */
 	public function __construct(
-		WikiPageFactory $wikiPageFactory, RevisionStore $revisionStore, TitleFactory $titleFactory,
-		Language $language, RevisionRenderer $revisionRenderer
+		WikiPageFactory $wikiPageFactory, ILoadBalancer $lb, TitleFactory $titleFactory,
+		Language $language, RevisionRenderer $revisionRenderer, PageProps $pageProps
 	) {
 		$this->wikiPageFactory = $wikiPageFactory;
-		$this->revisionStore = $revisionStore;
+		$this->lb = $lb;
 		$this->titleFactory = $titleFactory;
 		$this->language = $language;
 		$this->revisionRenderer = $revisionRenderer;
+		$this->pageProps = $pageProps;
 		$this->logger = new NullLogger();
 	}
 
@@ -97,6 +103,10 @@ class BlogFactory implements LoggerAwareInterface {
 		}
 	}
 
+	/**
+	 * @param LoggerInterface $logger
+	 * @return void
+	 */
 	public function setLogger( $logger ) {
 		$this->logger = $logger;
 	}
@@ -116,36 +126,37 @@ class BlogFactory implements LoggerAwareInterface {
 	}
 
 	/**
-	 * @param BlogPostContent $content
-	 * @param PageReference $page
-	 * @param int|null $revisionId
-	 * @return BlogEntry
+	 * @param Title|null $title
+	 * @param bool $mustExist
+	 * @return void
 	 */
-	public function getEntryFromContent(
-		BlogPostContent $content, PageReference $page, ?int $revisionId = null
-	): BlogEntry {
-		$title = $this->titleFactory->castFromPageReference( $page );
-		$revision = $revisionId ?
-			$this->revisionStore->getRevisionById( $revisionId ) :
-			$this->revisionStore->getRevisionByTitle( $title );
-		if ( !$revision ) {
-			throw new InvalidArgumentException( 'Revision not found' );
+	public function assertTitleIsBlog( ?Title $title, bool $mustExist = false ) {
+		if (
+			!$title ||
+			( $title->getNamespace() !== NS_BLOG && $title->getNamespace() !== NS_USER_BLOG ) ||
+			!$title->isSubpage()
+		) {
+			throw new InvalidArgumentException( Message::newFromKey( 'simpleblogpage-error-invalid-target-page' ) );
 		}
-		return $this->constructBlogEntry( $content, $revision );
+		if ( $mustExist && !$title->exists() ) {
+			throw new InvalidArgumentException( Message::newFromKey( 'simpleblogpage-error-invalid-target-page' ) );
+		}
 	}
 
 	/**
 	 * @param RevisionRecord $revision
-	 * @param Authority $forUser
 	 * @return BlogEntry
 	 */
-	public function getBlogFromRevision( RevisionRecord $revision, Authority $forUser ): BlogEntry {
+	public function getEntryFromRevision( RevisionRecord $revision ): BlogEntry {
 		$content = $revision->getContent( SlotRecord::MAIN );
-		if ( !( $content instanceof BlogPostContent ) ) {
+		if (
+			( $revision->getPage()->getNamespace() !== NS_BLOG && $revision->getPage()->getNamespace() !== NS_USER_BLOG ) ||
+			( $revision->getPage()->getNamespace() === NS_BLOG && !( $content instanceof BlogPostContent ) ) ||
+			( $revision->getPage()->getNamespace() === NS_USER_BLOG && !( $content instanceof WikitextContent ) )
+		) {
 			throw new InvalidArgumentException( Message::newFromKey( 'simpleblogpage-error-invalid-content' ) );
 		}
 		return $this->constructBlogEntry( $content, $revision );
-
 	}
 
 	/**
@@ -154,55 +165,110 @@ class BlogFactory implements LoggerAwareInterface {
 	 * @param BlogEntry $entry
 	 * @param Authority $forUser
 	 * @return array
+	 * @throws PermissionsError
 	 */
 	public function serializeForOutput( BlogEntry $entry, Authority $forUser ): array {
+		$this->assertActorCan( 'read', $forUser );
 		$rendered = $this->renderText( $entry, $forUser );
 
+		try {
+			$snippetMaker = new HtmlSnippetCreator( $rendered, 300 );
+			$snippet = $snippetMaker->getSnippet();
+			$hasMore = $snippetMaker->hasMore();
+		} catch ( Throwable $e ) {
+			$this->logger->error( 'Failed to create snippet', [
+				'page' => $entry->getRevision()->getPage()->getDBkey(),
+				'namespace' => $entry->getRevision()->getPage()->getNamespace(),
+				'revid' => $entry->getRevision()->getId(),
+				'exception' => $e->getMessage(),
+			] );
+			// Fallback, cannot create snippet, show all
+			$snippet = $rendered;
+			$hasMore = false;
+		}
+
+		$meta = $entry->getMeta( $this->language, $forUser );
+		$meta['hasMoreText'] = $hasMore;
+		$meta['root'] = $this->getPageDisplayTitle( $entry->getRoot() );
+		$meta['name'] = $this->getPageDisplayTitle( $entry->getTitle() );
 		return [
-			'text' => $rendered,
-			'meta' => $entry->getMeta( $this->language, $forUser ),
+			'text' => $snippet,
+			'meta' => $meta,
 		];
 	}
 
 	/**
-	 * Rendering on the blog page itself
-	 *
-	 * @param BlogEntry $entry
-	 * @param Authority $forUser
-	 * @param string $rendered
-	 * @return string
+	 * @return array
 	 */
-	public function getOutputForContentHandler( BlogEntry $entry, Authority $forUser, string $rendered ): string {
-		$widget = new BlogEntryWidget( $rendered, $entry->getMeta( $this->language, $forUser ) );
-		return $widget->toString();
-	}
-
-	/**
-	 * @param BlogPostContent $content
-	 * @param RevisionRecord $revisionRecord
-	 * @return BlogEntry
-	 */
-	private function constructBlogEntry( BlogPostContent $content, RevisionRecord $revisionRecord ): BlogEntry {
-		$title = $this->titleFactory->castFromPageReference( $revisionRecord->getPage() );
-		$root = $this->getBlogRootPage( $title );
-		// Remove $root->getText() from $title->getText() to get the name of the blog entry
-		$name = substr( $title->getText(), strlen( $root->getText() . '/' ) );
-		return new BlogEntry( $name, $title, $content->getText(), $revisionRecord, $root );
+	public function getBlogRootNames(): array {
+		$res = $this->getRawBlogRoots();
+		$roots = [];
+		if ( $res ) {
+			foreach ( $res as $row ) {
+				$roots[$row->page_title] = $this->getPageDisplayTitle( $this->titleFactory->newFromRow( $row ) );
+			}
+		}
+		return $roots;
 	}
 
 	/**
 	 * @param Title $page
 	 * @return Title
 	 */
-	private function getBlogRootPage( Title $page ): Title {
+	public function getBlogRootPage( Title $page ): Title {
+		$this->assertTargetTitleValid( $page );
 		$rootPage = $page;
-		while ( $rootPage->isSubpage() ) {
+		while ( $rootPage && $rootPage->isSubpage() ) {
 			$rootPage = $rootPage->getBaseTitle();
 		}
-		if ( $rootPage->getContentModel() !== 'blog_root' ) {
-			throw new InvalidArgumentException( Message::newFromKey( 'simpleblogpage-error-invalid-root-page' ) );
-		}
 		return $rootPage;
+	}
+
+	/**
+	 * @param Title $page
+	 * @return bool
+	 */
+	public function hasPosts( PageIdentity $page ): bool {
+		$res = $this->lb->getConnection( DB_REPLICA )->selectRowCount(
+			'page',
+			'*',
+			[
+				'page_namespace' => $page->getNamespace(),
+				'page_title LIKE \'' . $page->getDBkey() . '/%\'',
+				'page_content_model' => 'blog_post',
+			],
+		);
+		return $res > 0;
+	}
+
+	/**
+	 * @return IResultWrapper|null
+	 */
+	private function getRawBlogRoots(): ?IResultWrapper {
+		$db = $this->lb->getConnection( DB_REPLICA );
+		$query = $db->newSelectQueryBuilder()
+			->table( 'page' )
+			->fields( [ 'page_id', 'page_title', 'page_namespace' ] )
+			->where( [
+				'page_namespace' => NS_BLOG,
+				'page_content_model' => 'blog_root',
+			] );
+		$res = $db->query( $query->getSQL(), __METHOD__ );
+		if ( !$res ) {
+			return null;
+		}
+		return $res;
+	}
+
+	/**
+	 * @param WikitextContent $content
+	 * @param RevisionRecord $revisionRecord
+	 * @return BlogEntry
+	 */
+	private function constructBlogEntry( WikitextContent $content, RevisionRecord $revisionRecord ): BlogEntry {
+		$title = $this->titleFactory->castFromPageReference( $revisionRecord->getPage() );
+		$root = $this->getBlogRootPage( $title );
+		return new BlogEntry( $title, $content->getText(), $revisionRecord, $root );
 	}
 
 	/**
@@ -262,12 +328,15 @@ class BlogFactory implements LoggerAwareInterface {
 			case 'create':
 				$rights = [ 'createblogpost' ];
 				break;
+			case 'read':
+				$rights = [ 'read' ];
+				break;
 		}
 		if ( empty( $rights ) ) {
 			return;
 		}
 		if ( !$actor->isAllowedAll( ...$rights ) ) {
-			throw new PermissionsError( 'createblogpost' );
+			throw new PermissionsError( $rights[0] );
 		}
 	}
 
@@ -298,5 +367,29 @@ class BlogFactory implements LoggerAwareInterface {
 		return $po->getRawText();
 	}
 
+	/**
+	 * @param Title $title
+	 * @return string
+	 */
+	private function getPageDisplayTitle( Title $title ) {
+		$props = $this->pageProps->getProperties( $title, [ 'displaytitle' ] );
+		if ( isset( $props[$title->getArticleID()]['displaytitle'] ) ) {
+			return $props[$title->getArticleID()]['displaytitle'];
+		}
+		return $title->getText();
+	}
 
+	/**
+	 * @param Title|null $title
+	 * @param Title $root
+	 * @return string
+	 */
+	private function getBlogEntryName( ?Title $title, Title $root ) {
+		$blogPage = $title->getText();
+		$display = $this->getPageDisplayTitle( $title );
+		if ( $display !== $blogPage ) {
+			return $display;
+		}
+		return substr( $blogPage, strlen( $root->getText() . '/' ) );
+	}
 }

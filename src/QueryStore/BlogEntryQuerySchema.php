@@ -9,8 +9,8 @@ class BlogEntryQuerySchema extends Schema {
 
 	public function __construct() {
 		parent::__construct( [
-			BlogEntryQueryRecord::BLOG_ENTRY_PAGE => [
-				self::FILTERABLE => true,
+			BlogEntryQueryRecord::BLOG_ENTRY_NAME => [
+				self::FILTERABLE => false,
 				self::SORTABLE => false,
 				self::TYPE => FieldType::STRING
 			],
@@ -36,6 +36,11 @@ class BlogEntryQuerySchema extends Schema {
 				self::TYPE => FieldType::STRING,
 				self::IS_BUCKET => true
 			],
+			BlogEntryQueryRecord::BLOG_ENTRY_WIKI_PAGE => [
+				self::FILTERABLE => false,
+				self::SORTABLE => false,
+				self::TYPE => FieldType::STRING
+			]
 		] );
 	}
 }

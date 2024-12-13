@@ -2,6 +2,7 @@
 
 namespace MediaWiki\Extension\SimpleBlogPage\Rest;
 
+use MediaWiki\Context\RequestContext;
 use MediaWiki\Extension\SimpleBlogPage\BlogFactory;
 use MediaWiki\Rest\SimpleHandler;
 
@@ -18,6 +19,8 @@ class GetAvailableBlogRootPagesHandler extends SimpleHandler {
 	}
 
 	public function execute() {
-		return $this->getResponseFactory()->createJson( $this->blogFactory->getBlogRootNames() );
+		return $this->getResponseFactory()->createJson( $this->blogFactory->getBlogRootNames(
+			RequestContext::getMain()->getUser()
+		) );
 	}
 }

@@ -56,6 +56,7 @@
 			"constant": "NS_USER_BLOG",
 			"name": "User_blog",
 			"protection": "edit",
+			"defaultcontentmodel": "blog_post",
 			"subpages": true
 		},
 		{
@@ -68,6 +69,7 @@
 			"id": 1502,
 			"constant": "NS_BLOG",
 			"name": "Blog",
+			"defaultcontentmodel": "blog_post",
 			"subpages": true
 		},
 		{
@@ -78,12 +80,6 @@
 		}
 	],
 	"SpecialPages": {
-		"CreateBlogPost": {
-			"class": "MediaWiki\\Extension\\SimpleBlogPage\\Special\\CreateBlogPost",
-			"services": [
-				"SimpleBlogPage.BlogFactory"
-			]
-		},
 		"Blog": {
 			"class": "MediaWiki\\Extension\\SimpleBlogPage\\Special\\Blog",
 			"services": [
@@ -107,47 +103,28 @@
 				"ext.oOJSPlus.widgets"
 			]
 		},
-		"ext.simpleBlogPage.editor": {
+		"ext.simpleBlogPage.create": {
 			"scripts": [
-				"ui/panel/Editor.js"
+				"ui/dialog/CreateDialog.js",
+				"ext.simpleBlogPage.create.js"
 			],
 			"dependencies": [
 				"ext.simpleBlogPage.bootstrap",
-				"ext.simpleBlogPage.blogSelector",
-				"oojs-ui",
-				"ext.oOJSPlus.widgets"
+				"ext.simpleBlogPage.blogSelector"
 			],
 			"messages": [
+				"simpleblogpage-create-label",
+				"simpleblogpage-create-dialog-button-submit",
+				"simpleblogpage-create-dialog-button-cancel",
 				"simpleblogpage-editor-blog-select",
 				"simpleblogpage-editor-blog-select-new",
 				"simpleblogpage-editor-title",
-				"simpleblogpage-editor-content",
 				"simpleblogpage-editor-title-exists"
-			]
-		},
-		"ext.simpleBlogPage.create.special": {
-			"scripts": [
-				"ext.simpleBlogPage.create.special.js"
-			],
-			"dependencies": [
-				"ext.simpleBlogPage.editor",
-				"ext.oOJSPlus.managerPanel"
 			]
 		},
 		"ext.simpleBlogPage.entry.styles": {
 			"styles": [
 				"ext.simpleBlogPage.entry.less"
-			]
-		},
-		"ext.simpleBlogPage.render.entry.native": {
-			"scripts": [
-				"ui/panel/EntryHeader.js",
-				"ext.simpleBlogPage.render.entry.native.js"
-			],
-			"dependencies": [
-				"oojs-ui",
-				"ext.simpleBlogPage.bootstrap",
-				"ext.oOJSPlus.widgets"
 			]
 		},
 		"ext.simpleBlogPage.entry": {
@@ -201,7 +178,8 @@
 			],
 			"dependencies": [
 				"ext.simpleBlogPage.bootstrap",
-				"ext.simpleBlogPage.list"
+				"ext.simpleBlogPage.list",
+				"ext.simpleBlogPage.create"
 			]
 		}
 	},
@@ -213,7 +191,11 @@
 	},
 	"Hooks": {
 		"ContentHandlerDefaultModelFor": "setDefaultModel",
-		"BeforeDisplayNoArticleText": "handleNonExistingBlogPages"
+		"BeforeDisplayNoArticleText": "handleNonExistingBlogPages",
+		"MWStakeCommonUIRegisterSkinSlotComponents": "addBlogLinks",
+		"SkinTemplateNavigation::Universal": "addBlogLinks",
+		"BlueSpiceDiscoveryTemplateDataProviderAfterInit": "addBlogLinks",
+		"getUserPermissionsErrors": "handleEditPermissions"
 	},
 	"HookHandlers": {
 		"setDefaultModel": {
@@ -222,6 +204,13 @@
 		"handleNonExistingBlogPages": {
 			"class": "MediaWiki\\Extension\\SimpleBlogPage\\Hook\\HandleNonExistingBlogPages",
 			"services": [ "SimpleBlogPage.BlogFactory"]
+		},
+		"addBlogLinks": {
+			"class": "MediaWiki\\Extension\\SimpleBlogPage\\Hook\\AddBlogLinks",
+			"services": [ "SpecialPageFactory", "PermissionManager" ]
+		},
+		"handleEditPermissions": {
+			"class": "MediaWiki\\Extension\\SimpleBlogPage\\Hook\\HandleEditPermissions"
 		}
 	},
 	"ServiceWiringFiles": [
@@ -239,11 +228,6 @@
 	},
 	"RestRoutes": [
 		{
-			"path": "/simpleblogpage/v1/blog",
-			"method": "PUT",
-			"class": "MediaWiki\\Extension\\SimpleBlogPage\\Rest\\CreateBlogHandler",
-			"services": [ "SimpleBlogPage.BlogFactory", "TitleFactory" ]
-		}, {
 			"path": "/simpleblogpage/v1/list",
 			"method": "GET",
 			"class": "MediaWiki\\Extension\\SimpleBlogPage\\Rest\\ListHandler",

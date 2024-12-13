@@ -10,7 +10,7 @@ class SetDefaultContentModel implements ContentHandlerDefaultModelForHook {
 	 * @inheritDoc
 	 */
 	public function onContentHandlerDefaultModelFor( $title, &$model ) {
-		if ( $title->getNamespace() !== NS_BLOG ) {
+		if ( $title->getNamespace() !== NS_BLOG && $title->getNamespace() !== NS_USER_BLOG ) {
 			return true;
 		}
 		// All "root" pages in the blog namespace should use the "blog_root" content model

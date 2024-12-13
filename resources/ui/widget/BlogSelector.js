@@ -1,22 +1,26 @@
 ext.simpleBlogPage.ui.widget.BlogSelector = function( cfg ) {
 	cfg = cfg || {};
 	ext.simpleBlogPage.ui.widget.BlogSelector.super.call( this, cfg );
-	this.optionValues = {};
-	this.optionValuesReverse = {};
 	this.initialized = false;
+	this.userBlog = null;
+	this.optionMapping = {};
+	this.optionMappingReverse = {};
 
 	this.loadOptions().done( function( options ) {
 		this.menu.clearItems();
-		this.optionValues = options;
 		for ( var dbkey in options ) {
 			if ( !options.hasOwnProperty( dbkey ) ) {
 				continue;
 			}
-			this.optionValuesReverse[options[dbkey]] = dbkey;
-			const title = options[dbkey];
+			this.optionMapping[dbkey] = options[dbkey].display;
+			this.optionMappingReverse[options[dbkey].display] = dbkey;
+			if ( options[dbkey].type === 'user' ) {
+				this.userBlog = dbkey;
+			}
+			const data = options[dbkey];
 			const item = new OO.ui.MenuOptionWidget( {
-				data: title,
-				label: title
+				data: dbkey,
+				label: data.display
 			} );
 			this.menu.addItems( [ item ] );
 		}
@@ -44,20 +48,22 @@ ext.simpleBlogPage.ui.widget.BlogSelector.prototype.loadOptions = function() {
 };
 
 ext.simpleBlogPage.ui.widget.BlogSelector.prototype.setValue = function( value ) {
-	if ( value && this.optionValues && this.optionValues.hasOwnProperty( value ) ) {
-		value = this.optionValues[value];
+	if ( value && this.optionMapping && this.optionMapping.hasOwnProperty( value ) ) {
+		value = this.optionMapping[value];
 	}
-	ext.simpleBlogPage.ui.widget.BlogSelector.parent.prototype.setValue.call( this, value );
+	ext.simpleBlogPage.ui.widget.BlogSelector.super.prototype.setValue.call( this, value );
 };
 
 ext.simpleBlogPage.ui.widget.BlogSelector.prototype.getValue = function() {
-	if ( !this.initialized ) {
-		return '';
+	const value = ext.simpleBlogPage.ui.widget.BlogSelector.super.prototype.getValue.call( this );
+	if ( this.optionMappingReverse && this.optionMappingReverse.hasOwnProperty( value ) ) {
+		return { fromOption: true, value: this.optionMappingReverse[value] };
 	}
-	console.log( "IIII", this.optionValuesReverse );
-	const value = ext.simpleBlogPage.ui.widget.BlogSelector.parent.prototype.getValue.call( this );
-	if ( this.optionValuesReverse.hasOwnProperty( value ) ) {
-		return this.optionValuesReverse[value];
+	return { fromOption: false, value: value };
+};
+
+ext.simpleBlogPage.ui.widget.BlogSelector.prototype.selectUserBlog = function() {
+	if ( this.userBlog ) {
+		this.setValue( this.userBlog );
 	}
-	return value;
 };

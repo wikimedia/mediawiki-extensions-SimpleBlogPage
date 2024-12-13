@@ -9,7 +9,6 @@
 	"simpleblogpage-editor-blog-select": "Field label",
 	"simpleblogpage-editor-blog-select-new": "Warning message when selected blog doesnt exist",
 	"simpleblogpage-editor-title": "Field label",
-	"simpleblogpage-editor-content": "Field label",
 	"simpleblogpage-editor-title-exists": "Error message if selected blog title already exists",
 	"simpleblogpage-create-entry": "Button label for creating new posts",
 	"simpleblogpage-filter-all": "Filter label for all posts",
@@ -21,5 +20,10 @@
 	"simpleblogpage-error-rendering-failed": "Error message if rendering failed",
 	"simpleblogpage-filter-root": "Label for the blog page filter",
 	"simpleblogpage-readmore": "Label for the read more link",
-	"simpleblogpage-entry-blog-root-link": "Label for the link leading to root blog page.\n$1 - Blog page title\n$2 - Blog page displaytext"
+	"simpleblogpage-entry-blog-root-link": "Label for the link leading to root blog page.\n$1 - Blog page title\n$2 - Blog page displaytext",
+	"simpleblogpage-articles-home-links": "Link label for the home page",
+	"simpleblogpage-create-label": "Label for the create button",
+	"simpleblogpage-create-dialog-button-submit": "Button label for submitting the creation of a new blog post{{Identical|Create}}",
+	"simpleblogpage-create-dialog-button-cancel": "Button label for canceling the creation of a new blog post{{Identical|Cancel}}",
+	"simpleblogpage-user-blog-label": "Label for the user blog"
 }

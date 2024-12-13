@@ -27,7 +27,9 @@ class HandleNonExistingBlogPages implements BeforeDisplayNoArticleTextHook {
 	 * @inheritDoc
 	 */
 	public function onBeforeDisplayNoArticleText( $article ) {
-		if ( $article->getPage()->getNamespace() !== NS_BLOG ) {
+		if (
+			$article->getPage()->getNamespace() !== NS_BLOG && $article->getPage()->getNamespace() !== NS_USER_BLOG
+		) {
 			return true;
 		}
 		if ( !$article->getContext()->getUser()->isAllowed( 'createblogpost' ) ) {
@@ -38,29 +40,17 @@ class HandleNonExistingBlogPages implements BeforeDisplayNoArticleTextHook {
 		}
 		$isRoot = !$article->getContext()->getTitle()->isSubpage();
 		if ( $isRoot ) {
-			// On blog root page
-			$hasPosts = $this->blogFactory->hasPosts( $article->getPage() );
-			if ( $hasPosts ) {
-				// Root doesnt exist, but there are posts as subpages of it, show them - edge case, should not happen
-				$contentHandler = $article->getPage()->getContentHandler();
-				if ( $contentHandler instanceof BlogRootHandler ) {
-					$po = new ParserOutput();
-					$contentHandler->fillParserOutputInternal(
-						new BlogRootContent( '' ),
-						new ContentParseParams( $article->getPage() ),
-						$po
-					);
-					$article->getContext()->getOutput()->addParserOutput( $po );
-					return false;
-				}
+			$contentHandler = $article->getPage()->getContentHandler();
+			if ( $contentHandler instanceof BlogRootHandler ) {
+				$po = new ParserOutput();
+				$contentHandler->fillParserOutputInternal(
+					new BlogRootContent( '' ),
+					new ContentParseParams( $article->getPage() ),
+					$po
+				);
+				$article->getContext()->getOutput()->addParserOutput( $po );
+				return false;
 			}
-			$article->getContext()->getOutput()->addHTML(
-				$article->getContext()->msg(
-					'simpleblogpage-no-blog-create-root',
-					$article->getPage()->getDBkey(),
-					$article->getContext()->getUser()
-				)->parseAsBlock()
-			);
 			return false;
 		}
 

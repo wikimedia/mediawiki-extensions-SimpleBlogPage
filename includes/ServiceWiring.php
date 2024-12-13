@@ -7,7 +7,6 @@ use MediaWiki\MediaWikiServices;
 return [
 	'SimpleBlogPage.BlogFactory' => static function ( MediaWikiServices $services ) {
 		$factory = new BlogFactory(
-			$services->getWikiPageFactory(),
 			$services->getDBLoadBalancer(),
 			$services->getTitleFactory(),
 			$services->getContentLanguage(),

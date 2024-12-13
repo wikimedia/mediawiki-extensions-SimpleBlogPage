@@ -95,7 +95,9 @@ class PrimaryProvider extends PrimaryDatabaseDataProvider implements IBucketProv
 	 */
 	protected function getDefaultConds() {
 		return [
-			"page_namespace = 502 OR (page_namespace = 1502 AND page_content_model = 'blog_post')",
+			"( page_namespace = 502 AND page_content_model != 'blog_root' AND page_title LIKE '%/%' ) " .
+			"OR " .
+			"(page_namespace = 1502 AND page_content_model = 'blog_post')",
 		];
 	}
 

@@ -3,23 +3,20 @@
 namespace MediaWiki\Extension\SimpleBlogPage;
 
 use InvalidArgumentException;
-use MediaWiki\CommentStore\CommentStoreComment;
 use MediaWiki\Content\WikitextContent;
 use MediaWiki\Extension\SimpleBlogPage\Content\BlogPostContent;
-use MediaWiki\Extension\SimpleBlogPage\Content\BlogRootContent;
 use MediaWiki\Extension\SimpleBlogPage\Util\HtmlSnippetCreator;
 use MediaWiki\Language\Language;
 use MediaWiki\Message\Message;
 use MediaWiki\Page\PageIdentity;
 use MediaWiki\Page\PageProps;
-use MediaWiki\Page\WikiPageFactory;
 use MediaWiki\Permissions\Authority;
 use MediaWiki\Revision\RevisionRecord;
 use MediaWiki\Revision\RevisionRenderer;
 use MediaWiki\Revision\SlotRecord;
-use MediaWiki\Storage\PageUpdateStatus;
 use MediaWiki\Title\Title;
 use MediaWiki\Title\TitleFactory;
+use MediaWiki\User\UserIdentity;
 use PermissionsError;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
@@ -33,9 +30,6 @@ class BlogFactory implements LoggerAwareInterface {
 
 	/** @var LoggerInterface */
 	private $logger;
-
-	/** @var WikiPageFactory */
-	private $wikiPageFactory;
 
 	/** @var ILoadBalancer */
 	private $lb;
@@ -53,7 +47,6 @@ class BlogFactory implements LoggerAwareInterface {
 	private $pageProps;
 
 	/**
-	 * @param WikiPageFactory $wikiPageFactory
 	 * @param ILoadBalancer $lb
 	 * @param TitleFactory $titleFactory
 	 * @param Language $language
@@ -61,46 +54,15 @@ class BlogFactory implements LoggerAwareInterface {
 	 * @param PageProps $pageProps
 	 */
 	public function __construct(
-		WikiPageFactory $wikiPageFactory, ILoadBalancer $lb, TitleFactory $titleFactory,
+		ILoadBalancer $lb, TitleFactory $titleFactory,
 		Language $language, RevisionRenderer $revisionRenderer, PageProps $pageProps
 	) {
-		$this->wikiPageFactory = $wikiPageFactory;
 		$this->lb = $lb;
 		$this->titleFactory = $titleFactory;
 		$this->language = $language;
 		$this->revisionRenderer = $revisionRenderer;
 		$this->pageProps = $pageProps;
 		$this->logger = new NullLogger();
-	}
-
-	/**
-	 * @param Title $target
-	 * @param string $text
-	 * @param Authority $author
-	 * @param array $meta
-	 * @return void
-	 * @throws PermissionsError
-	 */
-	public function createBlogEntry( Title $target, string $text, Authority $author, array $meta = [] ) {
-		$this->assertActorCan( 'create', $author );
-		$this->assertTargetTitleValid( $target );
-		$root = $this->getBlogRootPage( $target );
-		if ( !$root->exists() ) {
-			$this->createRoot( $root, $author );
-		}
-		$this->logger->debug( 'Creating blog entry at ' . $target->getPrefixedText(), [
-			'author' => $author->getUser()->getName(),
-			'meta' => $meta,
-			'text' => $text,
-		] );
-		$text = $this->compileBlogText( $text, $meta );
-		$status = $this->editPost( $target, $text, $author, EDIT_NEW );
-		if ( !$status->isOK() ) {
-			$error = $status->getMessages()[0];
-			$msg = Message::newFromSpecifier( $error )->text();
-			$this->logger->error( 'Create post entry failed: ' . $msg );
-			throw new RuntimeException( $msg );
-		}
 	}
 
 	/**
@@ -149,10 +111,11 @@ class BlogFactory implements LoggerAwareInterface {
 	 */
 	public function getEntryFromRevision( RevisionRecord $revision ): BlogEntry {
 		$content = $revision->getContent( SlotRecord::MAIN );
+		$page = $revision->getPage();
 		if (
-			( $revision->getPage()->getNamespace() !== NS_BLOG && $revision->getPage()->getNamespace() !== NS_USER_BLOG ) ||
-			( $revision->getPage()->getNamespace() === NS_BLOG && !( $content instanceof BlogPostContent ) ) ||
-			( $revision->getPage()->getNamespace() === NS_USER_BLOG && !( $content instanceof WikitextContent ) )
+			( $page->getNamespace() !== NS_BLOG && $page->getNamespace() !== NS_USER_BLOG ) ||
+			( $page->getNamespace() === NS_BLOG && !( $content instanceof BlogPostContent ) ) ||
+			( $page->getNamespace() === NS_USER_BLOG && !( $content instanceof WikitextContent ) )
 		) {
 			throw new InvalidArgumentException( Message::newFromKey( 'simpleblogpage-error-invalid-content' ) );
 		}
@@ -172,7 +135,7 @@ class BlogFactory implements LoggerAwareInterface {
 		$rendered = $this->renderText( $entry, $forUser );
 
 		try {
-			$snippetMaker = new HtmlSnippetCreator( $rendered, 300 );
+			$snippetMaker = new HtmlSnippetCreator( $rendered, 100 );
 			$snippet = $snippetMaker->getSnippet();
 			$hasMore = $snippetMaker->hasMore();
 		} catch ( Throwable $e ) {
@@ -190,7 +153,7 @@ class BlogFactory implements LoggerAwareInterface {
 		$meta = $entry->getMeta( $this->language, $forUser );
 		$meta['hasMoreText'] = $hasMore;
 		$meta['root'] = $this->getPageDisplayTitle( $entry->getRoot() );
-		$meta['name'] = $this->getPageDisplayTitle( $entry->getTitle() );
+		$meta['name'] = $this->getBlogEntryName( $entry->getTitle(), $entry->getRoot() );
 		return [
 			'text' => $snippet,
 			'meta' => $meta,
@@ -198,14 +161,28 @@ class BlogFactory implements LoggerAwareInterface {
 	}
 
 	/**
+	 * @param UserIdentity|null $creatingUser
 	 * @return array
 	 */
-	public function getBlogRootNames(): array {
-		$res = $this->getRawBlogRoots();
+	public function getBlogRootNames( ?UserIdentity $creatingUser = null ): array {
 		$roots = [];
+		$res = $this->getRawBlogRoots();
+		if ( $creatingUser ) {
+			$userBlog = $this->titleFactory->makeTitle( NS_USER_BLOG, $creatingUser->getName() );
+			$roots[$userBlog->getPrefixedDBkey()] = [
+				'display' => Message::newFromKey( 'simpleblogpage-user-blog-label' )->text(),
+				'dbKey' => $userBlog->getDBkey(),
+				'type' => 'user'
+			];
+		}
 		if ( $res ) {
 			foreach ( $res as $row ) {
-				$roots[$row->page_title] = $this->getPageDisplayTitle( $this->titleFactory->newFromRow( $row ) );
+				$title = $this->titleFactory->newFromRow( $row );
+				$roots[$title->getPrefixedDBkey()] = [
+					'display' => $this->getPageDisplayTitle( $title ),
+					'dbKey' => $row->page_title,
+					'type' => 'global'
+				];
 			}
 		}
 		return $roots;
@@ -216,7 +193,7 @@ class BlogFactory implements LoggerAwareInterface {
 	 * @return Title
 	 */
 	public function getBlogRootPage( Title $page ): Title {
-		$this->assertTargetTitleValid( $page );
+		$this->assertTitleIsBlog( $page );
 		$rootPage = $page;
 		while ( $rootPage && $rootPage->isSubpage() ) {
 			$rootPage = $rootPage->getBaseTitle();
@@ -269,51 +246,6 @@ class BlogFactory implements LoggerAwareInterface {
 		$title = $this->titleFactory->castFromPageReference( $revisionRecord->getPage() );
 		$root = $this->getBlogRootPage( $title );
 		return new BlogEntry( $title, $content->getText(), $revisionRecord, $root );
-	}
-
-	/**
-	 * @param Title $root
-	 * @param Authority $author
-	 * @return PageUpdateStatus
-	 */
-	private function createRoot( Title $root, Authority $author ): PageUpdateStatus {
-		$wikipage = $this->wikiPageFactory->newFromTitle( $root );
-		$updater = $wikipage->newPageUpdater( $author );
-		$content = new BlogRootContent( '' );
-		$updater->setContent( SlotRecord::MAIN, $content );
-		$updater->saveRevision(
-			CommentStoreComment::newUnsavedComment( Message::newFromKey( 'simpleblogpage-create-root-summary' ) ),
-			EDIT_NEW
-		);
-		return $updater->getStatus();
-	}
-
-	/**
-	 * @param Title $target
-	 * @param string $text
-	 * @param Authority $author
-	 * @param int $flags
-	 * @return PageUpdateStatus
-	 */
-	private function editPost( Title $target, string $text, Authority $author, int $flags = 0 ): PageUpdateStatus {
-		$wikipage = $this->wikiPageFactory->newFromTitle( $target );
-		$updater = $wikipage->newPageUpdater( $author );
-		$content = new BlogPostContent( $text );
-		$updater->setContent( SlotRecord::MAIN, $content );
-		$updater->saveRevision(
-			CommentStoreComment::newUnsavedComment( Message::newFromKey( 'simpleblogpage-edit-summary' ) ),
-			$flags
-		);
-		return $updater->getStatus();
-	}
-
-	/**
-	 * @param string $text
-	 * @param array $meta
-	 * @return string
-	 */
-	private function compileBlogText( string $text, array $meta ): string {
-		return $text;
 	}
 
 	/**

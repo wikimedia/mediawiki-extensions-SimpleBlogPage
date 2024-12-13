@@ -8,6 +8,7 @@ use MediaWiki\Extension\SimpleBlogPage\BlogEntry;
 use MediaWiki\Extension\SimpleBlogPage\BlogFactory;
 use MediaWiki\Extension\SimpleBlogPage\Content\BlogPostContent;
 use MediaWiki\Language\Language;
+use MediaWiki\Message\Message;
 use MediaWiki\Page\PageProps;
 use MediaWiki\Page\PageReference;
 use MediaWiki\Page\WikiPageFactory;
@@ -16,8 +17,6 @@ use MediaWiki\Permissions\Authority;
 use MediaWiki\Revision\RenderedRevision;
 use MediaWiki\Revision\RevisionRecord;
 use MediaWiki\Revision\RevisionRenderer;
-use MediaWiki\Storage\PageUpdater;
-use MediaWiki\Storage\PageUpdateStatus;
 use MediaWiki\Title\Title;
 use MediaWiki\Title\TitleFactory;
 use MediaWiki\User\User;
@@ -27,47 +26,8 @@ use Wikimedia\Rdbms\FakeResultWrapper;
 use Wikimedia\Rdbms\IDatabase;
 use Wikimedia\Rdbms\ILoadBalancer;
 use Wikimedia\Rdbms\SelectQueryBuilder;
-use WikiPage;
 
 class BlogFactoryTest extends TestCase {
-
-	/**
-	 * @covers \MediaWiki\Extension\SimpleBlogPage\BlogFactory::createBlogEntry
-	 * @dataProvider  provideCreationData
-	 * @return void
-	 * @throws PermissionsError
-	 */
-	public function testCreateBlogEntry( bool $titleValid, bool $authorValid, string $expectException = '' ) {
-		$author = $this->createMock( Authority::class );
-		$author->method( 'isAllowedAll' )->willReturn( $authorValid );
-		if ( !$titleValid ) {
-			$targetTitle = $this->createMock( Title::class );
-			$targetTitle->method( 'getNamespace' )->willReturn( $titleValid ? NS_BLOG : NS_MAIN );
-			$targetTitle->method( 'getDBkey' )->willReturn( $titleValid ? 'Foo/Bar' : 'Foo' );
-		} else {
-			$targetTitle = Title::newFromText( 'Blog:Foo/Bar' );
-		}
-
-		$updaterMock = $this->createMock( PageUpdater::class );
-		$updaterMock->method( 'getStatus' )->willReturn( PageUpdateStatus::newGood() );
-		$wpFactoryMock = $this->createMock( WikiPageFactory::class );
-		$wpMock = $this->createMock( WikiPage::class );
-		$wpMock->method( 'newPageUpdater' )->willReturn( $updaterMock );
-		if ( !$expectException ) {
-			$wpFactoryMock->expects( $this->exactly( 2 ) )
-				->method( 'newFromTitle' )->willReturn( $wpMock );
-			$updaterMock->expects( $this->exactly( 2 ) )
-				->method( 'setContent' );
-			$updaterMock->expects( $this->exactly( 2 ) )
-				->method( 'saveRevision' )
-				->willReturn( $this->createMock( RevisionRecord::class ) );
-		}
-		$blogFactory = $this->getBlogFactory( null, $wpFactoryMock );
-		if ( $expectException ) {
-			$this->expectException( $expectException );
-		}
-		$blogFactory->createBlogEntry( $targetTitle, 'dummy', $author );
-	}
 
 	/**
 	 * @covers \MediaWiki\Extension\SimpleBlogPage\BlogFactory::assertTargetTitleValid
@@ -156,7 +116,7 @@ class BlogFactoryTest extends TestCase {
 				'rootPage' => 'Blog:Foo',
 				'entryPage' => 'Blog:Foo/Bar',
 				'hasMoreText' => false,
-				'name' => 'Foo/Bar',
+				'name' => 'Bar',
 			]
 		];
 		$this->assertSame( $expected, $serialized );
@@ -169,7 +129,7 @@ class BlogFactoryTest extends TestCase {
 	public function testGetBlogRootNames() {
 		$dbMock = $this->createMock( IDatabase::class );
 		$dbMock->method( 'newSelectQueryBuilder' )->willReturn( new SelectQueryBuilder( $dbMock ) );
-		$dbMock->expects( $this->once() )
+		$dbMock->expects( $this->exactly( 2 ) )
 			->method( 'query' )
 			->willReturn( new FakeResultWrapper( [
 				[
@@ -184,8 +144,29 @@ class BlogFactoryTest extends TestCase {
 				]
 			] ) );
 
+		$expected = [
+			'Blog:Foo' => [
+				'display' => 'DisplayFoo',
+				'dbKey' => 'Foo',
+				'type' => 'global'
+			],
+			'Blog:Bar' => [
+				'display' => 'Bar',
+				'dbKey' => 'Bar',
+				'type' => 'global'
+			]
+		];
 		$blogFactory = $this->getBlogFactory( $dbMock );
-		$this->assertSame( [ 'Foo' => 'DisplayFoo', 'Bar' => 'Bar' ], $blogFactory->getBlogRootNames() );
+		$this->assertSame( $expected, $blogFactory->getBlogRootNames() );
+
+		$newExpected = [ 'User_blog:John' => [
+			'display' => Message::newFromKey( 'simpleblogpage-user-blog-label' )->text(),
+			'dbKey' => 'John',
+			'type' => 'user'
+		] ] + $expected;
+		$user = $this->createMock( User::class );
+		$user->method( 'getName' )->willReturn( 'John' );
+		$this->assertSame( $newExpected, $blogFactory->getBlogRootNames( $user ) );
 	}
 
 	/**
@@ -203,29 +184,6 @@ class BlogFactoryTest extends TestCase {
 		if ( !$expectException ) {
 			$this->assertSame( $expectedRoot, $root->getText() );
 		}
-	}
-
-	/**
-	 * @covers \MediaWiki\Extension\SimpleBlogPage\BlogFactory::getBlogRootTitle
-	 * @return void
-	 */
-	public function testHasPosts() {
-		$dbMock = $this->createMock( IDatabase::class );
-		$dbMock->expects( $this->once() )
-			->method( 'selectRowCount' )
-			->with(
-				'page',
-				'*',
-				[
-					'page_namespace' => NS_BLOG,
-					'page_title LIKE \'Foo/%\'',
-					'page_content_model' => 'blog_post',
-				]
-			)
-			->willReturn( 1 );
-
-		$blogFactory = $this->getBlogFactory( $dbMock );
-		$blogFactory->hasPosts( Title::newFromText( 'Blog:Foo' ) );
 	}
 
 	/**
@@ -251,29 +209,6 @@ class BlogFactoryTest extends TestCase {
 				Title::newFromText( 'User_blog:FOO/Bar' ),
 				false,
 				'FOO'
-			],
-		];
-	}
-
-	/**
-	 * @return array[]
-	 */
-	public function provideCreationData(): array {
-		return [
-			'invalid-author' => [
-				'titleValid' => true,
-				'authorValid' => false,
-				'expectException' => PermissionsError::class
-			],
-			'invalid-page' => [
-				'titleValid' => false,
-				'authorValid' => true,
-				'expectException' => InvalidArgumentException::class
-			],
-			'valid' => [
-				'titleValid' => true,
-				'authorValid' => true,
-				'expectException' => ''
 			],
 		];
 	}
@@ -316,21 +251,12 @@ class BlogFactoryTest extends TestCase {
 	 */
 	private function getBlogFactory( ?IDatabase $db = null, ?WikiPageFactory $wpFactory = null ) {
 		return new BlogFactory(
-			$wpFactory ?? $this->getWikiPageFactoryMock(),
 			$this->getLBMock( $db ),
 			$this->getTitleFactoryMock(),
 			$this->getLanguageMock(),
 			$this->getRevisionRendererMock(),
 			$this->getPagePropsMock(),
 		);
-	}
-
-	/**
-	 * @return WikiPageFactory
-	 */
-	private function getWikiPageFactoryMock() {
-		$mock = $this->createMock( WikiPageFactory::class );
-		return $mock;
 	}
 
 	/**
@@ -354,9 +280,21 @@ class BlogFactoryTest extends TestCase {
 			$titleMock->method( 'getNamespace' )->willReturn( $row->page_namespace );
 			$titleMock->method( 'getText' )->willReturn( $row->page_title );
 			$titleMock->method( 'getDBkey' )->willReturn( $row->page_title );
+			$titleMock->method( 'getPrefixedDBkey' )->willReturn( 'Blog:' . $row->page_title );
 			return $titleMock;
 		} );
-		$mock->method( 'castFromPageReference' )->willReturnCallback( function( PageReference $ref ) {
+		$mock->method( 'makeTitle' )->willReturnCallback( function ( $ns, $title ) {
+			$titleMock = $this->createMock( Title::class );
+			$titleMock->method( 'getArticleID' )->willReturn( 1 );
+			$titleMock->method( 'getNamespace' )->willReturn( $ns );
+			$titleMock->method( 'getText' )->willReturn( $title );
+			$titleMock->method( 'getDBkey' )->willReturn( $title );
+			$titleMock->method( 'getPrefixedDBkey' )->willReturn(
+				( $ns === NS_USER_BLOG ? 'User_blog:' : 'Blog:' ) . $title
+			);
+			return $titleMock;
+		} );
+		$mock->method( 'castFromPageReference' )->willReturnCallback( static function ( PageReference $ref ) {
 			return Title::makeTitle( $ref->getNamespace(), $ref->getDBkey() );
 		} );
 		return $mock;

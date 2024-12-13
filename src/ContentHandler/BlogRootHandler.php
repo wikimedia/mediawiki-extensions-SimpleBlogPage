@@ -9,6 +9,7 @@ use MediaWiki\Context\RequestContext;
 use MediaWiki\Extension\SimpleBlogPage\Content\BlogRootContent;
 use MediaWiki\Html\Html;
 use MediaWiki\Parser\ParserOutput;
+use MediaWiki\Title\Title;
 
 class BlogRootHandler extends WikitextContentHandler {
 
@@ -18,11 +19,14 @@ class BlogRootHandler extends WikitextContentHandler {
 	protected function fillParserOutput(
 		Content $content, ContentParseParams $cpoParams, ParserOutput &$parserOutput
 	) {
+		$title = Title::castFromPageReference( $cpoParams->getPage() );
 		parent::fillParserOutput( $content, $cpoParams, $parserOutput );
 		$parserOutput->addModules( [ 'ext.simpleBlogPage.render.rootPage' ] );
 		$parserOutput->setRawText( $parserOutput->getRawText() . Html::element( 'div', [
 			'id' => 'blog-root',
-			'data-blog' => $cpoParams->getPage()->getDBkey(),
+			'data-blog-page' => $title ? $title->getPrefixedText() : '',
+			'data-blog' => $title ? $title->getDBkey() : '',
+			'data-blog-exists' => $title->exists() ? 'true' : 'false',
 			'data-creatable' => RequestContext::getMain()->getUser()->isAllowed( 'createblogpost' ),
 		] ) );
 	}

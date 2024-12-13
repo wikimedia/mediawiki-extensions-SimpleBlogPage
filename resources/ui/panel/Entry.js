@@ -4,6 +4,7 @@
 	ext.simpleBlogPage.ui.panel.Entry.parent.call( this, config );
 	this.wikiTitle = config.wikiTitle;
 	this.revision = config.revision || 0;
+	this.forcedBlog = config.forcedBlog || false;
 
 	this.isNative = config.native || false;
 	this.$element.addClass( 'blog-entry' );
@@ -22,7 +23,7 @@
 OO.inheritClass( ext.simpleBlogPage.ui.panel.Entry, OO.ui.PanelLayout );
 
 ext.simpleBlogPage.ui.panel.Entry.prototype.render = function() {
-	this.header = new ext.simpleBlogPage.ui.panel.EntryHeader( this.data.meta, this.wikiTitle );
+	this.header = new ext.simpleBlogPage.ui.panel.EntryHeader( this.data.meta, this.wikiTitle, this.forcedBlog );
 	this.content = new OO.ui.PanelLayout( {
 		padded: true,
 		expanded: false,

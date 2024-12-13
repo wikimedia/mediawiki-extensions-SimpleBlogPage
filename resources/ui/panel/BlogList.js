@@ -6,10 +6,12 @@ ext.simpleBlogPage.ui.panel.BlogList = function( cfg ) {
 	this.$element.addClass( 'blog-list' );
 
 	this.blog = cfg.blog || false;
+	this.blogPage = cfg.blogPage || false;
 	this.isNative = cfg.native || false;
 	this.allowCreation = cfg.allowCreation || false;
 	this.limit = cfg.limit || 10;
 	this.filtersInitialized = false;
+	this.forcedBlog = null;
 
 	this.store = new OOJSPlus.ui.data.store.RemoteRestStore( {
 		path: 'simpleblogpage/v1/list',
@@ -84,21 +86,15 @@ ext.simpleBlogPage.ui.panel.BlogList.prototype.setItems = function( data ) {
 		}
 		const item = data[index];
 		const entry = new ext.simpleBlogPage.ui.panel.Entry({
-			wikiTitle: mw.Title.makeTitle( item.namespace, item.wikipage )
+			wikiTitle: mw.Title.makeTitle( item.namespace, item.wikipage ),
+			forcedBlog: this.forcedBlog ? true : this.isNative,
 		} );
 		this.itemPanel.$element.append( entry.$element );
 	}
 };
 
 ext.simpleBlogPage.ui.panel.BlogList.prototype.onCreateClick = function() {
-	let targetPage = 'CreateBlogPost';
-	if ( this.blog ) {
-		targetPage += '/' + this.blog;
-	}
-	const title = mw.Title.makeTitle( -1, targetPage );
-
-	window.location.href = title.getUrl( { returnto: mw.config.get( 'wgPageName' ) } );
-	// Optionally: Open dialog
+	ext.simpleBlogPage.openCreateDialog( this.isNative && this.blogPage ? this.blogPage : null );
 };
 
 ext.simpleBlogPage.ui.panel.BlogList.prototype.renderFilters = async function() {
@@ -108,18 +104,27 @@ ext.simpleBlogPage.ui.panel.BlogList.prototype.renderFilters = async function() 
 			var blogNames = await this.loadBlogNames();
 			let options = [ { data: '', label: mw.msg( 'simpleblogpage-filter-all' ) } ];
 			this.buckets.root.forEach( function( i ) {
-				options.push( { data: i, label: blogNames[i] || i } );
+				let display = i;
+				for ( var key in blogNames ) {
+					if ( !blogNames.hasOwnProperty( key ) ) {
+						continue;
+					}
+					if ( blogNames[key].dbKey === i ) {
+						display = blogNames[key].display;
+						break;
+					}
+				}
+				options.push( { data: i, label: display } );
 			} );
-			this.rootFilter = new OO.ui.DropdownInputWidget( { options: options } );
+			this.rootFilter = new OO.ui.DropdownInputWidget( {
+				options: options,
+				title: mw.msg( 'simpleblogpage-filter-root' )
+			} );
 			this.rootFilter.connect( this, {
 				change: function( value ) {
 					this.onFilter( 'root', value );
 				}
 			} );
-			/*this.$filters.append( new OO.ui.FieldLayout( this.rootFilter,  {
-				align: 'left',
-				label: mw.msg( 'simpleblogpage-filter-root' )
-			} ).$element );*/
 			this.$filters.append( this.rootFilter.$element );
 		}
 	}
@@ -132,6 +137,9 @@ ext.simpleBlogPage.ui.panel.BlogList.prototype.onFilter = function( field, value
 			value: value,
 			operator: 'eq'
 		} );
+		this.forcedBlog = value;
+	} else {
+		this.forcedBlog = null;
 	}
 	this.store.filter( filter, field );
 };

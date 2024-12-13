@@ -1,10 +1,11 @@
-ext.simpleBlogPage.ui.panel.EntryHeader = function EntryHeader( config, wikiTitle ) {
+ext.simpleBlogPage.ui.panel.EntryHeader = function EntryHeader( config, wikiTitle, forcedBlog ) {
 	config = config || {};
 	config.expanded = false;
 	ext.simpleBlogPage.ui.panel.EntryHeader.parent.call( this, config );
 
 	this.isNative = config.native || false;
 	this.wikiTitle = wikiTitle;
+	this.isForcedBlog = forcedBlog || false;
 	this.$element.addClass( 'blog-entry-header' );
 
 	this.render( config );
@@ -27,13 +28,16 @@ ext.simpleBlogPage.ui.panel.EntryHeader.prototype.render = function( config ) {
 			.text( config.name )
 			.addClass( 'blog-entry-name' );
 		this.$title.append( $targetAnchor );
-		this.$title.append( $( '<div>' )
-			.addClass( 'blog-entry-blog' )
-			.append(
-				$( '<span>' ).html(
-					mw.message( 'simpleblogpage-entry-blog-root-link', config.rootPage, config.root ).parse()
+		if ( !this.isForcedBlog ) {
+			// Blogs entries viewed come from mixed blogs
+			this.$title.append( $( '<div>' )
+				.addClass( 'blog-entry-blog' )
+				.append(
+					$( '<span>' ).html(
+						mw.message( 'simpleblogpage-entry-blog-root-link', config.rootPage, config.root ).parse()
+					)
 				)
-			)
-		);
+			);
+		}
 	}
 };

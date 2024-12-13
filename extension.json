@@ -195,7 +195,8 @@
 		"MWStakeCommonUIRegisterSkinSlotComponents": "addBlogLinks",
 		"SkinTemplateNavigation::Universal": "addBlogLinks",
 		"BlueSpiceDiscoveryTemplateDataProviderAfterInit": "addBlogLinks",
-		"getUserPermissionsErrors": "handleEditPermissions"
+		"getUserPermissionsErrors": "handleEditPermissions",
+		"LoadExtensionSchemaUpdatesHook": "runDatabaseUpdates"
 	},
 	"HookHandlers": {
 		"setDefaultModel": {
@@ -211,6 +212,9 @@
 		},
 		"handleEditPermissions": {
 			"class": "MediaWiki\\Extension\\SimpleBlogPage\\Hook\\HandleEditPermissions"
+		},
+		"runDatabaseUpdates": {
+			"class": "MediaWiki\\Extension\\SimpleBlogPage\\Hook\\RunDatabaseUpdates"
 		}
 	},
 	"ServiceWiringFiles": [

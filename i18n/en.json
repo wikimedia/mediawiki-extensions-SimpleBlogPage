@@ -29,5 +29,6 @@
 	"simpleblogpage-create-label": "New blog post",
 	"simpleblogpage-create-dialog-button-submit": "Create",
 	"simpleblogpage-create-dialog-button-cancel": "Cancel",
-	"simpleblogpage-user-blog-label": "My user blog"
+	"simpleblogpage-user-blog-label": "My user blog",
+	"simpleblogpage-blog-type-general": "General"
 }

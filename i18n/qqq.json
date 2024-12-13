@@ -25,5 +25,6 @@
 	"simpleblogpage-create-label": "Label for the create button",
 	"simpleblogpage-create-dialog-button-submit": "Button label for submitting the creation of a new blog post{{Identical|Create}}",
 	"simpleblogpage-create-dialog-button-cancel": "Button label for canceling the creation of a new blog post{{Identical|Cancel}}",
-	"simpleblogpage-user-blog-label": "Label for the user blog"
+	"simpleblogpage-user-blog-label": "Label for the user blog",
+	"simpleblogpage-blog-type-general": "Name of the default blog page - must be valid title"
 }

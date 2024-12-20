@@ -4,6 +4,7 @@ $( function() {
 		const blogPage = $cnt.attr( 'data-blog' );
 		const panel = new ext.simpleBlogPage.ui.panel.BlogList( {
 			blog: blogPage === '' ? false : blogPage,
+			type: $cnt.attr( 'data-type' ),
 			allowCreation: $cnt.attr( 'data-creatable' ) === '1',
 			native: false
 		} );

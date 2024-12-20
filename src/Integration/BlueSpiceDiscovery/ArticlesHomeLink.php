@@ -40,7 +40,7 @@ class ArticlesHomeLink extends RestrictedTextLink {
 	 * @return string
 	 */
 	public function getHref(): string {
-		$sp = $this->spf->getPage( 'Blog' );
+		$sp = $this->spf->getPage( 'Blogs' );
 		if ( !$sp ) {
 			return '';
 		}
@@ -65,6 +65,6 @@ class ArticlesHomeLink extends RestrictedTextLink {
 	 * @return Message
 	 */
 	public function getAriaLabel(): Message {
-		return Message::newFromKey( 'blog' );
+		return Message::newFromKey( 'blogs' );
 	}
 }

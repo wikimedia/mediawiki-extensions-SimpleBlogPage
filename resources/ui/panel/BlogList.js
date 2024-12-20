@@ -6,6 +6,7 @@ ext.simpleBlogPage.ui.panel.BlogList = function( cfg ) {
 	this.$element.addClass( 'blog-list' );
 
 	this.blog = cfg.blog || false;
+	this.type = cfg.type || 'global';
 	this.blogPage = cfg.blogPage || false;
 	this.isNative = cfg.native || false;
 	this.allowCreation = cfg.allowCreation || false;
@@ -13,12 +14,14 @@ ext.simpleBlogPage.ui.panel.BlogList = function( cfg ) {
 	this.filtersInitialized = false;
 	this.forcedBlog = null;
 
+
 	this.store = new OOJSPlus.ui.data.store.RemoteRestStore( {
 		path: 'simpleblogpage/v1/list',
 		remoteFilter: true,
 		remoteSort: true,
 		pageSize: this.limit,
-		filter: this.blog ? { root: { value: this.blog, operator: 'eq' } } : {},
+		filter: this.blog ?
+			{ root: { value: this.blog, operator: 'eq' }, type: { value: this.type, operator: 'eq' } } : {},
 		sorter: { timestamp: { direction: 'DESC' } },
 	} );
 
@@ -87,7 +90,8 @@ ext.simpleBlogPage.ui.panel.BlogList.prototype.setItems = function( data ) {
 		const item = data[index];
 		const entry = new ext.simpleBlogPage.ui.panel.Entry({
 			wikiTitle: mw.Title.makeTitle( item.namespace, item.wikipage ),
-			forcedBlog: this.forcedBlog ? true : this.isNative,
+			forcedBlog: this.forcedBlog ? true : this.isNative || this.blog,
+			userCanWatch: item.canWatch, userIsWatching: item.isWatching,
 		} );
 		this.itemPanel.$element.append( entry.$element );
 	}
@@ -98,35 +102,65 @@ ext.simpleBlogPage.ui.panel.BlogList.prototype.onCreateClick = function() {
 };
 
 ext.simpleBlogPage.ui.panel.BlogList.prototype.renderFilters = async function() {
-	if ( !this.isNative && !this.blog ) {
-		// Native means that we are on a blog root page, which forces root filter, so we dont offer it
-		if ( this.buckets.hasOwnProperty( 'root' ) ) {
-			var blogNames = await this.loadBlogNames();
-			let options = [ { data: '', label: mw.msg( 'simpleblogpage-filter-all' ) } ];
-			this.buckets.root.forEach( function( i ) {
-				let display = i;
-				for ( var key in blogNames ) {
-					if ( !blogNames.hasOwnProperty( key ) ) {
-						continue;
-					}
-					if ( blogNames[key].dbKey === i ) {
-						display = blogNames[key].display;
-						break;
-					}
+	if ( this.isNative || this.blog ) {
+		return;
+	}
+	// Native means that we are on a blog root page, which forces root filter, so we dont offer it
+	if ( this.buckets.hasOwnProperty( 'root' ) ) {
+		var blogNames = await this.loadBlogNames();
+		let globalBlogs = [];
+		let userBlogs = [];
+		this.buckets.root.forEach( function( i ) {
+			let display = i;
+			let type = 'global';
+			for ( var key in blogNames ) {
+				if ( !blogNames.hasOwnProperty( key ) ) {
+					continue;
 				}
-				options.push( { data: i, label: display } );
-			} );
-			this.rootFilter = new OO.ui.DropdownInputWidget( {
-				options: options,
-				title: mw.msg( 'simpleblogpage-filter-root' )
-			} );
-			this.rootFilter.connect( this, {
-				change: function( value ) {
-					this.onFilter( 'root', value );
+				if ( blogNames[key].dbKey === i ) {
+					type = blogNames[key].type;
+					display = blogNames[key].display;
+					break;
 				}
-			} );
-			this.$filters.append( this.rootFilter.$element );
+
+			}
+			if ( type === 'global' ) {
+				globalBlogs.push( { data: i, label: display } );
+			} else if ( type === 'user' ) {
+				userBlogs.push( { data: i, label: display } );
+			}
+		} );
+		let options = [
+			new OO.ui.MenuOptionWidget( {
+				data: '',
+				label: mw.msg( 'simpleblogpage-filter-all' )
+			} ),
+			new OO.ui.MenuSectionOptionWidget( {
+				label: mw.msg( 'simpleblogpage-filter-section-global' ),
+			} ),
+			...globalBlogs.map( function( i ) {
+				return new OO.ui.MenuOptionWidget( i );
+			} )
+		];
+		if ( userBlogs.length > 0 ) {
+			options.push( new OO.ui.MenuSectionOptionWidget( {
+				label: mw.msg( 'simpleblogpage-filter-section-user' ),
+			} ) );
+			options.push( ...userBlogs.map( function( i ) {
+				return new OO.ui.MenuOptionWidget( i );
+			} ) );
 		}
+		this.rootFilter = new OO.ui.DropdownWidget( {
+			menu: { items: options },
+			title: mw.msg( 'simpleblogpage-filter-root' )
+		} );
+		this.rootFilter.getMenu().selectItemByData( '' );
+		this.rootFilter.menu.connect( this, {
+			select: function( item ) {
+				this.onFilter( 'root', item.getData() );
+			}
+		} );
+		this.$filters.append( this.rootFilter.$element );
 	}
 };
 

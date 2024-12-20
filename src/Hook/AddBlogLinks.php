@@ -52,14 +52,18 @@ class AddBlogLinks implements
 	 */
 	public function onSkinTemplateNavigation__Universal( $skinTemplate, &$links ): void {
 		$user = $skinTemplate->getUser();
+		$overviewSpecial = $this->spf->getPage( 'Blogs' );
+		$links['user-menu']['simpleblog_myblog'] = [
+			'id' => 'pt-simpleblog_myblog',
+			'href' => $overviewSpecial->getPageTitle( 'User_blog:' . $user->getName() )->getLocalURL(),
+			'text' => $skinTemplate->msg( 'simpleblogpage-user-blogoverview-label' )->plain(),
+			'position' => 50,
+		];
+
 		if ( !$this->permissionManager->userHasRight( $user, 'createblogpost' ) ) {
 			return;
 		}
-
-		$special = $this->spf->getPage( 'CreateBlogPost' );
-		if ( !$special ) {
-			return;
-		}
+		$skinTemplate->getOutput()->addModules( [ 'ext.simpleBlogPage.bootstrap' ] );
 		$links['actions']['simpleblogpage-create'] = [
 			'text' => $skinTemplate->getContext()->msg( 'simpleblogpage-create-label' )->text(),
 			'title' => $skinTemplate->getContext()->msg( 'simpleblogpage-create-label' )->text(),

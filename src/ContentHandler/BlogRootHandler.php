@@ -26,6 +26,7 @@ class BlogRootHandler extends WikitextContentHandler {
 			'id' => 'blog-root',
 			'data-blog-page' => $title ? $title->getPrefixedText() : '',
 			'data-blog' => $title ? $title->getDBkey() : '',
+			'data-type' => $title->getNamespace() === NS_USER_BLOG ? 'user' : 'global',
 			'data-blog-exists' => $title->exists() ? 'true' : 'false',
 			'data-creatable' => RequestContext::getMain()->getUser()->isAllowed( 'createblogpost' ),
 		] ) );

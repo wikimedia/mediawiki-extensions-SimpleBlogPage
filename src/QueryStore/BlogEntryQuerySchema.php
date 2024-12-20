@@ -40,6 +40,21 @@ class BlogEntryQuerySchema extends Schema {
 				self::FILTERABLE => false,
 				self::SORTABLE => false,
 				self::TYPE => FieldType::STRING
+			],
+			BlogEntryQueryRecord::BLOG_ENTRY_TYPE => [
+				self::FILTERABLE => false,
+				self::SORTABLE => false,
+				self::TYPE => FieldType::STRING
+			],
+			BlogEntryQueryRecord::META_CAN_WATCH => [
+				self::FILTERABLE => false,
+				self::SORTABLE => false,
+				self::TYPE => FieldType::BOOLEAN
+			],
+			BlogEntryQueryRecord::META_IS_WATCHING => [
+				self::FILTERABLE => false,
+				self::SORTABLE => false,
+				self::TYPE => FieldType::BOOLEAN
 			]
 		] );
 	}

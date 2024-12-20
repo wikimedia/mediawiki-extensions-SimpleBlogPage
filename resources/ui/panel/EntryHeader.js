@@ -1,4 +1,4 @@
-ext.simpleBlogPage.ui.panel.EntryHeader = function EntryHeader( config, wikiTitle, forcedBlog ) {
+ext.simpleBlogPage.ui.panel.EntryHeader = function EntryHeader( config, wikiTitle, forcedBlog, watchInfo ) {
 	config = config || {};
 	config.expanded = false;
 	ext.simpleBlogPage.ui.panel.EntryHeader.parent.call( this, config );
@@ -6,6 +6,7 @@ ext.simpleBlogPage.ui.panel.EntryHeader = function EntryHeader( config, wikiTitl
 	this.isNative = config.native || false;
 	this.wikiTitle = wikiTitle;
 	this.isForcedBlog = forcedBlog || false;
+	this.watchInfo = watchInfo || {};
 	this.$element.addClass( 'blog-entry-header' );
 
 	this.render( config );
@@ -27,7 +28,7 @@ ext.simpleBlogPage.ui.panel.EntryHeader.prototype.render = function( config ) {
 			.attr( 'href', this.wikiTitle.getUrl( { returnto: mw.config.get( 'wgPageName' ) } ) )
 			.text( config.name )
 			.addClass( 'blog-entry-name' );
-		this.$title.append( $targetAnchor );
+		this.$title.append( $( '<h2>' ).html( $targetAnchor ) );
 		if ( !this.isForcedBlog ) {
 			// Blogs entries viewed come from mixed blogs
 			this.$title.append( $( '<div>' )
@@ -40,4 +41,33 @@ ext.simpleBlogPage.ui.panel.EntryHeader.prototype.render = function( config ) {
 			);
 		}
 	}
+
+	if ( this.watchInfo.canWatch ) {
+		this.watchButton = new OO.ui.ButtonWidget( {
+			icon: this.watchInfo.isWatching ? 'unStar' : 'star',
+			title: mw.msg( this.watchInfo.isWatching ? 'simpleblogpage-unwatch' : 'simpleblogpage-watch' ),
+			framed: false,
+			classes: [ 'simpleblog-watch' ],
+			flags: [ 'progressive' ]
+		} );
+		this.watchButton.connect( this, { click: 'onWatchClick' } );
+		this.$title.append( this.watchButton.$element );
+	}
+};
+
+ext.simpleBlogPage.ui.panel.EntryHeader.prototype.onWatchClick = function() {
+	const unwatch = this.watchInfo.isWatching;
+	const api = new mw.Api();
+	this.watchButton.setDisabled( true );
+	api.postWithToken( 'watch', {
+		action: 'watch',
+		titles: this.wikiTitle.getPrefixedText(),
+		unwatch: unwatch ? '' : '1'
+	} ).done( function() {
+		this.watchButton.setIcon( unwatch ? 'star' : 'unStar' );
+		this.watchButton.setTitle( mw.msg( unwatch ? 'simpleblogpage-watch' : 'simpleblogpage-unwatch' ) );
+		this.watchInfo.isWatching = !unwatch;
+	}.bind( this ) ).always( function() {
+		this.watchButton.setDisabled( false );
+	}.bind( this ) );
 };

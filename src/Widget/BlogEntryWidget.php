@@ -30,7 +30,7 @@ class BlogEntryWidget extends PanelLayout {
 	private function makeContent( string $text ) {
 		$this->appendContent( new PanelLayout( [
 			'expanded' => false,
-			'padded' => true,
+			'padded' => false,
 			'framed' => false,
 			'classes' => [ 'blog-entry-body' ],
 			'content' => new HtmlSnippet( $text ),

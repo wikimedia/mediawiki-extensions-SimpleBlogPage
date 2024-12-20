@@ -6,6 +6,7 @@ $( function() {
 		const exists = $cnt.attr( 'data-blog-exists' ) === 'true';
 		const panel = new ext.simpleBlogPage.ui.panel.BlogList( {
 			blog: blog,
+			type: $cnt.attr( 'data-type' ),
 			// If page exists, we want to reference it, if not, just use the name
 			blogPage: exists ? blogPage : blog,
 			allowCreation: $cnt.attr( 'data-creatable' ) === '1',

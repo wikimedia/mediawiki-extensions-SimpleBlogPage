@@ -5,6 +5,8 @@
 	this.wikiTitle = config.wikiTitle;
 	this.revision = config.revision || 0;
 	this.forcedBlog = config.forcedBlog || false;
+	this.userCanWatch = config.userCanWatch || false;
+	this.userIsWatching = config.userIsWatching || false;
 
 	this.isNative = config.native || false;
 	this.$element.addClass( 'blog-entry' );
@@ -23,9 +25,11 @@
 OO.inheritClass( ext.simpleBlogPage.ui.panel.Entry, OO.ui.PanelLayout );
 
 ext.simpleBlogPage.ui.panel.Entry.prototype.render = function() {
-	this.header = new ext.simpleBlogPage.ui.panel.EntryHeader( this.data.meta, this.wikiTitle, this.forcedBlog );
+	this.header = new ext.simpleBlogPage.ui.panel.EntryHeader(
+		this.data.meta, this.wikiTitle, this.forcedBlog, { canWatch: this.userCanWatch, isWatching: this.userIsWatching }
+	);
 	this.content = new OO.ui.PanelLayout( {
-		padded: true,
+		padded: false,
 		expanded: false,
 		classes: [ 'blog-entry-body' ]
 	} );

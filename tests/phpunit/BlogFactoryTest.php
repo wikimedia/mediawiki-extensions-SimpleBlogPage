@@ -20,6 +20,7 @@ use MediaWiki\Revision\RevisionRenderer;
 use MediaWiki\Title\Title;
 use MediaWiki\Title\TitleFactory;
 use MediaWiki\User\User;
+use MediaWiki\User\UserFactory;
 use PermissionsError;
 use PHPUnit\Framework\TestCase;
 use Wikimedia\Rdbms\FakeResultWrapper;
@@ -158,15 +159,6 @@ class BlogFactoryTest extends TestCase {
 		];
 		$blogFactory = $this->getBlogFactory( $dbMock );
 		$this->assertSame( $expected, $blogFactory->getBlogRootNames() );
-
-		$newExpected = [ 'User_blog:John' => [
-			'display' => Message::newFromKey( 'simpleblogpage-user-blog-label' )->text(),
-			'dbKey' => 'John',
-			'type' => 'user'
-		] ] + $expected;
-		$user = $this->createMock( User::class );
-		$user->method( 'getName' )->willReturn( 'John' );
-		$this->assertSame( $newExpected, $blogFactory->getBlogRootNames( $user ) );
 	}
 
 	/**
@@ -256,6 +248,7 @@ class BlogFactoryTest extends TestCase {
 			$this->getLanguageMock(),
 			$this->getRevisionRendererMock(),
 			$this->getPagePropsMock(),
+			$this->createMock( UserFactory::class ),
 		);
 	}
 

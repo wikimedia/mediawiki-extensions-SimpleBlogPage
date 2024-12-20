@@ -16,6 +16,7 @@ use MediaWiki\Revision\RevisionRenderer;
 use MediaWiki\Revision\SlotRecord;
 use MediaWiki\Title\Title;
 use MediaWiki\Title\TitleFactory;
+use MediaWiki\User\UserFactory;
 use MediaWiki\User\UserIdentity;
 use PermissionsError;
 use Psr\Log\LoggerAwareInterface;
@@ -46,22 +47,27 @@ class BlogFactory implements LoggerAwareInterface {
 	/** @var PageProps */
 	private $pageProps;
 
+	/** @var UserFactory */
+	private $userFactory;
+
 	/**
 	 * @param ILoadBalancer $lb
 	 * @param TitleFactory $titleFactory
 	 * @param Language $language
 	 * @param RevisionRenderer $revisionRenderer
 	 * @param PageProps $pageProps
+	 * @param UserFactory $userFactory
 	 */
 	public function __construct(
-		ILoadBalancer $lb, TitleFactory $titleFactory,
-		Language $language, RevisionRenderer $revisionRenderer, PageProps $pageProps
+		ILoadBalancer $lb, TitleFactory $titleFactory, Language $language, RevisionRenderer $revisionRenderer,
+		PageProps $pageProps, UserFactory $userFactory
 	) {
 		$this->lb = $lb;
 		$this->titleFactory = $titleFactory;
 		$this->language = $language;
 		$this->revisionRenderer = $revisionRenderer;
 		$this->pageProps = $pageProps;
+		$this->userFactory = $userFactory;
 		$this->logger = new NullLogger();
 	}
 
@@ -71,6 +77,13 @@ class BlogFactory implements LoggerAwareInterface {
 	 */
 	public function setLogger( $logger ) {
 		$this->logger = $logger;
+	}
+
+	/**
+	 * @return LoggerInterface
+	 */
+	public function getLogger(): LoggerInterface {
+		return $this->logger;
 	}
 
 	/**
@@ -101,6 +114,20 @@ class BlogFactory implements LoggerAwareInterface {
 			throw new InvalidArgumentException( Message::newFromKey( 'simpleblogpage-error-invalid-target-page' ) );
 		}
 		if ( $mustExist && !$title->exists() ) {
+			throw new InvalidArgumentException( Message::newFromKey( 'simpleblogpage-error-invalid-target-page' ) );
+		}
+	}
+
+	/**
+	 * @param Title|null $title
+	 * @return void
+	 */
+	public function assertTitleIsBlogRoot( ?Title $title ) {
+		if (
+			!$title ||
+			( $title->getNamespace() !== NS_BLOG && $title->getNamespace() !== NS_USER_BLOG ) ||
+			$title->isSubpage()
+		) {
 			throw new InvalidArgumentException( Message::newFromKey( 'simpleblogpage-error-invalid-target-page' ) );
 		}
 	}
@@ -161,31 +188,39 @@ class BlogFactory implements LoggerAwareInterface {
 	}
 
 	/**
-	 * @param UserIdentity|null $creatingUser
 	 * @return array
 	 */
-	public function getBlogRootNames( ?UserIdentity $creatingUser = null ): array {
+	public function getBlogRootNames(): array {
 		$roots = [];
-		$res = $this->getRawBlogRoots();
-		if ( $creatingUser ) {
-			$userBlog = $this->titleFactory->makeTitle( NS_USER_BLOG, $creatingUser->getName() );
-			$roots[$userBlog->getPrefixedDBkey()] = [
-				'display' => Message::newFromKey( 'simpleblogpage-user-blog-label' )->text(),
-				'dbKey' => $userBlog->getDBkey(),
-				'type' => 'user'
-			];
+		$blogRoots = $this->getRawBlogRoots();
+		$userBlogRoots = $this->getRawUserBlogRoots();
+		$allRoots = [];
+		foreach ( [ $blogRoots, $userBlogRoots ] as $res ) {
+			if ( $res ) {
+				foreach ( $res as $row ) {
+					$allRoots[] = $row;
+				}
+			}
 		}
-		if ( $res ) {
-			foreach ( $res as $row ) {
+		if ( $allRoots ) {
+			foreach ( $allRoots as $row ) {
 				$title = $this->titleFactory->newFromRow( $row );
 				$roots[$title->getPrefixedDBkey()] = [
 					'display' => $this->getPageDisplayTitle( $title ),
 					'dbKey' => $row->page_title,
-					'type' => 'global'
+					'type' => $this->getBlogType( $title ),
 				];
 			}
 		}
 		return $roots;
+	}
+
+	/**
+	 * @param Title $title
+	 * @return string
+	 */
+	public function getBlogType( Title $title ): string {
+		return $title->getNamespace() === NS_USER_BLOG ? 'user' : 'global';
 	}
 
 	/**
@@ -231,6 +266,26 @@ class BlogFactory implements LoggerAwareInterface {
 				'page_content_model' => 'blog_root',
 			] );
 		$res = $db->query( $query->getSQL(), __METHOD__ );
+		if ( !$res ) {
+			return null;
+		}
+		return $res;
+	}
+
+	/**
+	 * @return IResultWrapper|null
+	 */
+	private function getRawUserBlogRoots(): ?IResultWrapper {
+		$db = $this->lb->getConnection( DB_REPLICA );
+		$query = $db->newSelectQueryBuilder()
+			->table( 'page' )
+			->fields( [ 'page_id', 'page_title', 'page_namespace' ] )
+			->where( [
+				'page_namespace' => NS_USER_BLOG,
+				'page_title NOT LIKE \'%/%\'',
+			] );
+		$res = $db->query( $query->getSQL(), __METHOD__ );
+		erroR_log( $query->getSQL() );
 		if ( !$res ) {
 			return null;
 		}
@@ -304,6 +359,12 @@ class BlogFactory implements LoggerAwareInterface {
 	 * @return string
 	 */
 	private function getPageDisplayTitle( Title $title ) {
+		if ( $title->getNamespace() === NS_USER_BLOG && !$title->isSubpage() ) {
+			$user = $this->userFactory->newFromName( $title->getText() );
+			if ( $user && $user->isRegistered() ) {
+				return $user->getRealName() ?: $user->getName();
+			}
+		}
 		$props = $this->pageProps->getProperties( $title, [ 'displaytitle' ] );
 		if ( isset( $props[$title->getArticleID()]['displaytitle'] ) ) {
 			return $props[$title->getArticleID()]['displaytitle'];

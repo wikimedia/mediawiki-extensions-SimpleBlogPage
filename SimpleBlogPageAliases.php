@@ -10,6 +10,6 @@ $specialPageAliases = [];
 
 /** English */
 $specialPageAliases['en'] = [
-	'Blog' => [ 'ArticlesHome', 'Blog' ],
+	'Blogs' => [ 'ArticlesHome', 'Blogs', 'Blog' ],
 	'CreateBlogPost' => [ 'CreateBlogPost' ],
 ];

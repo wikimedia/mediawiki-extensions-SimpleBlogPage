@@ -19,8 +19,6 @@ class GetAvailableBlogRootPagesHandler extends SimpleHandler {
 	}
 
 	public function execute() {
-		return $this->getResponseFactory()->createJson( $this->blogFactory->getBlogRootNames(
-			RequestContext::getMain()->getUser()
-		) );
+		return $this->getResponseFactory()->createJson( $this->blogFactory->getBlogRootNames() );
 	}
 }

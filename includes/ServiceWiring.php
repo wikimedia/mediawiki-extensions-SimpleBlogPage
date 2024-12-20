@@ -11,7 +11,8 @@ return [
 			$services->getTitleFactory(),
 			$services->getContentLanguage(),
 			$services->getRevisionRenderer(),
-			$services->getPageProps()
+			$services->getPageProps(),
+			$services->getUserFactory()
 		);
 		$factory->setLogger( LoggerFactory::getInstance( 'SimpleBlogPage' ) );
 		return $factory;

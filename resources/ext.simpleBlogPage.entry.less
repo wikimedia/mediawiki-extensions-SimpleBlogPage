@@ -1,7 +1,7 @@
 .blog-entry {
-  background-color: #ececec;
-  margin-bottom: 10px;
-  padding-bottom: 1px;
+  border: 1px solid #cecece;
+  margin-bottom: 30px;
+  padding: 20px;
   &.loading {
     background-image: url('./asset/postLoader.svg');
     background-repeat: no-repeat;
@@ -9,13 +9,22 @@
     height: 180px;
   }
   .blog-entry-header {
-    padding: 10px;
     min-height: 50px;
     &.non-native {
       display: flex;
       .blog-entry-title {
         flex: 1;
-        font-size: 1.5rem;
+        h2 {
+          margin: 0;
+          padding: 0;
+          display: inline-block;
+          vertical-align: middle;
+        }
+        .oo-ui-buttonWidget.simpleblog-watch {
+          display: inline-block;
+          vertical-align: middle;
+          margin-left: 10px;
+        }
         .blog-entry-blog {
           font-size: 1rem;
         }
@@ -28,6 +37,5 @@
   }
   .blog-entry-body {
     background-color: white;
-    margin: 10px;
   }
 }

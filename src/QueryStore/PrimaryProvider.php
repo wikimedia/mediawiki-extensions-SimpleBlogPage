@@ -84,7 +84,8 @@ class PrimaryProvider extends PrimaryDatabaseDataProvider implements IBucketProv
 			BlogEntryQueryRecord::BLOG_ENTRY_AUTHOR => $row->author,
 			BlogEntryQueryRecord::BLOG_ENTRY_TIMESTAMP => $row->timestamp,
 			BlogEntryQueryRecord::BLOG_ENTRY_ROOT => $this->getBlogRoot( $row->root ),
-			BlogEntryQueryRecord::BLOG_ENTRY_WIKI_PAGE => $row->root
+			BlogEntryQueryRecord::BLOG_ENTRY_WIKI_PAGE => $row->root,
+			BlogEntryQueryRecord::BLOG_ENTRY_TYPE => (int)$row->namespace === NS_USER_BLOG ? 'user' : 'global',
 		] );
 		$this->addToBuckets( $item );
 		$this->data[] = $item;

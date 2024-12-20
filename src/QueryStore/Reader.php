@@ -2,6 +2,9 @@
 
 namespace MediaWiki\Extension\SimpleBlogPage\QueryStore;
 
+use MediaWiki\Title\TitleFactory;
+use MediaWiki\Watchlist\WatchedItemStore;
+use MWStake\MediaWiki\Component\DataStore\ISecondaryDataProvider;
 use MWStake\MediaWiki\Component\DataStore\ReaderParams;
 use Wikimedia\Rdbms\ILoadBalancer;
 
@@ -11,13 +14,22 @@ class Reader extends \MWStake\MediaWiki\Component\DataStore\Reader {
 	 * @var ILoadBalancer
 	 */
 	private $lb;
+	/** @var WatchedItemStore */
+	private $watchedItemStore;
+
+	/** @var TitleFactory */
+	private $titleFactory;
 
 	/**
 	 * @param ILoadBalancer $lb
+	 * @param WatchedItemStore $watchedItemStore
+	 * @param TitleFactory $titleFactory
 	 */
-	public function __construct( ILoadBalancer $lb ) {
+	public function __construct( ILoadBalancer $lb, WatchedItemStore $watchedItemStore, TitleFactory $titleFactory ) {
 		parent::__construct();
 		$this->lb = $lb;
+		$this->watchedItemStore = $watchedItemStore;
+		$this->titleFactory = $titleFactory;
 	}
 
 	/**
@@ -39,9 +51,9 @@ class Reader extends \MWStake\MediaWiki\Component\DataStore\Reader {
 	}
 
 	/**
-	 * @return void
+	 * @return ISecondaryDataProvider
 	 */
 	protected function makeSecondaryDataProvider() {
-		return null;
+		return new SecondaryProvider( $this->watchedItemStore, $this->titleFactory );
 	}
 }

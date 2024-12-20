@@ -5,6 +5,7 @@
 			"Universal Omega"
 		]
 	},
+	"blogs": "Name for [[Special:Blogs]] page",
 	"simpleblogpage-desc": "{{desc|name=SimpleBlogPage|url=https://www.mediawiki.org/wiki/Extension:SimpleBlogPage}}",
 	"simpleblogpage-editor-blog-select": "Field label",
 	"simpleblogpage-editor-blog-select-new": "Warning message when selected blog doesnt exist",
@@ -25,6 +26,10 @@
 	"simpleblogpage-create-label": "Label for the create button",
 	"simpleblogpage-create-dialog-button-submit": "Button label for submitting the creation of a new blog post{{Identical|Create}}",
 	"simpleblogpage-create-dialog-button-cancel": "Button label for canceling the creation of a new blog post{{Identical|Cancel}}",
-	"simpleblogpage-user-blog-label": "Label for the user blog",
-	"simpleblogpage-blog-type-general": "Name of the default blog page - must be valid title"
+	"simpleblogpage-blog-type-general": "Name of the default blog page - must be valid title",
+	"simpleblogpage-filter-section-global": "Section label for the blog filter dropdown",
+	"simpleblogpage-filter-section-user": "Section label for the blog filter dropdown",
+	"simpleblogpage-user-blogoverview-label": "Link label for the user blog overview",
+	"simpleblogpage-unwatch": "Button title for unwatching a post",
+	"simpleblogpage-watch": "Button title for watching a post"
 }

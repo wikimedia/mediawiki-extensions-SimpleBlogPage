@@ -80,10 +80,10 @@
 		}
 	],
 	"SpecialPages": {
-		"Blog": {
-			"class": "MediaWiki\\Extension\\SimpleBlogPage\\Special\\Blog",
+		"Blogs": {
+			"class": "MediaWiki\\Extension\\SimpleBlogPage\\Special\\Blogs",
 			"services": [
-				"SimpleBlogPage.BlogFactory"
+				"SimpleBlogPage.BlogFactory", "TitleFactory"
 			]
 		}
 	},
@@ -105,8 +105,7 @@
 		},
 		"ext.simpleBlogPage.create": {
 			"scripts": [
-				"ui/dialog/CreateDialog.js",
-				"ext.simpleBlogPage.create.js"
+				"ui/dialog/CreateDialog.js"
 			],
 			"dependencies": [
 				"ext.simpleBlogPage.bootstrap",
@@ -134,13 +133,16 @@
 			],
 			"messages": [
 				"simpleblogpage-readmore",
-				"simpleblogpage-entry-blog-root-link"
+				"simpleblogpage-entry-blog-root-link",
+				"simpleblogpage-unwatch",
+				"simpleblogpage-watch"
 			],
 			"dependencies": [
 				"oojs-ui",
 				"ext.simpleBlogPage.bootstrap",
 				"ext.oOJSPlus.widgets",
-				"ext.simpleBlogPage.entry.styles"
+				"ext.simpleBlogPage.entry.styles",
+				"oojs-ui.styles.icons-moderation"
 			]
 		},
 		"ext.simpleBlogPage.list": {
@@ -153,7 +155,9 @@
 			"messages": [
 				"simpleblogpage-create-entry",
 				"simpleblogpage-filter-all",
-				"simpleblogpage-filter-root"
+				"simpleblogpage-filter-root",
+				"simpleblogpage-filter-section-global",
+				"simpleblogpage-filter-section-user"
 			],
 			"dependencies": [
 				"oojs-ui",
@@ -196,7 +200,8 @@
 		"SkinTemplateNavigation::Universal": "addBlogLinks",
 		"BlueSpiceDiscoveryTemplateDataProviderAfterInit": "addBlogLinks",
 		"getUserPermissionsErrors": "handleEditPermissions",
-		"LoadExtensionSchemaUpdatesHook": "runDatabaseUpdates"
+		"LoadExtensionSchemaUpdatesHook": "runDatabaseUpdates",
+		"PageSaveComplete": "createBlogRootPage"
 	},
 	"HookHandlers": {
 		"setDefaultModel": {
@@ -215,6 +220,10 @@
 		},
 		"runDatabaseUpdates": {
 			"class": "MediaWiki\\Extension\\SimpleBlogPage\\Hook\\RunDatabaseUpdates"
+		},
+		"createBlogRootPage": {
+			"class": "MediaWiki\\Extension\\SimpleBlogPage\\Hook\\CreateBlogRootPage",
+			"services": [ "SimpleBlogPage.BlogFactory", "WikiPageFactory" ]
 		}
 	},
 	"ServiceWiringFiles": [
@@ -235,7 +244,7 @@
 			"path": "/simpleblogpage/v1/list",
 			"method": "GET",
 			"class": "MediaWiki\\Extension\\SimpleBlogPage\\Rest\\ListHandler",
-			"services": [ "HookContainer", "DBLoadBalancer" ]
+			"services": [ "HookContainer", "DBLoadBalancer", "WatchedItemStore", "TitleFactory" ]
 		}, {
 			"path": "/simpleblogpage/v1/entry",
 			"method": "GET",

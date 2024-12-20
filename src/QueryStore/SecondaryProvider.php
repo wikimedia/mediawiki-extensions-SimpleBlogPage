@@ -3,7 +3,6 @@
 namespace MediaWiki\Extension\SimpleBlogPage\QueryStore;
 
 use MediaWiki\Context\RequestContext;
-use MediaWiki\MediaWikiServices;
 use MediaWiki\Title\TitleFactory;
 use MediaWiki\Watchlist\WatchedItemStore;
 use MWStake\MediaWiki\Component\DataStore\ISecondaryDataProvider;
@@ -33,8 +32,8 @@ class SecondaryProvider implements ISecondaryDataProvider {
 			);
 			$isAuthor = $dataSet->get( BlogEntryQueryRecord::BLOG_ENTRY_AUTHOR ) === $currentUser->getName();
 			if ( $isAuthor ) {
-				//$dataSet->set( BlogEntryQueryRecord::META_CAN_WATCH, false );
-				//continue;
+				/*$dataSet->set( BlogEntryQueryRecord::META_CAN_WATCH, false );
+				continue;*/
 			}
 			$dataSet->set( BlogEntryQueryRecord::META_CAN_WATCH, true );
 			$dataSet->set(

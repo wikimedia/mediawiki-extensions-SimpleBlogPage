@@ -19,6 +19,7 @@ ext.simpleBlogPage.ui.panel.EntryHeader.prototype.render = function( config ) {
 	this.$contribution = $( '<div>' ).addClass( 'blog-entry-contribution' );
 	this.$actions = $( '<div>' ).addClass( 'blog-entry-actions' );
 	this.$element.append( this.$title, this.$contribution, this.$actions );
+	this.$headerAnchor = $( '<h2>' );
 
 	this.contribution = new OOJSPlus.ui.widget.ContributionWidget( config.userTimestamp, { user_name: config.author } );
 	this.$contribution.append( this.contribution.$element );
@@ -28,7 +29,8 @@ ext.simpleBlogPage.ui.panel.EntryHeader.prototype.render = function( config ) {
 			.attr( 'href', this.wikiTitle.getUrl( { returnto: mw.config.get( 'wgPageName' ) } ) )
 			.text( config.name )
 			.addClass( 'blog-entry-name' );
-		this.$title.append( $( '<h2>' ).html( $targetAnchor ) );
+		this.$headerAnchor.append( $targetAnchor );
+		this.$title.append( this.$headerAnchor );
 		if ( !this.isForcedBlog ) {
 			// Blogs entries viewed come from mixed blogs
 			this.$title.append( $( '<div>' )
@@ -51,7 +53,7 @@ ext.simpleBlogPage.ui.panel.EntryHeader.prototype.render = function( config ) {
 			flags: [ 'progressive' ]
 		} );
 		this.watchButton.connect( this, { click: 'onWatchClick' } );
-		this.$title.append( this.watchButton.$element );
+		this.watchButton.$element.insertAfter( this.$headerAnchor );
 	}
 };
 

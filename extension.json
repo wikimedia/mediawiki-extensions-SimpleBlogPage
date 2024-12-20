@@ -57,6 +57,7 @@
 			"name": "User_blog",
 			"protection": "edit",
 			"defaultcontentmodel": "blog_post",
+			"content": true,
 			"subpages": true
 		},
 		{
@@ -69,6 +70,7 @@
 			"id": 1502,
 			"constant": "NS_BLOG",
 			"name": "Blog",
+			"content": true,
 			"defaultcontentmodel": "blog_post",
 			"subpages": true
 		},

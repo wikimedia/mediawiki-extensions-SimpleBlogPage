@@ -33,12 +33,15 @@ ext.simpleBlogPage.ui.panel.EntryHeader.prototype.render = function( config ) {
 		this.$title.append( this.$headerAnchor );
 		if ( !this.isForcedBlog ) {
 			// Blogs entries viewed come from mixed blogs
+			const $userBlogPill = $( '<span>' )
+				.addClass( 'blog-pill' ).text( mw.msg( 'simpleblogpage-blog-type-user' ) );
 			this.$title.append( $( '<div>' )
 				.addClass( 'blog-entry-blog' )
 				.append(
 					$( '<span>' ).html(
 						mw.message( 'simpleblogpage-entry-blog-root-link', config.rootPage, config.root ).parse()
-					)
+					),
+					config.type === 'user' ? $userBlogPill : ''
 				)
 			);
 		}

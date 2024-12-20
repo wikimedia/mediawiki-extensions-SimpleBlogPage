@@ -31,5 +31,6 @@
 	"simpleblogpage-filter-section-user": "Section label for the blog filter dropdown",
 	"simpleblogpage-user-blogoverview-label": "Link label for the user blog overview",
 	"simpleblogpage-unwatch": "Button title for unwatching a post",
-	"simpleblogpage-watch": "Button title for watching a post"
+	"simpleblogpage-watch": "Button title for watching a post",
+	"simpleblogpage-blog-type-user": "Label denoting a user blog"
 }

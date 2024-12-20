@@ -34,5 +34,6 @@
 	"simpleblogpage-filter-section-user": "User blogs",
 	"simpleblogpage-user-blogoverview-label": "My blog",
 	"simpleblogpage-unwatch": "Stop watching this post",
-	"simpleblogpage-watch": "Watch this post"
+	"simpleblogpage-watch": "Watch this post",
+	"simpleblogpage-blog-type-user": "User blog"
 }

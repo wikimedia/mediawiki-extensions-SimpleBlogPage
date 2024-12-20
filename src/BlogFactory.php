@@ -181,6 +181,7 @@ class BlogFactory implements LoggerAwareInterface {
 		$meta['hasMoreText'] = $hasMore;
 		$meta['root'] = $this->getPageDisplayTitle( $entry->getRoot() );
 		$meta['name'] = $this->getBlogEntryName( $entry->getTitle(), $entry->getRoot() );
+		$meta['type'] = $this->getBlogType( $entry->getRoot() );
 		return [
 			'text' => $snippet,
 			'meta' => $meta,

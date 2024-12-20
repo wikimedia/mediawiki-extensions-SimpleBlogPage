@@ -137,7 +137,8 @@
 				"simpleblogpage-readmore",
 				"simpleblogpage-entry-blog-root-link",
 				"simpleblogpage-unwatch",
-				"simpleblogpage-watch"
+				"simpleblogpage-watch",
+				"simpleblogpage-blog-type-user"
 			],
 			"dependencies": [
 				"oojs-ui",

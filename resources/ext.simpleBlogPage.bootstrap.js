@@ -15,12 +15,10 @@ ext.simpleBlogPage = {
 };
 
 $( function() {
-	console.log( "((II " );
 	const $btn = $( '#ca-simpleblogpage-create' );
 	if ( !$btn.length ) {
 		return;
 	}
-	console.log( $btn  );
 	$btn.on( 'click', function( e ) {
 		e.preventDefault();
 		ext.simpleBlogPage.openCreateDialog();

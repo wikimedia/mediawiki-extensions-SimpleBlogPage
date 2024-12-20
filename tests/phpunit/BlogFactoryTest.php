@@ -8,7 +8,6 @@ use MediaWiki\Extension\SimpleBlogPage\BlogEntry;
 use MediaWiki\Extension\SimpleBlogPage\BlogFactory;
 use MediaWiki\Extension\SimpleBlogPage\Content\BlogPostContent;
 use MediaWiki\Language\Language;
-use MediaWiki\Message\Message;
 use MediaWiki\Page\PageProps;
 use MediaWiki\Page\PageReference;
 use MediaWiki\Page\WikiPageFactory;

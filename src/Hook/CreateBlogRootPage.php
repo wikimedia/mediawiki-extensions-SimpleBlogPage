@@ -27,6 +27,9 @@ class CreateBlogRootPage implements PageSaveCompleteHook {
 		$this->wikiPageFactory = $wikiPageFactory;
 	}
 
+	/**
+	 * @inheritDoc
+	 */
 	public function onPageSaveComplete( $wikiPage, $user, $summary, $flags, $revisionRecord, $editResult ) {
 		if ( !( $flags & EDIT_NEW ) ) {
 			return;

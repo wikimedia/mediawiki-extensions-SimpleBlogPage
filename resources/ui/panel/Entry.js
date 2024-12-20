@@ -25,7 +25,6 @@
 OO.inheritClass( ext.simpleBlogPage.ui.panel.Entry, OO.ui.PanelLayout );
 
 ext.simpleBlogPage.ui.panel.Entry.prototype.render = function() {
-	console.log( this.data );
 	this.header = new ext.simpleBlogPage.ui.panel.EntryHeader(
 		this.data.meta, this.wikiTitle, this.forcedBlog, { canWatch: this.userCanWatch, isWatching: this.userIsWatching }
 	);

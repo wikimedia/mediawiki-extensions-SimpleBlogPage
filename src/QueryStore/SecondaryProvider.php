@@ -6,6 +6,8 @@ use MediaWiki\Context\RequestContext;
 use MediaWiki\Title\TitleFactory;
 use MediaWiki\Watchlist\WatchedItemStore;
 use MWStake\MediaWiki\Component\DataStore\ISecondaryDataProvider;
+use MWStake\MediaWiki\Component\DataStore\Record;
+
 class SecondaryProvider implements ISecondaryDataProvider {
 
 	/** @var WatchedItemStore */
@@ -23,6 +25,10 @@ class SecondaryProvider implements ISecondaryDataProvider {
 		$this->titleFactory = $titleFactory;
 	}
 
+	/**
+	 * @param array $dataSets
+	 * @return Record[]
+	 */
 	public function extend( $dataSets ) {
 		$currentUser = RequestContext::getMain()->getUser();
 		foreach ( $dataSets as &$dataSet ) {

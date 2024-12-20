@@ -2,7 +2,6 @@
 
 namespace MediaWiki\Extension\SimpleBlogPage\Rest;
 
-use MediaWiki\Context\RequestContext;
 use MediaWiki\Extension\SimpleBlogPage\BlogFactory;
 use MediaWiki\Rest\SimpleHandler;
 

@@ -1,6 +1,7 @@
 ext.simpleBlogPage.ui.dialog.CreateDialog = function( cfg ) {
 	ext.simpleBlogPage.ui.dialog.CreateDialog.parent.call( this, cfg );
 	this.forcedBlog = cfg.blog || false;
+	this.actor = cfg.actor || false;
 };
 
 OO.inheritClass( ext.simpleBlogPage.ui.dialog.CreateDialog, OO.ui.ProcessDialog );

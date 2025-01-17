@@ -12,15 +12,16 @@ ext.simpleBlogPage.ui.widget.BlogSelector = function( cfg ) {
 			if ( !options.hasOwnProperty( dbkey ) ) {
 				continue;
 			}
-			this.optionMapping[dbkey] = options[dbkey].display;
-			this.optionMappingReverse[options[dbkey].display] = dbkey;
 			if ( options[dbkey].type === 'user' ) {
 				this.userBlog = dbkey;
 			}
-			const data = options[dbkey];
+			const display = dbkey === this.userBlog ? mw.msg( 'simpleblogpage-create-blog-own' ) : options[dbkey].display;
+			this.optionMapping[dbkey] = display;
+			this.optionMappingReverse[display] = dbkey;
 			const item = new OO.ui.MenuOptionWidget( {
 				data: dbkey,
-				label: data.display
+				label: display,
+				icon: this.userBlog === dbkey ? 'userAvatarOutline' : ''
 			} );
 			this.menu.addItems( [ item ] );
 		}
@@ -37,6 +38,7 @@ ext.simpleBlogPage.ui.widget.BlogSelector.prototype.loadOptions = function() {
 	var deferred = $.Deferred();
 	$.ajax( {
 		url: mw.util.wikiScript( 'rest' ) + '/simpleblogpage/v1/helper/root_pages',
+		data: { forCreation: true },
 		method: 'GET'
 	} ).done( function( data ) {
 		deferred.resolve( data );

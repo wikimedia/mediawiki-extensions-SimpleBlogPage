@@ -18,7 +18,7 @@ class CreateDefaultBlog extends LoggedUpdateMaintenance {
 	 */
 	protected function doDBUpdates() {
 		$defaultBlog = Message::newFromKey( 'simpleblogpage-blog-type-general' )->text();
-		$page = $this->getServiceContainer()->getTitleFactory()->makeTitle( NS_BLOG, $defaultBlog . '_1' );
+		$page = $this->getServiceContainer()->getTitleFactory()->makeTitle( NS_BLOG, $defaultBlog );
 		if ( $page->exists() ) {
 			$this->output( "Default blog already exists. Nothing to do.\n" );
 			return true;

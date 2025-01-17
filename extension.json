@@ -111,7 +111,8 @@
 			],
 			"dependencies": [
 				"ext.simpleBlogPage.bootstrap",
-				"ext.simpleBlogPage.blogSelector"
+				"ext.simpleBlogPage.blogSelector",
+				"oojs-ui.styles.icons-user"
 			],
 			"messages": [
 				"simpleblogpage-create-label",
@@ -120,7 +121,8 @@
 				"simpleblogpage-editor-blog-select",
 				"simpleblogpage-editor-blog-select-new",
 				"simpleblogpage-editor-title",
-				"simpleblogpage-editor-title-exists"
+				"simpleblogpage-editor-title-exists",
+				"simpleblogpage-create-blog-own"
 			]
 		},
 		"ext.simpleBlogPage.entry.styles": {
@@ -204,7 +206,8 @@
 		"BlueSpiceDiscoveryTemplateDataProviderAfterInit": "addBlogLinks",
 		"getUserPermissionsErrors": "handleEditPermissions",
 		"LoadExtensionSchemaUpdatesHook": "runDatabaseUpdates",
-		"PageSaveComplete": "createBlogRootPage"
+		"PageSaveComplete": "createBlogRootPage",
+		"UserLoginComplete": "createBlogRootPage"
 	},
 	"HookHandlers": {
 		"setDefaultModel": {
@@ -226,7 +229,7 @@
 		},
 		"createBlogRootPage": {
 			"class": "MediaWiki\\Extension\\SimpleBlogPage\\Hook\\CreateBlogRootPage",
-			"services": [ "SimpleBlogPage.BlogFactory", "WikiPageFactory" ]
+			"services": [ "SimpleBlogPage.BlogFactory", "WikiPageFactory", "TitleFactory" ]
 		}
 	},
 	"ServiceWiringFiles": [

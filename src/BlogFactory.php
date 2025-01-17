@@ -17,6 +17,7 @@ use MediaWiki\Revision\SlotRecord;
 use MediaWiki\Title\Title;
 use MediaWiki\Title\TitleFactory;
 use MediaWiki\User\UserFactory;
+use MediaWiki\User\UserIdentity;
 use PermissionsError;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
@@ -188,12 +189,13 @@ class BlogFactory implements LoggerAwareInterface {
 	}
 
 	/**
+	 * @param bool|null $forUser If true, will only return list of blogs user can create posts in
 	 * @return array
 	 */
-	public function getBlogRootNames(): array {
+	public function getBlogRootNames( ?UserIdentity $forUser = null ): array {
 		$roots = [];
 		$blogRoots = $this->getRawBlogRoots();
-		$userBlogRoots = $this->getRawUserBlogRoots();
+		$userBlogRoots = $this->getRawUserBlogRoots( $forUser );
 		$allRoots = [];
 		foreach ( [ $blogRoots, $userBlogRoots ] as $res ) {
 			if ( $res ) {
@@ -211,6 +213,12 @@ class BlogFactory implements LoggerAwareInterface {
 					'type' => $this->getBlogType( $title ),
 				];
 			}
+		}
+		if ( $forUser ) {
+			// Sort type: user first
+			uasort( $roots, static function ( $a, $b ) {
+				return $a['type'] === 'user' ? -1 : 1;
+			} );
 		}
 		return $roots;
 	}
@@ -273,9 +281,10 @@ class BlogFactory implements LoggerAwareInterface {
 	}
 
 	/**
+	 * @param UserIdentity|null $forUser
 	 * @return IResultWrapper|null
 	 */
-	private function getRawUserBlogRoots(): ?IResultWrapper {
+	private function getRawUserBlogRoots( ?UserIdentity $forUser = null ): ?IResultWrapper {
 		$db = $this->lb->getConnection( DB_REPLICA );
 		$query = $db->newSelectQueryBuilder()
 			->table( 'page' )
@@ -284,12 +293,10 @@ class BlogFactory implements LoggerAwareInterface {
 				'page_namespace' => NS_USER_BLOG,
 				'page_title NOT LIKE \'%/%\'',
 			] );
-		$res = $db->query( $query->getSQL(), __METHOD__ );
-		erroR_log( $query->getSQL() );
-		if ( !$res ) {
-			return null;
+		if ( $forUser ) {
+			$query->where( [ 'page_title' => str_replace( ' ', '_', $forUser->getName() ) ] );
 		}
-		return $res;
+		return $query->fetchResultSet();
 	}
 
 	/**

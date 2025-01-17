@@ -44,8 +44,9 @@ ext.simpleBlogPage.ui.panel.Entry.prototype.render = function() {
 		} );
 		this.content.$element.append( readMoreBtn.$element );
 	}
+	const $unFloater = $( '<div>' ).css( 'clear', 'both' );
 
-	this.$element.append( this.header.$element, this.content.$element );
+	this.$element.append( this.header.$element, this.content.$element, $unFloater );
 };
 
 ext.simpleBlogPage.ui.panel.Entry.prototype.loadData = function() {

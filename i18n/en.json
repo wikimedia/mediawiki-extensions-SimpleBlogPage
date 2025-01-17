@@ -22,7 +22,7 @@
 	"simpleblogpage-edit-summary": "Blog post edited",
 	"simpleblogpage-error-rendering-failed": "Failed to render blog post",
 	"simpleblogpage-filter-root": "Blog type filter",
-	"simpleblogpage-readmore": "Read whole post",
+	"simpleblogpage-readmore": "Read more",
 	"simpleblogpage-no-blog-no-create": "This blog does not exist",
 	"simpleblogpage-entry-blog-root-link": "[[$1|$2]]",
 	"simpleblogpage-articles-home-links": "Blogs",
@@ -35,5 +35,6 @@
 	"simpleblogpage-user-blogoverview-label": "My blog",
 	"simpleblogpage-unwatch": "Stop watching this post",
 	"simpleblogpage-watch": "Watch this post",
-	"simpleblogpage-blog-type-user": "User blog"
+	"simpleblogpage-blog-type-user": "User blog",
+	"simpleblogpage-create-blog-own": "My user blog"
 }

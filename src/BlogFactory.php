@@ -16,6 +16,7 @@ use MediaWiki\Revision\RevisionRenderer;
 use MediaWiki\Revision\SlotRecord;
 use MediaWiki\Title\Title;
 use MediaWiki\Title\TitleFactory;
+use MediaWiki\User\User;
 use MediaWiki\User\UserFactory;
 use MediaWiki\User\UserIdentity;
 use PermissionsError;
@@ -259,6 +260,20 @@ class BlogFactory implements LoggerAwareInterface {
 			],
 		);
 		return $res > 0;
+	}
+
+	/**
+	 * @param User $user
+	 * @param Title|null $blogRoot
+	 * @return bool
+	 */
+	public function canUserPostInBlog( User $user, ?Title $blogRoot ): bool {
+		if ( $blogRoot && $blogRoot->getNamespace() === NS_USER_BLOG ) {
+			if ( str_replace( ' ', '_', $user->getName() ) !== $blogRoot->getDBkey() ) {
+				return false;
+			}
+		}
+		return $user->isAllowed( 'createblogpost' );
 	}
 
 	/**

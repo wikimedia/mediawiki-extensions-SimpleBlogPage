@@ -36,5 +36,6 @@
 	"simpleblogpage-unwatch": "Stop watching this post",
 	"simpleblogpage-watch": "Watch this post",
 	"simpleblogpage-blog-type-user": "User blog",
-	"simpleblogpage-create-blog-own": "My user blog"
+	"simpleblogpage-create-blog-own": "My user blog",
+	"simpleblogpage-error-non-existing-root-page": "Requested blog does not exist yet, be the first one to post!"
 }

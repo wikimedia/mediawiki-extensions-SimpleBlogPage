@@ -35,36 +35,57 @@ class Blogs extends SpecialPage {
 		parent::execute( $subPage );
 		$root = null;
 		$rootType = null;
+		$forcedBlog = null;
 		if ( $subPage ) {
 			$forcedBlog = $this->titleFactory->newFromText( $subPage );
 			try {
 				$this->blogFactory->assertTitleIsBlogRoot( $forcedBlog );
 				$roots = $this->blogFactory->getBlogRootNames();
 				$blogKey = $forcedBlog->getPrefixedDBkey();
+				$root = $forcedBlog->getDBkey();
+				$rootType = $forcedBlog->getNamespace() === NS_USER_BLOG ? 'user' : 'global';
+
 				if ( isset( $roots[$blogKey] ) ) {
 					$root = $roots[$blogKey]['dbKey'];
 					$rootType = $roots[$blogKey]['type'];
-					$this->getOutput()->setPageTitle(
-						$this->getOutput()->getPageTitle() . ' - ' . $forcedBlog->getPrefixedText()
-					);
 				} else {
-					throw new Exception();
+					$this->getOutput()->enableOOUI();
+					$msg = $this->blogFactory->canUserPostInBlog( $this->getUser(), $forcedBlog ) ?
+						'simpleblogpage-error-non-existing-root-page' :
+						'simpleblogpage-no-blog-no-create';
+					$this->getOutput()->addHTML( ( new MessageWidget( [
+						'type' => 'warning',
+						'label' => $this->msg( $msg )->text()
+					] ) )->toString() );
 				}
+				$this->getOutput()->setPageTitle(
+					$this->getOutput()->getPageTitle() . ' - ' . $forcedBlog->getPrefixedText()
+				);
 			} catch ( Exception $e ) {
 				$this->getOutput()->enableOOUI();
 				$this->getOutput()->addHTML( ( new MessageWidget( [
-					'type' => 'warning',
+					'type' => 'error',
 					'label' => $this->msg( 'simpleblogpage-error-invalid-root-page' )->text()
 				] ) )->toString() );
+				return;
 			}
 		}
 
+		$blogPage = '';
+		if ( $forcedBlog ) {
+			if ( $forcedBlog->getNamespace() === NS_USER_BLOG ) {
+				$blogPage = $forcedBlog->getPrefixedDBkey();
+			} else {
+				$blogPage = $forcedBlog->getDBkey();
+			}
+		}
 		$this->getOutput()->addModules( [ 'ext.simpleBlogPage.home.special' ] );
 		$this->getOutput()->addHTML( Html::element( 'div', [
 			'id' => 'blog-home',
 			'data-blog' => $root ?? '',
 			'data-type' => $rootType ?? '',
-			'data-creatable' => $this->getUser()->isAllowed( 'createblogpost' ),
+			'data-blog-page' => $blogPage,
+			'data-creatable' => $this->blogFactory->canUserPostInBlog( $this->getUser(), $forcedBlog )
 		] ) );
 	}
 }

@@ -63,7 +63,6 @@ ext.simpleBlogPage.ui.panel.BlogList.prototype.renderHeader = function() {
 
 	this.$actions = $( '<div>' ).addClass( 'blog-list-actions' );
 	this.$filters = $( '<div>' ).addClass( 'blog-list-filters' );
-	this.header.$element.append( this.$actions, this.$filters );
 
 	if ( this.allowCreation ) {
 		this.createButton = new OO.ui.ButtonWidget( {
@@ -74,6 +73,7 @@ ext.simpleBlogPage.ui.panel.BlogList.prototype.renderHeader = function() {
 		} );
 		this.createButton.connect( this, { click: 'onCreateClick' } );
 		this.$actions.append( this.createButton.$element );
+		this.header.$element.append( this.$actions );
 	}
 };
 
@@ -98,13 +98,14 @@ ext.simpleBlogPage.ui.panel.BlogList.prototype.setItems = function( data ) {
 };
 
 ext.simpleBlogPage.ui.panel.BlogList.prototype.onCreateClick = function() {
-	ext.simpleBlogPage.openCreateDialog( this.isNative && this.blogPage ? this.blogPage : null );
+	ext.simpleBlogPage.openCreateDialog( this.blogPage ? this.blogPage : null );
 };
 
 ext.simpleBlogPage.ui.panel.BlogList.prototype.renderFilters = async function() {
 	if ( this.isNative || this.blog ) {
 		return;
 	}
+	this.header.$element.append( this.$filters );
 	// Native means that we are on a blog root page, which forces root filter, so we dont offer it
 	if ( this.buckets.hasOwnProperty( 'root' ) ) {
 		var blogNames = await this.loadBlogNames();

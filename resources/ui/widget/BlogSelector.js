@@ -50,6 +50,9 @@ ext.simpleBlogPage.ui.widget.BlogSelector.prototype.loadOptions = function() {
 };
 
 ext.simpleBlogPage.ui.widget.BlogSelector.prototype.setValue = function( value ) {
+	if ( value ) {
+		value = value.replace( /\s/g, '_' );
+	}
 	if ( value && this.optionMapping && this.optionMapping.hasOwnProperty( value ) ) {
 		value = this.optionMapping[value];
 	}

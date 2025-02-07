@@ -18,5 +18,8 @@ class Setup {
 				$GLOBALS['wgCommentStreamsAllowedNamespaces'][] = NS_USER_BLOG;
 			}
 		};
+
+		$GLOBALS['wgContentStabilizationUnavailableNamespaces'][] = NS_BLOG;
+		$GLOBALS['wgContentStabilizationUnavailableNamespaces'][] = NS_USER_BLOG;
 	}
 }

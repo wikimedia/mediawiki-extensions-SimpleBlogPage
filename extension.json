@@ -205,7 +205,7 @@
 		"SkinTemplateNavigation::Universal": "addBlogLinks",
 		"BlueSpiceDiscoveryTemplateDataProviderAfterInit": "addBlogLinks",
 		"getUserPermissionsErrors": "handleEditPermissions",
-		"LoadExtensionSchemaUpdatesHook": "runDatabaseUpdates",
+		"LoadExtensionSchemaUpdates": "runDatabaseUpdates",
 		"PageSaveComplete": "createBlogRootPage",
 		"UserLoginComplete": "createBlogRootPage"
 	},

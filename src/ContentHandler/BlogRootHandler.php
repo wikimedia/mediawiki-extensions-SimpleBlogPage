@@ -12,8 +12,6 @@ use MediaWiki\Html\Html;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\Parser\ParserOutput;
 use MediaWiki\Title\Title;
-use MediaWiki\User\User;
-use MediaWiki\User\UserIdentity;
 
 class BlogRootHandler extends WikitextContentHandler {
 

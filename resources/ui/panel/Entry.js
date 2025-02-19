@@ -40,7 +40,7 @@ ext.simpleBlogPage.ui.panel.Entry.prototype.render = function() {
 			flags: [ 'progressive' ],
 			framed: false,
 			classes: [ 'read-more-button' ],
-			href: this.wikiTitle.getUrl( { returnto: mw.config.get( 'wgPageName' ) } )
+			href: this.wikiTitle.getUrl()
 		} );
 		this.content.$element.append( readMoreBtn.$element );
 	}

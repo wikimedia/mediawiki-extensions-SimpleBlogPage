@@ -26,7 +26,7 @@ ext.simpleBlogPage.ui.panel.EntryHeader.prototype.render = function( config ) {
 	if ( !this.isNative ) {
 		this.$element.addClass( 'non-native' );
 		const $targetAnchor = $( '<a>' )
-			.attr( 'href', this.wikiTitle.getUrl( { returnto: mw.config.get( 'wgPageName' ) } ) )
+			.attr( 'href', this.wikiTitle.getUrl() )
 			.text( config.name )
 			.addClass( 'blog-entry-name' );
 		this.$headerAnchor.append( $targetAnchor );

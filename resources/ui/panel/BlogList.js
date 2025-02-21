@@ -83,6 +83,10 @@ ext.simpleBlogPage.ui.panel.BlogList.prototype.clearItems = function() {
 
 ext.simpleBlogPage.ui.panel.BlogList.prototype.setItems = function( data ) {
 	this.itemPanel.$element.empty();
+	if ( $.isEmptyObject( data ) ) {
+		this.showNoPosts();
+		return;
+	}
 	for ( let index in data ) {
 		if ( !data.hasOwnProperty( index ) ) {
 			continue;
@@ -191,4 +195,11 @@ ext.simpleBlogPage.ui.panel.BlogList.prototype.loadBlogNames = async function() 
 		deferred.resolve( {} );
 	} );
 	return deferred;
+};
+
+ext.simpleBlogPage.ui.panel.BlogList.prototype.showNoPosts = function() {
+	this.itemPanel.$element.append( new OOJSPlus.ui.widget.NoContentPlaceholderWidget( {
+		icon: 'blog-no-posts',
+		label: mw.msg( 'simpleblogpage-no-posts' )
+	} ).$element );
 };

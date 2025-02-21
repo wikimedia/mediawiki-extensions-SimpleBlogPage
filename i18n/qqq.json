@@ -34,5 +34,6 @@
 	"simpleblogpage-watch": "Button title for watching a post",
 	"simpleblogpage-blog-type-user": "Label denoting a user blog",
 	"simpleblogpage-create-blog-own": "Label for creating post in own blog",
-	"simpleblogpage-error-non-existing-root-page": "Message shown when user tries to show posts of a non-existing blog"
+	"simpleblogpage-error-non-existing-root-page": "Message shown when user tries to show posts of a non-existing blog",
+	"simpleblogpage-no-posts": "Notice when no blog posts exist"
 }

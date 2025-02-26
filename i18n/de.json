@@ -1,0 +1,40 @@
+{
+	"@metadata": {
+		"authors": [
+			"Miriam Schlindwein"
+		]
+	},
+	"simpleblogpage-desc": "Blogsystem mit Kommentar- und Abstimmungsfunktionen, [[Special:CreateBlogPost|eine Spezialseite zum Erstellen von Blogbeiträgen]] und[[Special:ArticlesHome|eine Spezialseite zur Auflistung von Blogbeiträgen]]",
+	"blogs": "Alle Blogbeiträge",
+	"right-createblogpost": "Neue Blogbeiträge erstellen",
+	"action-createblogpost": "neue Blogbeiträge erstellen",
+	"simpleblogpage-editor-blog-select": "Blog",
+	"simpleblogpage-editor-blog-select-new": "Der ausgewählte Blog existiert noch nicht. Er wird erstellt, wenn du den Beitrag speicherst.",
+	"simpleblogpage-editor-title": "Titel des Blogbeitrags",
+	"simpleblogpage-editor-title-exists": "Der Blogbeitrag mit diesem Titel existiert bereits. Bitte wähle einen anderen Titel.",
+	"simpleblogpage-create-entry": "Neuen Blogbeitrag erstellen",
+	"simpleblogpage-filter-all": "Alle",
+	"simpleblogpage-error-invalid-content": "Der Inhalt der angeforderten Seite ist kein Blogbeitrag",
+	"simpleblogpage-error-invalid-target-page": "Diese Seite ist keine gültige Blogbeitrags-Seite",
+	"simpleblogpage-error-invalid-root-page": "Angeforderte Seite ist keine gültige Blog-Seite",
+	"simpleblogpage-create-root-summary": "Haupt-Blogseite erstellt",
+	"simpleblogpage-edit-summary": "Blogbeitrag bearbeitet",
+	"simpleblogpage-error-rendering-failed": "Blogbeitrag konnte nicht erstellt werden",
+	"simpleblogpage-filter-root": "Filter nach Blog-Typ",
+	"simpleblogpage-readmore": "Weiterlesen",
+	"simpleblogpage-no-blog-no-create": "Dieser Blog existiert nicht",
+	"simpleblogpage-entry-blog-root-link": "[[$1|$2]]",
+	"simpleblogpage-articles-home-links": "Blogs",
+	"simpleblogpage-create-label": "Neuer Blogbeitrag",
+	"simpleblogpage-create-dialog-button-submit": "Erstellen",
+	"simpleblogpage-create-dialog-button-cancel": "Abbrechen",
+	"simpleblogpage-blog-type-general": "Allgemein",
+	"simpleblogpage-filter-section-global": "Blogs",
+	"simpleblogpage-filter-section-user": "Benutzerblogs",
+	"simpleblogpage-user-blogoverview-label": "Mein Blog",
+	"simpleblogpage-unwatch": "Diesen Beitrag nicht mehr beobachten",
+	"simpleblogpage-watch": "Diesen Beitrag beobachten",
+	"simpleblogpage-blog-type-user": "Benutzerblog",
+	"simpleblogpage-create-blog-own": "Mein Benutzerblog",
+	"simpleblogpage-error-non-existing-root-page": "Der gewünschte Blog existiert noch nicht. Schreibe jetzt den ersten Beitrag!"
+}

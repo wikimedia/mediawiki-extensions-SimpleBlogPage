@@ -5,6 +5,8 @@
  * @file
  */
 
+require_once __DIR__ . '/defines.php';
+
 $namespaceNames = [];
 
 /** English */

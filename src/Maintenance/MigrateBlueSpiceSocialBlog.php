@@ -71,7 +71,7 @@ class MigrateBlueSpiceSocialBlog extends LoggedUpdateMaintenance {
 			if ( !$content ) {
 				continue;
 			}
-			$text = $content->getText();
+			$text = $content->getNativeData();
 			$json = json_decode( $text, true );
 			if ( !$json ) {
 				continue;

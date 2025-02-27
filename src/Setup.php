@@ -10,7 +10,10 @@ class Setup {
 		$GLOBALS['wgVisualEditorAvailableContentModels']['blog_root'] = 'article';
 
 		$GLOBALS['wgExtensionFunctions'][] = static function () {
-			if ( $GLOBALS['wgCommentStreamsAllowedNamespaces'] !== null ) {
+			if (
+				isset( $GLOBALS['wgCommentStreamsAllowedNamespaces'] ) &&
+				is_array( $GLOBALS['wgCommentStreamsAllowedNamespaces'] )
+			) {
 				// This config is `null` by default, which will implicitly fallback
 				// to all content namespaces. We don't want to override this default
 				// but if it's already set, we can add the blog namespaces to it.

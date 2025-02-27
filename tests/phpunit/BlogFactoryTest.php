@@ -117,6 +117,7 @@ class BlogFactoryTest extends TestCase {
 				'entryPage' => 'Blog:Foo/Bar',
 				'hasMoreText' => false,
 				'name' => 'Bar',
+				'type' => 'global'
 			]
 		];
 		$this->assertSame( $expected, $serialized );
@@ -129,7 +130,8 @@ class BlogFactoryTest extends TestCase {
 	public function testGetBlogRootNames() {
 		$dbMock = $this->createMock( IDatabase::class );
 		$dbMock->method( 'newSelectQueryBuilder' )->willReturn( new SelectQueryBuilder( $dbMock ) );
-		$dbMock->expects( $this->exactly( 2 ) )
+		$dbMock->method( 'select' )->willReturn( new FakeResultWrapper( [] ) );
+		$dbMock->expects( $this->once() )
 			->method( 'query' )
 			->willReturn( new FakeResultWrapper( [
 				[

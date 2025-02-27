@@ -2,7 +2,6 @@
 
 namespace MediaWiki\Extension\SimpleBlogPage\Hook;
 
-use BlueSpice\Discovery\Hook\BlueSpiceDiscoveryTemplateDataProviderAfterInit;
 use MediaWiki\Extension\SimpleBlogPage\Integration\BlueSpiceDiscovery\ArticlesHomeLink;
 use MediaWiki\Hook\SkinTemplateNavigation__UniversalHook;
 use MediaWiki\Permissions\PermissionManager;
@@ -11,8 +10,7 @@ use MWStake\MediaWiki\Component\CommonUserInterface\Hook\MWStakeCommonUIRegister
 
 class AddBlogLinks implements
 	MWStakeCommonUIRegisterSkinSlotComponents,
-	SkinTemplateNavigation__UniversalHook,
-	BlueSpiceDiscoveryTemplateDataProviderAfterInit
+	SkinTemplateNavigation__UniversalHook
 {
 
 	/** @var SpecialPageFactory */
@@ -70,12 +68,5 @@ class AddBlogLinks implements
 			'href' => '',
 			'class' => 'simpleblogpage-create-label'
 		];
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	public function onBlueSpiceDiscoveryTemplateDataProviderAfterInit( $registry ): void {
-		$registry->register( 'panel/create', 'ca-simpleblogpage-create' );
 	}
 }

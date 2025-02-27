@@ -25,6 +25,7 @@ use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use RuntimeException;
 use Throwable;
+use Wikimedia\Rdbms\DBError;
 use Wikimedia\Rdbms\ILoadBalancer;
 use Wikimedia\Rdbms\IResultWrapper;
 
@@ -311,7 +312,11 @@ class BlogFactory implements LoggerAwareInterface {
 		if ( $forUser ) {
 			$query->where( [ 'page_title' => str_replace( ' ', '_', $forUser->getName() ) ] );
 		}
-		return $query->fetchResultSet();
+		try {
+			return $query->fetchResultSet();
+		} catch ( DBError $e ) {
+			return null;
+		}
 	}
 
 	/**

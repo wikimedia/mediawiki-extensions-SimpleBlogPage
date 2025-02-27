@@ -203,7 +203,7 @@
 		"BeforeDisplayNoArticleText": "handleNonExistingBlogPages",
 		"MWStakeCommonUIRegisterSkinSlotComponents": "addBlogLinks",
 		"SkinTemplateNavigation::Universal": "addBlogLinks",
-		"BlueSpiceDiscoveryTemplateDataProviderAfterInit": "addBlogLinks",
+		"BlueSpiceDiscoveryTemplateDataProviderAfterInit": "addBlogLinksBlueSpiceDiscovery",
 		"getUserPermissionsErrors": "handleEditPermissions",
 		"LoadExtensionSchemaUpdates": "runDatabaseUpdates",
 		"PageSaveComplete": "createBlogRootPage",
@@ -220,6 +220,9 @@
 		"addBlogLinks": {
 			"class": "MediaWiki\\Extension\\SimpleBlogPage\\Hook\\AddBlogLinks",
 			"services": [ "SpecialPageFactory", "PermissionManager" ]
+		},
+		"addBlogLinksBlueSpiceDiscovery": {
+			"class": "MediaWiki\\Extension\\SimpleBlogPage\\Hook\\AddBlogLinksBlueSpiceDiscovery"
 		},
 		"handleEditPermissions": {
 			"class": "MediaWiki\\Extension\\SimpleBlogPage\\Hook\\HandleEditPermissions"

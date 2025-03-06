@@ -5,8 +5,8 @@
 			"Universal Omega"
 		]
 	},
-	"blogs": "Name for [[Special:Blogs]] page",
 	"simpleblogpage-desc": "{{desc|name=SimpleBlogPage|url=https://www.mediawiki.org/wiki/Extension:SimpleBlogPage}}",
+	"blogs": "Name for [[Special:Blogs]] page",
 	"simpleblogpage-editor-blog-select": "Field label",
 	"simpleblogpage-editor-blog-select-new": "Warning message when selected blog doesnt exist",
 	"simpleblogpage-editor-title": "Field label",

@@ -1,0 +1,13 @@
+{
+	"@metadata": {
+		"authors": [
+			"Milicevic01"
+		]
+	},
+	"simpleblogpage-filter-all": "Све",
+	"simpleblogpage-readmore": "Прочитај још",
+	"simpleblogpage-create-dialog-button-submit": "Направи",
+	"simpleblogpage-create-dialog-button-cancel": "Откажи",
+	"simpleblogpage-filter-section-global": "Блогови",
+	"simpleblogpage-user-blogoverview-label": "Мој блог"
+}

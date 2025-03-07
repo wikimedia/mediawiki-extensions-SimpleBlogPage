@@ -1,11 +1,41 @@
 {
 	"@metadata": {
 		"authors": [
+			"GuoPC",
 			"Lakejason0",
 			"LittlePaw365"
 		]
 	},
 	"simpleblogpage-desc": "拥有评论投票功能、[[Special:CreateBlogPost|可创建博客文章的特殊页面]]和[[Special:ArticlesHome|可列出博客文章的特殊页面]]的博客系统",
-	"right-createblogpost": "[[Special:CreateBlogPost|创建新博客文章]]",
-	"action-createblogpost": "创建新博客文章"
+	"blogs": "所有博客文章",
+	"right-createblogpost": "创建新博客文章",
+	"action-createblogpost": "创建新博客文章",
+	"simpleblogpage-editor-blog-select": "博客",
+	"simpleblogpage-editor-blog-select-new": "您选择的博客尚不存在。在您保存文章后将创建该博客。",
+	"simpleblogpage-editor-title": "博客文章标题",
+	"simpleblogpage-editor-title-exists": "已存在相同标题的博客文章。请选择其他标题。",
+	"simpleblogpage-create-entry": "创建新博客文章",
+	"simpleblogpage-filter-all": "所有",
+	"simpleblogpage-error-invalid-content": "所请求页面的内容不是博客文章",
+	"simpleblogpage-error-invalid-target-page": "该页面不是有效的博客文章页面",
+	"simpleblogpage-error-invalid-root-page": "所请求的页面不是有效的博客页面",
+	"simpleblogpage-create-root-summary": "已创建根博客页面",
+	"simpleblogpage-edit-summary": "已编辑博客文章",
+	"simpleblogpage-error-rendering-failed": "无法渲染博客文章",
+	"simpleblogpage-filter-root": "博客类型过滤器",
+	"simpleblogpage-readmore": "阅读更多",
+	"simpleblogpage-no-blog-no-create": "此博客不存在",
+	"simpleblogpage-articles-home-links": "博客",
+	"simpleblogpage-create-label": "新博客文章",
+	"simpleblogpage-create-dialog-button-submit": "创建",
+	"simpleblogpage-create-dialog-button-cancel": "取消",
+	"simpleblogpage-blog-type-general": "常规",
+	"simpleblogpage-filter-section-global": "博客",
+	"simpleblogpage-filter-section-user": "用户博客",
+	"simpleblogpage-user-blogoverview-label": "我的博客",
+	"simpleblogpage-unwatch": "停止监视此文章",
+	"simpleblogpage-watch": "监视此文章",
+	"simpleblogpage-blog-type-user": "用户博客",
+	"simpleblogpage-create-blog-own": "我的用户博客",
+	"simpleblogpage-error-non-existing-root-page": "所请求的博客尚不存在。现在就撰写第一篇文章吧！"
 }

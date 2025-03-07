@@ -5,6 +5,15 @@
 		]
 	},
 	"simpleblogpage-desc": "Систем за блогирање со можности за коментирање и гласање, [[Special:CreateBlogPost|службена страница за создавање на блоговски објави]] и [[Special:ArticlesHome|службена страница за нивно наведување во список]]",
-	"right-createblogpost": "[[Special:CreateBlogPost|Создавање на нови блоговски објави]]",
-	"action-createblogpost": "создавање на нови блоговски објави"
+	"blogs": "Сите блоговски објави",
+	"right-createblogpost": "Создавање на нови блоговски објави",
+	"action-createblogpost": "создавање на нови блоговски објави",
+	"simpleblogpage-editor-blog-select": "Блог",
+	"simpleblogpage-editor-blog-select-new": "Избраниот блог сè уште не постои. Ќе биде создаден кога ќе ја зачувате објавата.",
+	"simpleblogpage-editor-title": "Наслов на блоговската објава",
+	"simpleblogpage-editor-title-exists": "Веќе постои блоговска објава со тој наслов. Изберете друг.",
+	"simpleblogpage-create-entry": "Создај нова блоговска објава",
+	"simpleblogpage-filter-all": "Сè",
+	"simpleblogpage-error-invalid-content": "Содржината на бараната страница не е блоговска објава",
+	"simpleblogpage-error-invalid-target-page": "Страницата не преставува важечка блоговска објава"
 }

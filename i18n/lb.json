@@ -1,0 +1,39 @@
+{
+	"@metadata": {
+		"authors": [
+			"Volvox"
+		]
+	},
+	"simpleblogpage-desc": "Blogsystem mat Kommentéier- an Ofstëmmfunktiounen, [[Special:CreateBlogPost|enger Spezialsäit fir Blogbäiträg unzeleeën]] an [[Special:ArticlesHome|enger Spezialsäit fir Blogbäiträg opzelëschten]]",
+	"blogs": "All Blogbäiträg",
+	"right-createblogpost": "Nei Blogbäiträg uleeën",
+	"action-createblogpost": "nei Blogbäiträg uleeën",
+	"simpleblogpage-editor-blog-select": "Blog",
+	"simpleblogpage-editor-blog-select-new": "De Blog, deen Dir ausgewielt hutt, gëtt et nach net. E wäert ugeluecht ginn, wann Dir de Bäitrag späichert.",
+	"simpleblogpage-editor-title": "Titel vum Blogbäitrag",
+	"simpleblogpage-editor-title-exists": "Et gëtt schonn e Blogbäitrag mat dësem Titel. Sicht Iech wgl. en aneren Titel eraus.",
+	"simpleblogpage-create-entry": "Neie Blogbäiträg uleeën",
+	"simpleblogpage-filter-all": "All",
+	"simpleblogpage-error-invalid-content": "Den Inhalt vun der ugefroter Säit ass kee Blogbäitrag",
+	"simpleblogpage-error-invalid-target-page": "Dës Säit ass keng gülteg Blogbäitragssäit",
+	"simpleblogpage-error-invalid-root-page": "Déi ugefrote Säit ass keng gülteg Blog-Säit",
+	"simpleblogpage-create-root-summary": "Haaptblogsäit ugeluecht",
+	"simpleblogpage-edit-summary": "Blogbäitrag geännert",
+	"simpleblogpage-error-rendering-failed": "De Blogbäitrag kann net duergestallt ginn",
+	"simpleblogpage-filter-root": "Filter no Blog-Typ",
+	"simpleblogpage-readmore": "Weiderliesen",
+	"simpleblogpage-no-blog-no-create": "Dëse Blog gëtt et net",
+	"simpleblogpage-articles-home-links": "Bloggen",
+	"simpleblogpage-create-label": "Neie Blogbäitrag",
+	"simpleblogpage-create-dialog-button-submit": "Uleeën",
+	"simpleblogpage-create-dialog-button-cancel": "Ofbriechen",
+	"simpleblogpage-blog-type-general": "Allgemeng",
+	"simpleblogpage-filter-section-global": "Bloggen",
+	"simpleblogpage-filter-section-user": "Benotzerbloggen",
+	"simpleblogpage-user-blogoverview-label": "Mäi Blog",
+	"simpleblogpage-unwatch": "Dëse Bäitrag net méi iwwerwaachen",
+	"simpleblogpage-watch": "Dëse Bäitrag iwwerwaachen",
+	"simpleblogpage-blog-type-user": "Benotzerblog",
+	"simpleblogpage-create-blog-own": "Mäi Benotzerblog",
+	"simpleblogpage-error-non-existing-root-page": "Den ugefrote Blog gëtt et nach net. Schreift elo den éischte Bäiträg!"
+}

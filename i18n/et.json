@@ -1,0 +1,13 @@
+{
+	"@metadata": {
+		"authors": [
+			"Rivoz"
+		]
+	},
+	"simpleblogpage-filter-all": "Kõik",
+	"simpleblogpage-readmore": "Loe veel",
+	"simpleblogpage-create-dialog-button-submit": "Loo",
+	"simpleblogpage-blog-type-general": "Üldine",
+	"simpleblogpage-filter-section-global": "Blogid",
+	"simpleblogpage-user-blogoverview-label": "Minu blogi"
+}

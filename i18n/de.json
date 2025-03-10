@@ -1,6 +1,7 @@
 {
 	"@metadata": {
 		"authors": [
+			"Brettchenweber",
 			"Miriam Schlindwein"
 		]
 	},
@@ -11,7 +12,7 @@
 	"simpleblogpage-editor-blog-select": "Blog",
 	"simpleblogpage-editor-blog-select-new": "Der ausgewählte Blog existiert noch nicht. Er wird erstellt, wenn du den Beitrag speicherst.",
 	"simpleblogpage-editor-title": "Titel des Blogbeitrags",
-	"simpleblogpage-editor-title-exists": "Der Blogbeitrag mit diesem Titel existiert bereits. Bitte wähle einen anderen Titel.",
+	"simpleblogpage-editor-title-exists": "Ein Blogbeitrag mit diesem Titel existiert bereits. Bitte wähle einen anderen Titel.",
 	"simpleblogpage-create-entry": "Neuen Blogbeitrag erstellen",
 	"simpleblogpage-filter-all": "Alle",
 	"simpleblogpage-error-invalid-content": "Der Inhalt der angeforderten Seite ist kein Blogbeitrag",

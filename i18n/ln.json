@@ -1,0 +1,39 @@
+{
+	"@metadata": {
+		"authors": [
+			"BOKOBA VEROLY"
+		]
+	},
+	"simpleblogpage-desc": "Système de blogue avec des fonctionnalités de commentaire et de vote, une [[Special:CreateBlogPost|page spéciale pour créer des notes de blogue]] et une [[Special:ArticlesHome|page spéciale pour lister les notes de blogue]].",
+	"blogs": "Ba posts nionso ya blog",
+	"right-createblogpost": "Kobimisa makambo ya sika na blog",
+	"action-createblogpost": "kosala ba posts ya sika ya blog",
+	"simpleblogpage-editor-blog-select": "Blog",
+	"simpleblogpage-editor-blog-select-new": "Blog oyo oponi ezali naino te. Ekosalema ntango obatelaka poste.",
+	"simpleblogpage-editor-title": "Motó ya likambo ya blog",
+	"simpleblogpage-editor-title-exists": "Poste ya blog na titre oyo eza déjà. Svp pona titre mususu.",
+	"simpleblogpage-create-entry": "Kobimisa lisolo ya sika na blog",
+	"simpleblogpage-filter-all": "Nyɔ́nsɔ",
+	"simpleblogpage-error-invalid-content": "Makambo oyo ezali na lokasa oyo basengi ezali te makambo oyo batye na blog",
+	"simpleblogpage-error-invalid-target-page": "Lokasa ezali lokasa ya solo ya blog te",
+	"simpleblogpage-error-invalid-root-page": "Lokasa oyo esengami ezali lokasa ya blog ya malamu te",
+	"simpleblogpage-create-root-summary": "Lokasa ya blog ya ebandeli esalami",
+	"simpleblogpage-edit-summary": "Mokanda ya blog ebongisami",
+	"simpleblogpage-error-rendering-failed": "Elongi te kosala poste ya blog",
+	"simpleblogpage-filter-root": "Filtre ya lolenge ya blog",
+	"simpleblogpage-readmore": "Tángá mingi",
+	"simpleblogpage-no-blog-no-create": "Blog oyo ezali te",
+	"simpleblogpage-articles-home-links": "Ba blogs",
+	"simpleblogpage-create-label": "Mokanda ya sika na blog",
+	"simpleblogpage-create-dialog-button-submit": "Kobimisa",
+	"simpleblogpage-create-dialog-button-cancel": "Kolongola",
+	"simpleblogpage-blog-type-general": "ya bánsɔ́",
+	"simpleblogpage-filter-section-global": "Ba blogs ya ba blogs",
+	"simpleblogpage-filter-section-user": "Ba blogs ya basaleli",
+	"simpleblogpage-user-blogoverview-label": "Blog na ngai",
+	"simpleblogpage-unwatch": "Botika kotala poste oyo",
+	"simpleblogpage-watch": "Tala esika oyo",
+	"simpleblogpage-blog-type-user": "Blog ya utilisateur",
+	"simpleblogpage-create-blog-own": "Mosali na ngai",
+	"simpleblogpage-error-non-existing-root-page": "Blog oyo basengi ezali nanu te. Koma poste ya liboso sikoyo!"
+}

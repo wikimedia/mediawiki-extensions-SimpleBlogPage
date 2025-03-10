@@ -4,5 +4,23 @@
 			"Ykhwong"
 		]
 	},
-	"action-createblogpost": "새 블로그 글을 만들"
+	"blogs": "모든 블로그 게시물",
+	"action-createblogpost": "새 블로그 글을 만들",
+	"simpleblogpage-editor-blog-select": "블로그",
+	"simpleblogpage-editor-title": "블로그 게시물 제목",
+	"simpleblogpage-create-entry": "새 블로그 글 만들기",
+	"simpleblogpage-filter-all": "모두",
+	"simpleblogpage-filter-root": "블로그 유형 필터",
+	"simpleblogpage-readmore": "더 읽어보기",
+	"simpleblogpage-articles-home-links": "블로그",
+	"simpleblogpage-create-label": "새로운 블로그 게시물",
+	"simpleblogpage-create-dialog-button-submit": "만들기",
+	"simpleblogpage-create-dialog-button-cancel": "취소",
+	"simpleblogpage-blog-type-general": "일반",
+	"simpleblogpage-filter-section-global": "블로그",
+	"simpleblogpage-filter-section-user": "사용자 블로그",
+	"simpleblogpage-user-blogoverview-label": "내 블로그",
+	"simpleblogpage-watch": "이 글 주시하기",
+	"simpleblogpage-blog-type-user": "사용자 블로그",
+	"simpleblogpage-create-blog-own": "내 사용자 블로그"
 }

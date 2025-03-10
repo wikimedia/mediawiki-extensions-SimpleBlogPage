@@ -1,10 +1,17 @@
 {
 	"@metadata": {
 		"authors": [
-			"Verdy p"
+			"JLTRY",
+			"Verdy p",
+			"WillyM"
 		]
 	},
 	"simpleblogpage-desc": "Système de blogue avec des fonctionnalités de commentaire et de vote, une [[Special:CreateBlogPost|page spéciale pour créer des notes de blogue]] et une [[Special:ArticlesHome|page spéciale pour lister les notes de blogue]].",
-	"right-createblogpost": "[[Special:CreateBlogPost|Créer de nouveaux billets de blogue]]",
-	"action-createblogpost": "créer de nouveaux billets de blogue"
+	"blogs": "Tous les articles de blog",
+	"right-createblogpost": "Créer de nouveaux billets de blogue",
+	"action-createblogpost": "créer de nouveaux billets de blogue",
+	"simpleblogpage-editor-title-exists": "Un article de blog avec ce titre existe déjà. S'il vous plaît choisissez un autre titre.",
+	"simpleblogpage-filter-all": "Tous",
+	"simpleblogpage-filter-section-global": "Blogues",
+	"simpleblogpage-error-non-existing-root-page": "Le blog demandé n'existe pas encore. Écrivez le premier message maintenant !"
 }

@@ -153,7 +153,8 @@ ext.simpleBlogPage.ui.panel.BlogList.prototype.renderFilters = async function() 
 		}
 		this.rootFilter = new OO.ui.DropdownWidget( {
 			menu: { items: options },
-			title: mw.msg( 'simpleblogpage-filter-root' )
+			title: mw.msg( 'simpleblogpage-filter-root' ),
+			$overlay: true
 		} );
 		this.rootFilter.getMenu().selectItemByData( '' );
 		this.rootFilter.menu.connect( this, {

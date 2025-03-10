@@ -162,7 +162,8 @@
 				"simpleblogpage-filter-all",
 				"simpleblogpage-filter-root",
 				"simpleblogpage-filter-section-global",
-				"simpleblogpage-filter-section-user"
+				"simpleblogpage-filter-section-user",
+				"simpleblogpage-no-posts"
 			],
 			"dependencies": [
 				"oojs-ui",

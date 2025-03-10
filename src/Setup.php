@@ -6,8 +6,10 @@ class Setup {
 	public static function callback() {
 		mwsInitComponents();
 
-		$GLOBALS['wgVisualEditorAvailableContentModels']['blog_post'] = 'article';
-		$GLOBALS['wgVisualEditorAvailableContentModels']['blog_root'] = 'article';
+		if ( isset( $GLOBALS['wgVisualEditorAvailableContentModels'] ) ) {
+			$GLOBALS['wgVisualEditorAvailableContentModels']['blog_post'] = 'article';
+			$GLOBALS['wgVisualEditorAvailableContentModels']['blog_root'] = 'article';
+		}
 
 		$GLOBALS['wgExtensionFunctions'][] = static function () {
 			if (
@@ -22,7 +24,13 @@ class Setup {
 			}
 		};
 
-		$GLOBALS['wgContentStabilizationUnavailableNamespaces'][] = NS_BLOG;
-		$GLOBALS['wgContentStabilizationUnavailableNamespaces'][] = NS_USER_BLOG;
+		if ( isset( $GLOBALS['wgContentStabilizationUnavailableNamespaces'] ) ) {
+			$GLOBALS['wgContentStabilizationUnavailableNamespaces'][] = NS_BLOG;
+			$GLOBALS['wgContentStabilizationUnavailableNamespaces'][] = NS_USER_BLOG;
+		}
+		if ( isset( $GLOBALS['smwgNamespacesWithSemanticLinks'] ) ) {
+			$GLOBALS['smwgNamespacesWithSemanticLinks'][NS_BLOG] = true;
+			$GLOBALS['smwgNamespacesWithSemanticLinks'][NS_USER_BLOG] = true;
+		}
 	}
 }

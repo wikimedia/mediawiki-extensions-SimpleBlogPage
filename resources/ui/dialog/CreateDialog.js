@@ -176,7 +176,13 @@ ext.simpleBlogPage.ui.dialog.CreateDialog.prototype.composeEntryTitle = async fu
 		this.blogSelector.getValidity()
 	];
 	$.when( ...promises ).done( () => {
-		let title = mw.Title.newFromText( this.blog + '/' + this.titleField.getValue().ucFirst() );
+		let blogTitle = this.titleField.getValue();
+		if ( typeof blogTitle !== 'string' || blogTitle.length < 1 ) {
+			throw new Error( 'Invalid blog title' );
+		}
+		// Uppercase first letter
+		blogTitle = blogTitle.charAt( 0 ).toUpperCase() + blogTitle.slice( 1 );
+		let title = mw.Title.newFromText( this.blog + '/' + blogTitle );
 		dfd.resolve( title.getPrefixedDb() );
 	} ).fail( () => { dfd.reject(); } );
 	return dfd.promise();

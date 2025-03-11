@@ -37,5 +37,5 @@
 	"simpleblogpage-watch": "监视此文章",
 	"simpleblogpage-blog-type-user": "用户博客",
 	"simpleblogpage-create-blog-own": "我的用户博客",
-	"simpleblogpage-error-non-existing-root-page": "所请求的博客尚不存在。现在就撰写第一篇文章吧！"
+	"simpleblogpage-error-non-existing-root-page": "所请求的博客尚不存在，成为第一个撰写文章的人吧！"
 }

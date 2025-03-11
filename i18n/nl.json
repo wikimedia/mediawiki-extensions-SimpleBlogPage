@@ -37,5 +37,6 @@
 	"simpleblogpage-watch": "Dit bericht volgen",
 	"simpleblogpage-blog-type-user": "Gebruikersblog",
 	"simpleblogpage-create-blog-own": "Mijn gebruikersblog",
-	"simpleblogpage-error-non-existing-root-page": "Het gevraagde blog bestaat nog niet. Schrijf nu het eerste bericht!"
+	"simpleblogpage-error-non-existing-root-page": "Het gevraagde blog bestaat nog niet. Schrijf het eerste bericht!",
+	"simpleblogpage-no-posts": "Er zijn nog geen blogberichten. Begin het blog en schrijf het eerste artikel!"
 }

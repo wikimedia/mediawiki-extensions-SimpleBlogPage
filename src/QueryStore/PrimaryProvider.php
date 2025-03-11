@@ -45,7 +45,7 @@ class PrimaryProvider extends PrimaryDatabaseDataProvider implements IBucketProv
 			}
 			$rootFilter = [];
 			foreach ( $value as $root ) {
-				$rootFilter[] = "page_title LIKE '$root/%'";
+				$rootFilter[] = 'page_title ' . $this->db->buildLike( "{$root}/", $this->db->anyString() );
 			}
 			$conds[] = '(' . $this->db->makeList( $rootFilter, IDatabase::LIST_OR ) . ')';
 			$filter->setApplied( true );

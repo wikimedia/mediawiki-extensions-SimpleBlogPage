@@ -36,5 +36,6 @@
 	"simpleblogpage-watch": "לעקוב אחרי הרשומה הזאת",
 	"simpleblogpage-blog-type-user": "בלוג משתמש",
 	"simpleblogpage-create-blog-own": "בלוג המשתמש שלי",
-	"simpleblogpage-error-non-existing-root-page": "הבלוג המבוקש עדיין לא קיים. אפשר לכתוב את הרשומה הראשונה עכשיו!"
+	"simpleblogpage-error-non-existing-root-page": "הבלוג המבוקש עדיין לא קיים. אפשר לכתוב את הרשומה הראשונה עכשיו!",
+	"simpleblogpage-no-posts": "בבלוג עדיין אין רשומות. אפשר להתחיל ליצור את הראשונה!"
 }

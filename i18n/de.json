@@ -24,7 +24,6 @@
 	"simpleblogpage-filter-root": "Filter nach Blog-Typ",
 	"simpleblogpage-readmore": "Weiterlesen",
 	"simpleblogpage-no-blog-no-create": "Dieser Blog existiert nicht",
-	"simpleblogpage-entry-blog-root-link": "[[$1|$2]]",
 	"simpleblogpage-articles-home-links": "Blogs",
 	"simpleblogpage-create-label": "Neuer Blogbeitrag",
 	"simpleblogpage-create-dialog-button-submit": "Erstellen",

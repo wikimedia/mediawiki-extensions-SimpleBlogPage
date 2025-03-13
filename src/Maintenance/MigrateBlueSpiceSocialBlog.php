@@ -67,6 +67,9 @@ class MigrateBlueSpiceSocialBlog extends LoggedUpdateMaintenance {
 		foreach ( $pages as $page ) {
 			$title = $this->getServiceContainer()->getTitleFactory()->newFromRow( $page );
 			$revision = $this->getServiceContainer()->getRevisionStore()->getRevisionByTitle( $title );
+			if ( !$revision ) {
+				continue;
+			}
 			$content = $revision->getContent( SlotRecord::MAIN );
 			if ( !$content ) {
 				continue;

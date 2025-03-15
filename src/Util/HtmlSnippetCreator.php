@@ -34,7 +34,7 @@ class HtmlSnippetCreator {
 		// Load the HTML into a DOMDocument
 		$dom = new DOMDocument();
 		libxml_use_internal_errors( true );
-		$html = mb_convert_encoding( $this->html, 'HTML-ENTITIES', 'UTF-8' );
+		$html = mb_encode_numericentity( $this->html, [ 0x80, 0x10FFFF, 0x0, ~0 ], 'UTF-8' );
 		$dom->loadHTML( $html, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD );
 		libxml_clear_errors();
 

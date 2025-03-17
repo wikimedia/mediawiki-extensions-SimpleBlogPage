@@ -5,6 +5,6 @@
 		]
 	},
 	"simpleblogpage-desc": "Systema de blog con functionalitate de commentos e votation, [[Special:CreateBlogPost|un pagina special pro crear articulos de blog]] e [[Special:ArticlesHome|un pagina special pro listar le articulos de blog]]",
-	"right-createblogpost": "[[Special:CreateBlogPost|Crear nove articulos de blog]]",
+	"right-createblogpost": "Crear nove articulos de blog",
 	"action-createblogpost": "crear nove articulos de blog"
 }

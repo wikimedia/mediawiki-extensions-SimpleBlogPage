@@ -35,5 +35,6 @@
 	"simpleblogpage-watch": "Набљудувај ја објавава",
 	"simpleblogpage-blog-type-user": "Кориснички блог",
 	"simpleblogpage-create-blog-own": "Мој кориснички блог",
-	"simpleblogpage-error-non-existing-root-page": "Бараниот блог сè уште не постои. Напишете ја првата објава сега!"
+	"simpleblogpage-error-non-existing-root-page": "Бараниот блог сè уште не постои. Напишете ја првата објава!",
+	"simpleblogpage-no-posts": "Сè уште нема блоговски записи. Започнете со создавање на првиот!"
 }

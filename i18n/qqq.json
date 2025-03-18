@@ -2,6 +2,7 @@
 	"@metadata": {
 		"authors": [
 			"Amire80",
+			"McDutchie",
 			"Robby",
 			"Universal Omega"
 		]
@@ -12,7 +13,7 @@
 	"simpleblogpage-editor-blog-select-new": "Warning message when selected blog doesnt exist",
 	"simpleblogpage-editor-title": "Field label",
 	"simpleblogpage-editor-title-exists": "Error message if selected blog title already exists",
-	"simpleblogpage-create-entry": "Button label for creating new posts",
+	"simpleblogpage-create-entry": "Button label for creating a new blog post",
 	"simpleblogpage-filter-all": "Filter label for all posts",
 	"simpleblogpage-error-invalid-content": "Error message if content is not a blog post",
 	"simpleblogpage-error-invalid-target-page": "Error message if target page is not a blog page",
@@ -31,8 +32,8 @@
 	"simpleblogpage-filter-section-global": "Section label for the blog filter dropdown",
 	"simpleblogpage-filter-section-user": "Section label for the blog filter dropdown",
 	"simpleblogpage-user-blogoverview-label": "Link label for the user blog overview",
-	"simpleblogpage-unwatch": "Button title for unwatching a post",
-	"simpleblogpage-watch": "Button title for watching a post",
+	"simpleblogpage-unwatch": "Button title for unwatching a blog post, as in removing it from the watchlist.",
+	"simpleblogpage-watch": "Button title for watching a blog post, as in adding it to the watchlist.",
 	"simpleblogpage-blog-type-user": "Label denoting a user blog",
 	"simpleblogpage-create-blog-own": "Label for creating post in own blog",
 	"simpleblogpage-error-non-existing-root-page": "Message shown when user tries to show posts of a non-existing blog",

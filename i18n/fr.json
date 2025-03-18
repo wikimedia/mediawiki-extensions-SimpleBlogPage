@@ -2,6 +2,7 @@
 	"@metadata": {
 		"authors": [
 			"JLTRY",
+			"McDutchie",
 			"Verdy p",
 			"WillyM"
 		]
@@ -14,7 +15,7 @@
 	"simpleblogpage-editor-blog-select-new": "Le blog que vous avez sélectionné n'existe pas encore. Il sera créé lorsque vous sauvegarderez le message.",
 	"simpleblogpage-editor-title": "Titre de l'article du blog",
 	"simpleblogpage-editor-title-exists": "Un article de blog avec ce titre existe déjà. S'il vous plaît choisissez un autre titre.",
-	"simpleblogpage-create-entry": "Créer de nouveaux billets de blogue",
+	"simpleblogpage-create-entry": "Créer un nouvel article de blog",
 	"simpleblogpage-filter-all": "Tous",
 	"simpleblogpage-error-invalid-content": "Le contenu de la page demandée n'est pas un article de blog",
 	"simpleblogpage-error-invalid-target-page": "La page n'est pas une page d'article de blog valide",
@@ -33,8 +34,8 @@
 	"simpleblogpage-filter-section-global": "Blogues",
 	"simpleblogpage-filter-section-user": "Blogs d'utilisateurs",
 	"simpleblogpage-user-blogoverview-label": "Mon blog",
-	"simpleblogpage-unwatch": "Arrêtez de regarder ce post",
-	"simpleblogpage-watch": "Regardez ce post",
+	"simpleblogpage-unwatch": "Ne plus suivre cet article",
+	"simpleblogpage-watch": "Suivre cet article",
 	"simpleblogpage-blog-type-user": "Blog utilisateur",
 	"simpleblogpage-create-blog-own": "Mon blog utilisateur",
 	"simpleblogpage-error-non-existing-root-page": "Le blog demandé n'existe pas encore, soyez le premier à publier !",

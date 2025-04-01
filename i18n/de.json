@@ -2,10 +2,11 @@
 	"@metadata": {
 		"authors": [
 			"Brettchenweber",
-			"Miriam Schlindwein"
+			"Miriam Schlindwein",
+			"Mschlindwein"
 		]
 	},
-	"simpleblogpage-desc": "Blogsystem mit Kommentar- und Abstimmungsfunktionen, [[Special:CreateBlogPost|eine Spezialseite zum Erstellen von Blogbeiträgen]] und[[Special:ArticlesHome|eine Spezialseite zur Auflistung von Blogbeiträgen]]",
+	"simpleblogpage-desc": "Blogsystem mit Kommentar- und Abstimmungsfunktionen, [[Special:CreateBlogPost|eine Spezialseite zum Erstellen von Blogbeiträgen]] und [[Special:ArticlesHome|eine Spezialseite zur Auflistung von Blogbeiträgen]]",
 	"blogs": "Alle Blogbeiträge",
 	"right-createblogpost": "Neue Blogbeiträge erstellen",
 	"action-createblogpost": "neue Blogbeiträge erstellen",

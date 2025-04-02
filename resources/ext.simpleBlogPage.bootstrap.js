@@ -5,8 +5,8 @@ ext.simpleBlogPage = {
 		widget: {},
 		dialog: {}
 	},
-	openCreateDialog: function( blog ) {
-		mw.loader.using( [ 'ext.simpleBlogPage.create' ] ).done( function() {
+	openCreateDialog: function ( blog ) {
+		mw.loader.using( [ 'ext.simpleBlogPage.create' ] ).done( () => {
 			const dialog = new ext.simpleBlogPage.ui.dialog.CreateDialog( {
 				blog: blog,
 				actor: mw.config.get( 'wgUserName' )
@@ -17,12 +17,12 @@ ext.simpleBlogPage = {
 	}
 };
 
-$( function() {
+$( () => {
 	const $btn = $( '#ca-simpleblogpage-create' );
 	if ( !$btn.length ) {
 		return;
 	}
-	$btn.on( 'click', function( e ) {
+	$btn.on( 'click', ( e ) => {
 		e.preventDefault();
 		ext.simpleBlogPage.openCreateDialog();
 	} );

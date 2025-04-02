@@ -1,4 +1,4 @@
-$( function() {
+$( () => {
 	const $cnt = $( '#blog-root' );
 	if ( $cnt.length > 0 ) {
 		const blog = $cnt.attr( 'data-blog' );

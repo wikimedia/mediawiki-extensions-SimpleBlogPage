@@ -6,7 +6,7 @@
 		"David Pean",
 		"Jack Phoenix",
 		"1f604",
-		"HalloWelt! GmbH"
+		"[http://www.hallowelt.com Hallo Welt! GmbH]"
 	],
 	"license-name": "GPL-3.0-or-later",
 	"url": "https://www.mediawiki.org/wiki/Extension:SimpleBlogPage",
@@ -216,7 +216,7 @@
 		},
 		"handleNonExistingBlogPages": {
 			"class": "MediaWiki\\Extension\\SimpleBlogPage\\Hook\\HandleNonExistingBlogPages",
-			"services": [ "SimpleBlogPage.BlogFactory"]
+			"services": [ "SimpleBlogPage.BlogFactory" ]
 		},
 		"addBlogLinks": {
 			"class": "MediaWiki\\Extension\\SimpleBlogPage\\Hook\\AddBlogLinks",

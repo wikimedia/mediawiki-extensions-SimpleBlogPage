@@ -1,4 +1,4 @@
-ext.simpleBlogPage.ui.dialog.CreateDialog = function( cfg ) {
+ext.simpleBlogPage.ui.dialog.CreateDialog = function ( cfg ) {
 	ext.simpleBlogPage.ui.dialog.CreateDialog.parent.call( this, cfg );
 	this.forcedBlog = cfg.blog || false;
 	this.actor = cfg.actor || false;
@@ -21,7 +21,7 @@ ext.simpleBlogPage.ui.dialog.CreateDialog.static.actions = [
 	}
 ];
 
-ext.simpleBlogPage.ui.dialog.CreateDialog.prototype.initialize = function() {
+ext.simpleBlogPage.ui.dialog.CreateDialog.prototype.initialize = function () {
 	ext.simpleBlogPage.ui.dialog.CreateDialog.parent.prototype.initialize.call( this );
 
 	this.panel = new OO.ui.PanelLayout( { padded: true, expanded: false } );
@@ -32,14 +32,14 @@ ext.simpleBlogPage.ui.dialog.CreateDialog.prototype.initialize = function() {
 	this.$body.append( this.panel.$element );
 };
 
-ext.simpleBlogPage.ui.dialog.CreateDialog.prototype.addSelector = function() {
+ext.simpleBlogPage.ui.dialog.CreateDialog.prototype.addSelector = function () {
 	this.blogSelector = new ext.simpleBlogPage.ui.widget.BlogSelector( {
 		$overlay: this.$overlay,
 		required: true
 	} );
 	this.blogSelector.connect( this, {
 		change: 'onBlogChange',
-		initialized: function() {
+		initialized: function () {
 			if ( !this.forcedBlog ) {
 				this.blogSelector.selectUserBlog();
 				return;
@@ -49,7 +49,7 @@ ext.simpleBlogPage.ui.dialog.CreateDialog.prototype.addSelector = function() {
 		}
 	} );
 	this.blogSelector.menu.connect( this, {
-		highlight: function() {
+		highlight: function () {
 			if ( this.blogTypingTimer ) {
 				clearTimeout( this.blogTypingTimer );
 			}
@@ -63,7 +63,7 @@ ext.simpleBlogPage.ui.dialog.CreateDialog.prototype.addSelector = function() {
 	this.panel.$element.append( this.blogSelectorLayout.$element );
 };
 
-ext.simpleBlogPage.ui.dialog.CreateDialog.prototype.addTitleField = function() {
+ext.simpleBlogPage.ui.dialog.CreateDialog.prototype.addTitleField = function () {
 	this.titleField = new OO.ui.TextInputWidget( {
 		required: true,
 		limit: 255
@@ -76,11 +76,11 @@ ext.simpleBlogPage.ui.dialog.CreateDialog.prototype.addTitleField = function() {
 	this.panel.$element.append( this.titleLayout.$element );
 };
 
-ext.simpleBlogPage.ui.dialog.CreateDialog.prototype.getActionProcess = function( action ) {
+ext.simpleBlogPage.ui.dialog.CreateDialog.prototype.getActionProcess = function ( action ) {
 	return ext.simpleBlogPage.ui.dialog.CreateDialog.parent.prototype.getActionProcess.call( this, action ).next(
-		async function() {
+		async () => {
 			if ( action === 'submit' ) {
-				var dfd = $.Deferred();
+				const dfd = $.Deferred();
 				this.pushPending();
 				try {
 					await this.checkValidity();
@@ -101,17 +101,17 @@ ext.simpleBlogPage.ui.dialog.CreateDialog.prototype.getActionProcess = function(
 			if ( action === 'cancel' ) {
 				this.close();
 			}
-		}.bind( this )
+		}
 	);
 };
 
-ext.simpleBlogPage.ui.dialog.CreateDialog.prototype.onBlogChange = async function( value ) {
+ext.simpleBlogPage.ui.dialog.CreateDialog.prototype.onBlogChange = async function ( value ) {
 	if ( !this.blogSelector.initialized ) {
 		return;
 	}
 	value = this.blogSelector.getValue();
 
-	if ( value.value )  {
+	if ( value.value ) {
 		if ( !value.fromOption ) {
 			const title = mw.Title.makeTitle( 1502, value.value );
 			value.value = title.getPrefixedDb();
@@ -139,7 +139,7 @@ ext.simpleBlogPage.ui.dialog.CreateDialog.prototype.onBlogChange = async functio
 	}
 };
 
-ext.simpleBlogPage.ui.dialog.CreateDialog.prototype.onTitleChange = function() {
+ext.simpleBlogPage.ui.dialog.CreateDialog.prototype.onTitleChange = function () {
 	if ( this.titleTypeTimer ) {
 		clearTimeout( this.titleTypeTimer );
 	}
@@ -152,25 +152,25 @@ ext.simpleBlogPage.ui.dialog.CreateDialog.prototype.onTitleChange = function() {
 	}, 500 );
 };
 
-ext.simpleBlogPage.ui.dialog.CreateDialog.prototype.doCheckExists = async function( title ) {
+ext.simpleBlogPage.ui.dialog.CreateDialog.prototype.doCheckExists = async function ( title ) {
 	const dfd = $.Deferred();
 	new mw.Api().get( {
 		action: 'query',
 		titles: title
-	} ).done( function( data ) {
+	} ).done( ( data ) => {
 		if ( data.query.pages[ -1 ] ) {
 			dfd.resolve( false );
 		} else {
 			dfd.resolve( true );
 		}
-	} ).fail( function( error ) {
+	} ).fail( ( error ) => {
 		dfd.reject( error );
 	} );
 	return dfd.promise();
 };
 
-ext.simpleBlogPage.ui.dialog.CreateDialog.prototype.composeEntryTitle = async function() {
-	var dfd = $.Deferred();
+ext.simpleBlogPage.ui.dialog.CreateDialog.prototype.composeEntryTitle = async function () {
+	const dfd = $.Deferred();
 	const promises = [
 		this.titleField.getValidity(),
 		this.blogSelector.getValidity()
@@ -182,14 +182,16 @@ ext.simpleBlogPage.ui.dialog.CreateDialog.prototype.composeEntryTitle = async fu
 		}
 		// Uppercase first letter
 		blogTitle = blogTitle.charAt( 0 ).toUpperCase() + blogTitle.slice( 1 );
-		let title = mw.Title.newFromText( this.blog + '/' + blogTitle );
+		const title = mw.Title.newFromText( this.blog + '/' + blogTitle );
 		dfd.resolve( title.getPrefixedDb() );
-	} ).fail( () => { dfd.reject(); } );
+	} ).fail( () => {
+		dfd.reject();
+	} );
 	return dfd.promise();
 };
 
-ext.simpleBlogPage.ui.dialog.CreateDialog.prototype.checkValidity = async function() {
-	var dfd = $.Deferred();
+ext.simpleBlogPage.ui.dialog.CreateDialog.prototype.checkValidity = async function () {
+	const dfd = $.Deferred();
 
 	try {
 		this.titleLayout.setErrors( [] );
@@ -199,7 +201,7 @@ ext.simpleBlogPage.ui.dialog.CreateDialog.prototype.checkValidity = async functi
 			return dfd.reject().promise();
 		}
 		this.blogEntryPage = await this.composeEntryTitle();
-		var exists = await this.doCheckExists( this.blogEntryPage );
+		const exists = await this.doCheckExists( this.blogEntryPage );
 		if ( exists ) {
 			this.titleLayout.setErrors( [ mw.msg( 'simpleblogpage-editor-title-exists' ) ] );
 			this.blogEntryPage = false;

@@ -14,7 +14,8 @@
 		"es-x/no-async-functions": "off",
 		"max-len": "off",
 		"no-jquery/no-global-selector": "off",
-		"no-prototype-builtins": "off"
+		"no-prototype-builtins": "off",
+		"no-jquery/no-done-fail": "warn"
 	},
 	"parserOptions": {
 		"ecmaVersion": 8

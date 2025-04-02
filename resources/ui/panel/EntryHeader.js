@@ -14,14 +14,14 @@ ext.simpleBlogPage.ui.panel.EntryHeader = function EntryHeader( config, wikiTitl
 
 OO.inheritClass( ext.simpleBlogPage.ui.panel.EntryHeader, OO.ui.PanelLayout );
 
-ext.simpleBlogPage.ui.panel.EntryHeader.prototype.render = function( config ) {
+ext.simpleBlogPage.ui.panel.EntryHeader.prototype.render = function ( config ) {
 	this.$title = $( '<div>' ).addClass( 'blog-entry-title' );
 	this.$contribution = $( '<div>' ).addClass( 'blog-entry-contribution' );
 	this.$actions = $( '<div>' ).addClass( 'blog-entry-actions' );
 	this.$element.append( this.$title, this.$contribution, this.$actions );
 	this.$headerAnchor = $( '<h2>' );
 
-	this.contribution = new OOJSPlus.ui.widget.ContributionWidget( config.userTimestamp, { user_name: config.author } );
+	this.contribution = new OOJSPlus.ui.widget.ContributionWidget( config.userTimestamp, { user_name: config.author } ); // eslint-disable-line camelcase
 	this.$contribution.append( this.contribution.$element );
 	if ( !this.isNative ) {
 		this.$element.addClass( 'non-native' );
@@ -60,7 +60,7 @@ ext.simpleBlogPage.ui.panel.EntryHeader.prototype.render = function( config ) {
 	}
 };
 
-ext.simpleBlogPage.ui.panel.EntryHeader.prototype.onWatchClick = function() {
+ext.simpleBlogPage.ui.panel.EntryHeader.prototype.onWatchClick = function () {
 	const unwatch = this.watchInfo.isWatching;
 	const api = new mw.Api();
 	this.watchButton.setDisabled( true );
@@ -68,11 +68,11 @@ ext.simpleBlogPage.ui.panel.EntryHeader.prototype.onWatchClick = function() {
 		action: 'watch',
 		titles: this.wikiTitle.getPrefixedText(),
 		unwatch: unwatch ? '' : '1'
-	} ).done( function() {
+	} ).done( () => {
 		this.watchButton.setIcon( unwatch ? 'star' : 'unStar' );
 		this.watchButton.setTitle( mw.msg( unwatch ? 'simpleblogpage-watch' : 'simpleblogpage-unwatch' ) );
 		this.watchInfo.isWatching = !unwatch;
-	}.bind( this ) ).always( function() {
+	} ).always( () => {
 		this.watchButton.setDisabled( false );
-	}.bind( this ) );
+	} );
 };

@@ -1,4 +1,4 @@
-$( function() {
+$( () => {
 	const $cnt = $( '#blog-home' );
 	if ( $cnt.length > 0 ) {
 		const blogToFilter = $cnt.attr( 'data-blog' );

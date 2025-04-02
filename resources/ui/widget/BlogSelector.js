@@ -1,4 +1,4 @@
-ext.simpleBlogPage.ui.widget.BlogSelector = function( cfg ) {
+ext.simpleBlogPage.ui.widget.BlogSelector = function ( cfg ) {
 	cfg = cfg || {};
 	ext.simpleBlogPage.ui.widget.BlogSelector.super.call( this, cfg );
 	this.initialized = false;
@@ -6,18 +6,18 @@ ext.simpleBlogPage.ui.widget.BlogSelector = function( cfg ) {
 	this.optionMapping = {};
 	this.optionMappingReverse = {};
 
-	this.loadOptions().done( function( options ) {
+	this.loadOptions().done( ( options ) => {
 		this.menu.clearItems();
-		for ( var dbkey in options ) {
+		for ( const dbkey in options ) {
 			if ( !options.hasOwnProperty( dbkey ) ) {
 				continue;
 			}
-			if ( options[dbkey].type === 'user' ) {
+			if ( options[ dbkey ].type === 'user' ) {
 				this.userBlog = dbkey;
 			}
-			const display = dbkey === this.userBlog ? mw.msg( 'simpleblogpage-create-blog-own' ) : options[dbkey].display;
-			this.optionMapping[dbkey] = display;
-			this.optionMappingReverse[display] = dbkey;
+			const display = dbkey === this.userBlog ? mw.msg( 'simpleblogpage-create-blog-own' ) : options[ dbkey ].display;
+			this.optionMapping[ dbkey ] = display;
+			this.optionMappingReverse[ display ] = dbkey;
 			const item = new OO.ui.MenuOptionWidget( {
 				data: dbkey,
 				label: display,
@@ -27,47 +27,47 @@ ext.simpleBlogPage.ui.widget.BlogSelector = function( cfg ) {
 		}
 		this.initialized = true;
 		this.emit( 'initialized' );
-	}.bind( this ) ).fail( function() {
+	} ).fail( () => {
 		this.initialized = true;
-	}.bind( this ) );
+	} );
 };
 
 OO.inheritClass( ext.simpleBlogPage.ui.widget.BlogSelector, OO.ui.ComboBoxInputWidget );
 
-ext.simpleBlogPage.ui.widget.BlogSelector.prototype.loadOptions = function() {
-	var deferred = $.Deferred();
+ext.simpleBlogPage.ui.widget.BlogSelector.prototype.loadOptions = function () {
+	const deferred = $.Deferred();
 	$.ajax( {
 		url: mw.util.wikiScript( 'rest' ) + '/simpleblogpage/v1/helper/root_pages',
 		data: { forCreation: true },
 		method: 'GET'
-	} ).done( function( data ) {
+	} ).done( ( data ) => {
 		deferred.resolve( data );
-	} ).fail( function( xhr, s, e ) {
-		console.error( xhr.hasOwnProperty( 'responseJSON' ) ? xhr.responseJSON.message : e );
+	} ).fail( ( xhr, s, e ) => {
+		console.error( xhr.hasOwnProperty( 'responseJSON' ) ? xhr.responseJSON.message : e ); // eslint-disable-line no-console
 		deferred.reject();
 	} );
 	return deferred;
 };
 
-ext.simpleBlogPage.ui.widget.BlogSelector.prototype.setValue = function( value ) {
+ext.simpleBlogPage.ui.widget.BlogSelector.prototype.setValue = function ( value ) {
 	if ( value ) {
 		value = value.replace( /\s/g, '_' );
 	}
 	if ( value && this.optionMapping && this.optionMapping.hasOwnProperty( value ) ) {
-		value = this.optionMapping[value];
+		value = this.optionMapping[ value ];
 	}
 	ext.simpleBlogPage.ui.widget.BlogSelector.super.prototype.setValue.call( this, value );
 };
 
-ext.simpleBlogPage.ui.widget.BlogSelector.prototype.getValue = function() {
+ext.simpleBlogPage.ui.widget.BlogSelector.prototype.getValue = function () {
 	const value = ext.simpleBlogPage.ui.widget.BlogSelector.super.prototype.getValue.call( this );
 	if ( this.optionMappingReverse && this.optionMappingReverse.hasOwnProperty( value ) ) {
-		return { fromOption: true, value: this.optionMappingReverse[value] };
+		return { fromOption: true, value: this.optionMappingReverse[ value ] };
 	}
 	return { fromOption: false, value: value };
 };
 
-ext.simpleBlogPage.ui.widget.BlogSelector.prototype.selectUserBlog = function() {
+ext.simpleBlogPage.ui.widget.BlogSelector.prototype.selectUserBlog = function () {
 	if ( this.userBlog ) {
 		this.setValue( this.userBlog );
 	}

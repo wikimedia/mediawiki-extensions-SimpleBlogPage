@@ -1,5 +1,5 @@
-ext.simpleBlogPage.ui.panel.BlogList = function( cfg ) {
-	cfg = $.extend( cfg || {}, {
+ext.simpleBlogPage.ui.panel.BlogList = function ( cfg ) {
+	cfg = $.extend( cfg || {}, { // eslint-disable-line no-jquery/no-extend
 		expanded: false
 	} );
 	ext.simpleBlogPage.ui.panel.BlogList.parent.call( this, cfg );
@@ -14,7 +14,6 @@ ext.simpleBlogPage.ui.panel.BlogList = function( cfg ) {
 	this.filtersInitialized = false;
 	this.forcedBlog = null;
 
-
 	this.store = new OOJSPlus.ui.data.store.RemoteRestStore( {
 		path: 'simpleblogpage/v1/list',
 		remoteFilter: true,
@@ -22,7 +21,7 @@ ext.simpleBlogPage.ui.panel.BlogList = function( cfg ) {
 		pageSize: this.limit,
 		filter: this.blog ?
 			{ root: { value: this.blog, operator: 'eq' }, type: { value: this.type, operator: 'eq' } } : {},
-		sorter: { timestamp: { direction: 'DESC' } },
+		sorter: { timestamp: { direction: 'DESC' } }
 	} );
 
 	this.renderHeader();
@@ -35,26 +34,26 @@ ext.simpleBlogPage.ui.panel.BlogList = function( cfg ) {
 		grid: this
 	} );
 
-	this.store.load().done( function() {
+	this.store.load().done( () => {
 		this.paginator.init();
 		if ( !this.filtersInitialized ) {
 			this.buckets = this.store.getBuckets() || {};
 			this.filtersInitialized = true;
 			this.renderFilters();
 		}
-	}.bind( this ) ).fail( function( xhr, status, error ) {
-		this.$element.html( new OO.ui.MessageWidget(  {
+	} ).fail( ( xhr, status, error ) => {
+		this.$element.html( new OO.ui.MessageWidget( {
 			type: 'error',
 			label: xhr.hasOwnProperty( 'responseJSON' ) ? xhr.responseJSON.message : error
 		} ).$element );
-	}.bind( this ) );
+	} );
 
 	this.$element.append( this.itemPanel.$element, this.paginator.$element );
 };
 
 OO.inheritClass( ext.simpleBlogPage.ui.panel.BlogList, OO.ui.PanelLayout );
 
-ext.simpleBlogPage.ui.panel.BlogList.prototype.renderHeader = function() {
+ext.simpleBlogPage.ui.panel.BlogList.prototype.renderHeader = function () {
 	this.header = new OO.ui.PanelLayout( {
 		expanded: false,
 		classes: [ 'blog-list-header' ]
@@ -77,54 +76,54 @@ ext.simpleBlogPage.ui.panel.BlogList.prototype.renderHeader = function() {
 	}
 };
 
-ext.simpleBlogPage.ui.panel.BlogList.prototype.clearItems = function() {
+ext.simpleBlogPage.ui.panel.BlogList.prototype.clearItems = function () {
 	this.itemPanel.$element.empty();
 };
 
-ext.simpleBlogPage.ui.panel.BlogList.prototype.setItems = function( data ) {
+ext.simpleBlogPage.ui.panel.BlogList.prototype.setItems = function ( data ) {
 	this.itemPanel.$element.empty();
 	if ( $.isEmptyObject( data ) ) {
 		this.showNoPosts();
 		return;
 	}
-	for ( let index in data ) {
+	for ( const index in data ) {
 		if ( !data.hasOwnProperty( index ) ) {
 			continue;
 		}
-		const item = data[index];
-		const entry = new ext.simpleBlogPage.ui.panel.Entry({
+		const item = data[ index ];
+		const entry = new ext.simpleBlogPage.ui.panel.Entry( {
 			wikiTitle: mw.Title.makeTitle( item.namespace, item.wikipage ),
 			forcedBlog: this.forcedBlog ? true : this.isNative || this.blog,
-			userCanWatch: item.canWatch, userIsWatching: item.isWatching,
+			userCanWatch: item.canWatch, userIsWatching: item.isWatching
 		} );
 		this.itemPanel.$element.append( entry.$element );
 	}
 };
 
-ext.simpleBlogPage.ui.panel.BlogList.prototype.onCreateClick = function() {
+ext.simpleBlogPage.ui.panel.BlogList.prototype.onCreateClick = function () {
 	ext.simpleBlogPage.openCreateDialog( this.blogPage ? this.blogPage : null );
 };
 
-ext.simpleBlogPage.ui.panel.BlogList.prototype.renderFilters = async function() {
+ext.simpleBlogPage.ui.panel.BlogList.prototype.renderFilters = async function () {
 	if ( this.isNative || this.blog ) {
 		return;
 	}
 	this.header.$element.append( this.$filters );
 	// Native means that we are on a blog root page, which forces root filter, so we dont offer it
 	if ( this.buckets.hasOwnProperty( 'root' ) ) {
-		var blogNames = await this.loadBlogNames();
-		let globalBlogs = [];
-		let userBlogs = [];
-		this.buckets.root.forEach( function( i ) {
+		const blogNames = await this.loadBlogNames();
+		const globalBlogs = [];
+		const userBlogs = [];
+		this.buckets.root.forEach( ( i ) => {
 			let display = i;
 			let type = 'global';
-			for ( var key in blogNames ) {
+			for ( const key in blogNames ) {
 				if ( !blogNames.hasOwnProperty( key ) ) {
 					continue;
 				}
-				if ( blogNames[key].dbKey === i ) {
-					type = blogNames[key].type;
-					display = blogNames[key].display;
+				if ( blogNames[ key ].dbKey === i ) {
+					type = blogNames[ key ].type;
+					display = blogNames[ key ].display;
 					break;
 				}
 
@@ -135,25 +134,21 @@ ext.simpleBlogPage.ui.panel.BlogList.prototype.renderFilters = async function() 
 				userBlogs.push( { data: i, label: display } );
 			}
 		} );
-		let options = [
+		const options = [
 			new OO.ui.MenuOptionWidget( {
 				data: '',
 				label: mw.msg( 'simpleblogpage-filter-all' )
 			} ),
 			new OO.ui.MenuSectionOptionWidget( {
-				label: mw.msg( 'simpleblogpage-filter-section-global' ),
+				label: mw.msg( 'simpleblogpage-filter-section-global' )
 			} ),
-			...globalBlogs.map( function( i ) {
-				return new OO.ui.MenuOptionWidget( i );
-			} )
+			...globalBlogs.map( ( i ) => new OO.ui.MenuOptionWidget( i ) )
 		];
 		if ( userBlogs.length > 0 ) {
 			options.push( new OO.ui.MenuSectionOptionWidget( {
-				label: mw.msg( 'simpleblogpage-filter-section-user' ),
+				label: mw.msg( 'simpleblogpage-filter-section-user' )
 			} ) );
-			options.push( ...userBlogs.map( function( i ) {
-				return new OO.ui.MenuOptionWidget( i );
-			} ) );
+			options.push( ...userBlogs.map( ( i ) => new OO.ui.MenuOptionWidget( i ) ) );
 		}
 		this.rootFilter = new OO.ui.DropdownWidget( {
 			menu: { items: options },
@@ -162,7 +157,7 @@ ext.simpleBlogPage.ui.panel.BlogList.prototype.renderFilters = async function() 
 		} );
 		this.rootFilter.getMenu().selectItemByData( '' );
 		this.rootFilter.menu.connect( this, {
-			select: function( item ) {
+			select: function ( item ) {
 				this.onFilter( 'root', item.getData() );
 			}
 		} );
@@ -170,7 +165,7 @@ ext.simpleBlogPage.ui.panel.BlogList.prototype.renderFilters = async function() 
 	}
 };
 
-ext.simpleBlogPage.ui.panel.BlogList.prototype.onFilter = function( field, value ) {
+ext.simpleBlogPage.ui.panel.BlogList.prototype.onFilter = function ( field, value ) {
 	let filter = null;
 	if ( value ) {
 		filter = new OOJSPlus.ui.data.filter.String( {
@@ -184,21 +179,21 @@ ext.simpleBlogPage.ui.panel.BlogList.prototype.onFilter = function( field, value
 	this.store.filter( filter, field );
 };
 
-ext.simpleBlogPage.ui.panel.BlogList.prototype.loadBlogNames = async function() {
-	var deferred = $.Deferred();
+ext.simpleBlogPage.ui.panel.BlogList.prototype.loadBlogNames = async function () {
+	const deferred = $.Deferred();
 	$.ajax( {
 		url: mw.util.wikiScript( 'rest' ) + '/simpleblogpage/v1/helper/root_pages',
 		method: 'GET'
-	} ).done( function( data ) {
+	} ).done( ( data ) => {
 		deferred.resolve( data );
-	} ).fail( function( xhr, s, e ) {
-		console.error( xhr.hasOwnProperty( 'responseJSON' ) ? xhr.responseJSON.message : e );
+	} ).fail( ( xhr, s, e ) => {
+		console.error( xhr.hasOwnProperty( 'responseJSON' ) ? xhr.responseJSON.message : e ); // eslint-disable-line no-console
 		deferred.resolve( {} );
 	} );
 	return deferred;
 };
 
-ext.simpleBlogPage.ui.panel.BlogList.prototype.showNoPosts = function() {
+ext.simpleBlogPage.ui.panel.BlogList.prototype.showNoPosts = function () {
 	this.itemPanel.$element.append( new OOJSPlus.ui.widget.NoContentPlaceholderWidget( {
 		icon: 'blog-no-posts',
 		label: mw.msg( 'simpleblogpage-no-posts' )

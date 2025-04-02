@@ -63,10 +63,10 @@ class AddBlogLinks implements
 		}
 		$skinTemplate->getOutput()->addModules( [ 'ext.simpleBlogPage.bootstrap' ] );
 		$links['actions']['simpleblogpage-create'] = [
+			'id' => 'ca-simpleblogpage-create',
+			'href' => '',
 			'text' => $skinTemplate->getContext()->msg( 'simpleblogpage-create-label' )->text(),
 			'title' => $skinTemplate->getContext()->msg( 'simpleblogpage-create-label' )->text(),
-			'href' => '',
-			'class' => 'simpleblogpage-create-label'
 		];
 	}
 }

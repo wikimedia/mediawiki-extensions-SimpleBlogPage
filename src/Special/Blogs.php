@@ -48,15 +48,6 @@ class Blogs extends SpecialPage {
 				if ( isset( $roots[$blogKey] ) ) {
 					$root = $roots[$blogKey]['dbKey'];
 					$rootType = $roots[$blogKey]['type'];
-				} else {
-					$this->getOutput()->enableOOUI();
-					$msg = $this->blogFactory->canUserPostInBlog( $this->getUser(), $forcedBlog ) ?
-						'simpleblogpage-error-non-existing-root-page' :
-						'simpleblogpage-no-blog-no-create';
-					$this->getOutput()->addHTML( ( new MessageWidget( [
-						'type' => 'warning',
-						'label' => $this->msg( $msg )->text()
-					] ) )->toString() );
 				}
 				$this->getOutput()->setPageTitle(
 					$this->getOutput()->getPageTitle() . ' - ' . $forcedBlog->getPrefixedText()

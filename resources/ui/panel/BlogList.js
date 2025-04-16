@@ -194,8 +194,12 @@ ext.simpleBlogPage.ui.panel.BlogList.prototype.loadBlogNames = async function ()
 };
 
 ext.simpleBlogPage.ui.panel.BlogList.prototype.showNoPosts = function () {
+	let label = mw.msg( 'simpleblogpage-no-posts' );
+	if ( !this.allowCreation ) {
+		label = mw.msg( 'simpleblogpage-no-blog-no-create' );
+	}
 	this.itemPanel.$element.append( new OOJSPlus.ui.widget.NoContentPlaceholderWidget( {
 		icon: 'blog-no-posts',
-		label: mw.msg( 'simpleblogpage-no-posts' )
+		label: label
 	} ).$element );
 };

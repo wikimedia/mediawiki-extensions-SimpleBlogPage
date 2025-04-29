@@ -6,7 +6,7 @@
 			"LittlePaw365"
 		]
 	},
-	"simpleblogpage-desc": "拥有评论投票功能、[[Special:CreateBlogPost|可创建博客文章的特殊页面]]和[[Special:ArticlesHome|可列出博客文章的特殊页面]]的博客系统",
+	"simpleblogpage-desc": "拥有评论投票功能以及[[Special:ArticlesHome|可列出博客文章的特殊页面]]的博客系统",
 	"blogs": "所有博客文章",
 	"right-createblogpost": "创建新博客文章",
 	"action-createblogpost": "创建新博客文章",

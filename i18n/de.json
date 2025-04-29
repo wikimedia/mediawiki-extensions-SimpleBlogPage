@@ -37,5 +37,6 @@
 	"simpleblogpage-watch": "Diesen Beitrag beobachten",
 	"simpleblogpage-blog-type-user": "Benutzerblog",
 	"simpleblogpage-create-blog-own": "Mein Benutzerblog",
-	"simpleblogpage-error-non-existing-root-page": "Der gewünschte Blog existiert noch nicht. Schreibe jetzt den ersten Beitrag!"
+	"simpleblogpage-error-non-existing-root-page": "Das gewünschte Blog existiert noch nicht; sei der Erste, der dort veröffentlicht!",
+	"simpleblogpage-no-posts": "Noch keine Blogeinträge. Starte mit der Erstellung des ersten Eintrags!"
 }

@@ -6,7 +6,7 @@
 			"Siebrand"
 		]
 	},
-	"simpleblogpage-desc": "Blogsysteem met functies voor reacties en peilingen, [[Special:CreateBlogPost|een speciale pagina om blogpagina's aan te maken]] en [[Special:ArticlesHome|een speciale pagina met een lijst van blogpagina's]].",
+	"simpleblogpage-desc": "Blogsysteem met functies voor reacties en peilingen, alsmede [[Special:ArticlesHome|een speciale pagina met een lijst van blogartikelen]].",
 	"blogs": "Alle blogberichten",
 	"right-createblogpost": "Nieuwe blogartikelen aanmaken",
 	"action-createblogpost": "nieuwe blogposts aan te maken",

@@ -38,5 +38,7 @@
 	"simpleblogpage-blog-type-user": "User blog",
 	"simpleblogpage-create-blog-own": "My user blog",
 	"simpleblogpage-error-non-existing-root-page": "Requested blog does not exist yet, be the first one to post!",
-	"simpleblogpage-no-posts": "No blog entries yet. Start by creating the first one!"
+	"simpleblogpage-no-posts": "No blog entries yet. Start by creating the first one!",
+	"simpleblogpage-config-mainlinks-blog-label": "Show entrypoint \"Blog\"",
+	"simpleblogpage-config-mainlinks-blog-help": "Show entrypoint \"Blog\" link in the left navigation"
 }

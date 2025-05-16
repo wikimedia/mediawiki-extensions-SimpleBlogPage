@@ -4,7 +4,7 @@
 			"Volvox"
 		]
 	},
-	"simpleblogpage-desc": "Blogsystem mat Kommentéier- an Ofstëmmfunktiounen, [[Special:CreateBlogPost|enger Spezialsäit fir Blogbäiträg unzeleeën]] an [[Special:ArticlesHome|enger Spezialsäit fir Blogbäiträg opzelëschten]]",
+	"simpleblogpage-desc": "Blogsystem mat Kommentéier- an Ofstëmmfunktiounen a mat [[Special:ArticlesHome|enger Spezialsäit fir Blogbäiträg opzelëschten]]",
 	"blogs": "All Blogbäiträg",
 	"right-createblogpost": "Nei Blogbäiträg uleeën",
 	"action-createblogpost": "nei Blogbäiträg uleeën",

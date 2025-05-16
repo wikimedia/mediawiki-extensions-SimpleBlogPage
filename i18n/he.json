@@ -5,7 +5,7 @@
 			"מקף"
 		]
 	},
-	"simpleblogpage-desc": "מערכת בלוגים עם אפשרויות תגובה והצבעה, [[Special:CreateBlogPost|דף מיוחד ליצירת רשומות בבלוג]] ו[[Special:ArticlesHome|דף מיוחד להצגת כל הרשומות בבלוג]]",
+	"simpleblogpage-desc": "מערכת בלוגים עם אפשרויות תגובה והצבעה, וגם [[Special:ArticlesHome|דף מיוחד להצגת כל הרשומות בבלוג]]",
 	"blogs": "כל רשומות הבלוג",
 	"right-createblogpost": "יצירת רשומות בלוג חדשות",
 	"action-createblogpost": "ליצור רשומות חדשות בבלוג",

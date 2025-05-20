@@ -1,0 +1,11 @@
+{
+	"@metadata": {
+		"authors": []
+	},
+	"simpleblogpage-filter-all": "Sve",
+	"simpleblogpage-readmore": "Pročitaj još",
+	"simpleblogpage-create-dialog-button-submit": "Napravi",
+	"simpleblogpage-create-dialog-button-cancel": "Otkaži",
+	"simpleblogpage-filter-section-global": "Blogovi",
+	"simpleblogpage-user-blogoverview-label": "Moj blog"
+}

@@ -216,7 +216,8 @@
 		"getUserPermissionsErrors": "handleEditPermissions",
 		"LoadExtensionSchemaUpdates": "runDatabaseUpdates",
 		"PageSaveComplete": "createBlogRootPage",
-		"UserLoginComplete": "createBlogRootPage"
+		"UserLoginComplete": "createBlogRootPage",
+		"BSUsageTrackerRegisterCollectors": "registerUsageTracker"
 	},
 	"HookHandlers": {
 		"setDefaultModel": {
@@ -242,6 +243,9 @@
 		"createBlogRootPage": {
 			"class": "MediaWiki\\Extension\\SimpleBlogPage\\Hook\\CreateBlogRootPage",
 			"services": [ "SimpleBlogPage.BlogFactory", "WikiPageFactory", "TitleFactory" ]
+		},
+		"registerUsageTracker": {
+			"class": "MediaWiki\\Extension\\SimpleBlogPage\\Hook\\RegisterUsageTracker"
 		}
 	},
 	"ServiceWiringFiles": [

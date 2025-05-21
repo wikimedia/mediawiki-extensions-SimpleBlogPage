@@ -2,11 +2,12 @@
 
 namespace MediaWiki\Extension\SimpleBlogPage\Maintenance;
 
-use MediaWiki\CommentStore\CommentStoreComment;
 use MediaWiki\Extension\SimpleBlogPage\Content\BlogPostContent;
 use MediaWiki\Maintenance\LoggedUpdateMaintenance;
 use MediaWiki\Message\Message;
+use MediaWiki\Revision\RevisionRecord;
 use MediaWiki\Revision\SlotRecord;
+use MediaWiki\Title\Title;
 use MediaWiki\User\User;
 
 require_once dirname( __DIR__, 4 ) . '/maintenance/Maintenance.php';
@@ -25,14 +26,10 @@ class MigrateBlueSpiceSocialBlog extends LoggedUpdateMaintenance {
 		$blogPages = $this->getSocialBlogPages();
 		$this->output( "Found " . count( $blogPages ) . " blog pages.\n" );
 		$count = 0;
-		foreach ( $blogPages as $page => $data ) {
-			if ( $count > 0 && $count % 100 === 0 ) {
-				$this->output( "Migrated $count pages...\n" );
-			}
-			if ( $this->migratePage( $page, $data ) ) {
+		foreach ( $blogPages as $data ) {
+			if ( $this->migratePage( $data ) ) {
 				$count++;
 			}
-
 		}
 		$this->output( "Migrated $count pages.\n" );
 		return true;
@@ -66,28 +63,36 @@ class MigrateBlueSpiceSocialBlog extends LoggedUpdateMaintenance {
 		$blogPages = [];
 		foreach ( $pages as $page ) {
 			$title = $this->getServiceContainer()->getTitleFactory()->newFromRow( $page );
-			$revision = $this->getServiceContainer()->getRevisionStore()->getRevisionByTitle( $title );
-			if ( !$revision ) {
+			$revisions = [];
+			$revision = $this->getServiceContainer()->getRevisionStore()->getFirstRevision( $title );
+			$page = null;
+			while ( $revision ) {
+				$blogRevisionDetails = $this->getBlogRevisionDetails( $revision );
+				if ( !$blogRevisionDetails ) {
+					break;
+				}
+				if ( !$page ) {
+					$page = $this->makeBlogPage( $blogRevisionDetails['page'] );
+					if ( !$page ) {
+						break;
+					}
+				}
+				$newRevision = new \WikiRevision();
+				$newRevision->setTitle( $page );
+				$newRevision->setTimestamp( $revision->getTimestamp() );
+				$newRevision->setUsername( $revision->getUser()?->getName() );
+				$newRevision->setContent( SlotRecord::MAIN, new BlogPostContent( $blogRevisionDetails['text' ] ) );
+				$revisions[] = $newRevision;
+
+				$revision = $this->getServiceContainer()->getRevisionStore()->getNextRevision( $revision );
+			}
+			if ( !$revisions ) {
 				continue;
 			}
-			$content = $revision->getContent( SlotRecord::MAIN );
-			if ( !$content ) {
-				continue;
-			}
-			$text = $content->getNativeData();
-			$json = json_decode( $text, true );
-			if ( !$json ) {
-				continue;
-			}
-			if ( !isset( $json['type'] ) || $json['type'] !== 'blog' ) {
-				continue;
-			}
-			if ( $json['archived'] ) {
-				continue;
-			}
-			$blogPages[$json['blogtitle']] = [
-				'text' => $json['text'],
-				'author' => $json['ownerid'],
+
+			$blogPages[] = [
+				'page' => $page,
+				'revisions' => $revisions
 			];
 		}
 
@@ -95,34 +100,115 @@ class MigrateBlueSpiceSocialBlog extends LoggedUpdateMaintenance {
 	}
 
 	/**
-	 * @param string $title
-	 * @param array $data
-	 * @return bool
+	 * @param RevisionRecord $revision
+	 * @return array|null
 	 */
-	private function migratePage( string $title, array $data ) {
+	private function getBlogRevisionDetails( RevisionRecord $revision ): ?array {
+		$content = $revision->getContent( SlotRecord::MAIN );
+		if ( !$content ) {
+			return null;
+		}
+		$text = $content->getNativeData();
+		$json = json_decode( $text, true );
+		if ( !$json ) {
+			return null;
+		}
+		if ( !isset( $json['type'] ) || $json['type'] !== 'blog' ) {
+			return null;
+		}
+		if ( $json['archived'] ) {
+			return null;
+		}
+
+		return [
+			'page' => $json['blogtitle'],
+			'text' => $json['text'],
+		];
+	}
+
+	/**
+	 * @param string $blogName
+	 * @return Title|null
+	 */
+	private function makeBlogPage( string $blogName ): ?Title {
 		$defaultBlog = Message::newFromKey( 'simpleblogpage-blog-type-general' )->text();
-		$newTitle = $this->getServiceContainer()->getTitleFactory()->makeTitle( NS_BLOG, "$defaultBlog/$title" );
+		$newTitle = $this->getServiceContainer()->getTitleFactory()->makeTitle( NS_BLOG, "$defaultBlog/$blogName" );
 		if ( $newTitle->exists() ) {
-			return false;
+			return $newTitle;
 		}
 		if ( !$newTitle->canExist() ) {
 			$this->error( 'Cannot create blog page ' . $newTitle->getPrefixedText() );
-			return false;
+			return null;
 		}
-		$content = new BlogPostContent( $data['text'] );
-		$author = $this->getServiceContainer()->getUserFactory()->newFromId( $data['author'] );
-		if ( !$author->isAllowed( 'createblogpost' ) ) {
-			$author = User::newSystemUser( 'MediaWiki default', [ 'steal' => true ] );
+		return $newTitle;
+	}
+
+	/**
+	 * @param array $data
+	 * @return bool
+	 */
+	private function migratePage( array $data ) {
+		$page = $data['page'];
+		if ( $page->exists() ) {
+			if ( $this->getOption( 'force' ) ) {
+				$this->output( "Page {$page->getPrefixedText()} already exists. Deleting due to --force...\n" );
+				$deletePage = $this->getServiceContainer()->getDeletePageFactory()->newDeletePage(
+					$page->toPageIdentity(), User::newSystemUser( 'MediaWiki default', [ 'steal' => true ] )
+				);
+				if ( !$deletePage->deleteUnsafe( 'Blog migration' )->isOK() ) {
+					$this->error( "Failed to delete page {$page->getPrefixedText()}\n" );
+					return false;
+				}
+			} else {
+				$this->output( "Page {$page->getPrefixedText()} already exists. Skipping...\n" );
+				return false;
+			}
 		}
-		$wp = $this->getServiceContainer()->getWikiPageFactory()->newFromTitle( $newTitle );
-		$updater = $wp->newPageUpdater( $author );
-		$updater->setContent( SlotRecord::MAIN, $content );
-		$updater->saveRevision( CommentStoreComment::newUnsavedComment( 'Migrated from BlueSpiceSocialBlog' ) );
-		if ( !$updater->getStatus()->isOK() ) {
-			$this->error( 'Failed to save blog post ' . $newTitle->getPrefixedText() );
-			return false;
+
+		$importer = $this->getServiceContainer()->getOldRevisionImporter();
+
+		$this->output( 'Importing blog post to ' . $page->getPrefixedText() . "..." );
+		$importedCnt = 0;
+		foreach ( $data['revisions'] as $revision ) {
+			if ( $importer->import( $revision ) ) {
+				$importedCnt++;
+			}
 		}
-		return true;
+		$totalRevisions = count( $data['revisions'] );
+		$this->output( " Imported $importedCnt/$totalRevisions revisions.\n" );
+		if ( $importedCnt !== $totalRevisions ) {
+			$this->error( "Failed to import all revisions for {$page->getPrefixedText()}\n" );
+		}
+		$this->forcePageLatest( $page );
+		return $importedCnt > 0;
+	}
+
+	/**
+	 * @param Title $title
+	 * @return void
+	 */
+	private function forcePageLatest( Title $title ) {
+		$db = $this->getDB( DB_PRIMARY );
+		$maxRev = $db->newSelectQueryBuilder()
+			->from( 'revision' )
+			->select( 'MAX( rev_id ) as latest' )
+			->where( [
+				'rev_page' => $title->getArticleID(),
+			] )
+			->fetchRow();
+		if ( !$maxRev ) {
+			$this->error( "Failed to get max revision for {$title->getPrefixedText()}\n" );
+			return;
+		}
+		$db->newUpdateQueryBuilder()
+			->update( 'page' )
+			->set( [
+				'page_latest' => $maxRev->latest,
+			] )
+			->where( [
+				'page_id' => $title->getArticleID(),
+			] )
+			->execute();
 	}
 
 	/**

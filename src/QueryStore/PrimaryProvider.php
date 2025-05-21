@@ -19,7 +19,7 @@ class PrimaryProvider extends PrimaryDatabaseDataProvider implements IBucketProv
 	 * @return string[]
 	 */
 	protected function getTableNames() {
-		return [ 'page', 'revision', 'actor', 'user' ];
+		return [ 'page', 'revision', 'actor' ];
 	}
 
 	/**
@@ -28,7 +28,7 @@ class PrimaryProvider extends PrimaryDatabaseDataProvider implements IBucketProv
 	protected function getFields() {
 		return [
 			'page_id', 'page_title as root', 'page_namespace as namespace',
-			'user_name as author', 'rev_timestamp as timestamp'
+			'actor_name as author', 'rev_timestamp as timestamp'
 		];
 	}
 
@@ -65,10 +65,6 @@ class PrimaryProvider extends PrimaryDatabaseDataProvider implements IBucketProv
 			'actor' => [
 				'INNER JOIN',
 				[ 'rev_actor = actor_id' ]
-			],
-			'user' => [
-				'INNER JOIN',
-				[ 'actor_user = user_id' ]
 			]
 		];
 	}

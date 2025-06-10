@@ -7,7 +7,7 @@
 			"WillyM"
 		]
 	},
-	"simpleblogpage-desc": "Système de blogue avec des fonctionnalités de commentaire et de vote, une [[Special:CreateBlogPost|page spéciale pour créer des notes de blogue]] et une [[Special:ArticlesHome|page spéciale pour lister les notes de blogue]].",
+	"simpleblogpage-desc": "Système de blogue avec des fonctionnalités de commentaire et de vote, ainsi qu'une [[Special:ArticlesHome|page spéciale pour lister les notes de blogue]].",
 	"blogs": "Tous les articles de blog",
 	"right-createblogpost": "Créer de nouveaux billets de blogue",
 	"action-createblogpost": "créer de nouveaux billets de blogue",

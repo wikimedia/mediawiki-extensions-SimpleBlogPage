@@ -77,7 +77,7 @@ class BlogFactory implements LoggerAwareInterface {
 	 * @param LoggerInterface $logger
 	 * @return void
 	 */
-	public function setLogger( $logger ) {
+	public function setLogger( $logger ): void {
 		$this->logger = $logger;
 	}
 

@@ -30,6 +30,9 @@
 					"type": "global",
 					"roles": [ "editor" ]
 				}
+			},
+			"ConfigDefinitionRegistry": {
+				"SimpleBlogPageShowInMainLinks": "\\MediaWiki\\Extension\\SimpleBlogPage\\Integration\\ConfigDefinition\\MainLinksBlog::getInstance"
 			}
 		}
 	},
@@ -199,6 +202,10 @@
 		"remoteExtPath": "SimpleBlogPage/resources"
 	},
 	"config": {
+		"SimpleBlogPageShowInMainLinks": {
+			"value": true,
+			"public": true
+		}
 	},
 	"Hooks": {
 		"ContentHandlerDefaultModelFor": "setDefaultModel",
@@ -221,7 +228,7 @@
 		},
 		"addBlogLinks": {
 			"class": "MediaWiki\\Extension\\SimpleBlogPage\\Hook\\AddBlogLinks",
-			"services": [ "SpecialPageFactory", "PermissionManager" ]
+			"services": [ "SpecialPageFactory", "PermissionManager", "MainConfig" ]
 		},
 		"addBlogLinksBlueSpiceDiscovery": {
 			"class": "MediaWiki\\Extension\\SimpleBlogPage\\Hook\\AddBlogLinksBlueSpiceDiscovery"

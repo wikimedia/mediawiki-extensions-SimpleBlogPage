@@ -2,6 +2,7 @@
 
 namespace MediaWiki\Extension\SimpleBlogPage\Hook;
 
+use Config;
 use MediaWiki\Extension\SimpleBlogPage\Integration\BlueSpiceDiscovery\ArticlesHomeLink;
 use MediaWiki\Hook\SkinTemplateNavigation__UniversalHook;
 use MediaWiki\Permissions\PermissionManager;
@@ -19,30 +20,37 @@ class AddBlogLinks implements
 	/** @var PermissionManager */
 	private $permissionManager;
 
+	/** @var Config */
+	private $config;
+
 	/**
 	 * @param SpecialPageFactory $spf
 	 * @param PermissionManager $permissionManager
+	 * @param Config $config
 	 */
-	public function __construct( SpecialPageFactory $spf, PermissionManager $permissionManager ) {
+	public function __construct( SpecialPageFactory $spf, PermissionManager $permissionManager, Config $config ) {
 		$this->spf = $spf;
 		$this->permissionManager = $permissionManager;
+		$this->config = $config;
 	}
 
 	/**
 	 * @inheritDoc
 	 */
 	public function onMWStakeCommonUIRegisterSkinSlotComponents( $registry ): void {
-		$registry->register(
-			'MainLinksPanel',
-			[
-				'simpleblogpage-blog-overview' => [
-					'factory' => function () {
-						return new ArticlesHomeLink( $this->spf, [] );
-					},
-					'position' => 30
+		if ( $this->config->get( 'SimpleBlogPageShowInMainLinks' ) ) {
+			$registry->register(
+				'MainLinksPanel',
+				[
+					'simpleblogpage-blog-overview' => [
+						'factory' => function () {
+							return new ArticlesHomeLink( $this->spf, [] );
+						},
+						'position' => 30
+					]
 				]
-			]
-		);
+			);
+		}
 	}
 
 	/**

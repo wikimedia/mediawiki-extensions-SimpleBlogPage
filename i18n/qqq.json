@@ -40,5 +40,7 @@
 	"simpleblogpage-blog-type-user": "Label denoting a user blog",
 	"simpleblogpage-create-blog-own": "Label for creating post in own blog",
 	"simpleblogpage-error-non-existing-root-page": "Message shown when user tries to show posts of a non-existing blog",
-	"simpleblogpage-no-posts": "Notice when no blog posts exist"
+	"simpleblogpage-no-posts": "Notice when no blog posts exist",
+	"simpleblogpage-config-mainlinks-blog-label": "Configuration option in BlueSpiceConfigManager",
+	"simpleblogpage-config-mainlinks-blog-help": "Help for configuration option in BlueSpiceConfigManager"
 }

@@ -3,12 +3,13 @@
 		"authors": [
 			"Deltaspace",
 			"Kareyac",
+			"Okras",
 			"Rairakkumee"
 		]
 	},
 	"simpleblogpage-desc": "Система блогов с функциями комментирования и голосования, [[Special:CreateBlogPost|служебной страницей для создания постов в блоге]] и [[Special:ArticlesHome|служебной страницей со списком постов]]",
 	"blogs": "Все сообщения в блоге",
-	"right-createblogpost": "[[Special:CreateBlogPost|Создавать новые посты в блоге]]",
+	"right-createblogpost": "Создавать новые посты в блоге",
 	"action-createblogpost": "создавать новые сообщения в блоге",
 	"simpleblogpage-filter-all": "Все",
 	"simpleblogpage-filter-section-global": "Блоги"

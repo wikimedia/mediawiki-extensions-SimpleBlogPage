@@ -36,5 +36,7 @@
 	"simpleblogpage-blog-type-user": "Blog de usator",
 	"simpleblogpage-create-blog-own": "Mi blog de usator",
 	"simpleblogpage-error-non-existing-root-page": "Le blog requestate non existe ancora. Sia le prime a publicar!",
-	"simpleblogpage-no-posts": "Necun articulo de blog ancora. Comencia per crear le prime!"
+	"simpleblogpage-no-posts": "Necun articulo de blog ancora. Comencia per crear le prime!",
+	"simpleblogpage-config-mainlinks-blog-label": "Monstrar le puncto de entrata “Blog”",
+	"simpleblogpage-config-mainlinks-blog-help": "Monstrar le ligamine del puncto de entrata “Blog” in le navigation al sinistra"
 }

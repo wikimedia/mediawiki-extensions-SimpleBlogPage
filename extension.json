@@ -50,7 +50,9 @@
 	],
 	"callback": "MediaWiki\\Extension\\SimpleBlogPage\\Setup::callback",
 	"AutoloadNamespaces": {
-		"MediaWiki\\Extension\\SimpleBlogPage\\": "src/",
+		"MediaWiki\\Extension\\SimpleBlogPage\\": "src/"
+	},
+	"TestAutoloadNamespaces": {
 		"MediaWiki\\Extension\\SimpleBlogPage\\tests\\": "tests/phpunit/"
 	},
 	"namespaces": [

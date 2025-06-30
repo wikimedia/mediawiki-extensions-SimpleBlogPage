@@ -1,19 +1,20 @@
 {
 	"@metadata": {
 		"authors": [
+			"Derugon",
 			"JLTRY",
 			"McDutchie",
 			"Verdy p",
 			"WillyM"
 		]
 	},
-	"simpleblogpage-desc": "Système de blogue avec des fonctionnalités de commentaire et de vote, une [[Special:CreateBlogPost|page spéciale pour créer des notes de blogue]] et une [[Special:ArticlesHome|page spéciale pour lister les notes de blogue]].",
+	"simpleblogpage-desc": "Système de blogue avec des fonctionnalités de commentaire et de vote, ainsi qu'une [[Special:ArticlesHome|page spéciale pour lister les notes de blogue]].",
 	"blogs": "Tous les articles de blog",
 	"right-createblogpost": "Créer de nouveaux billets de blogue",
 	"action-createblogpost": "créer de nouveaux billets de blogue",
 	"simpleblogpage-editor-blog-select": "Blog",
 	"simpleblogpage-editor-blog-select-new": "Le blog que vous avez sélectionné n'existe pas encore. Il sera créé lorsque vous sauvegarderez le message.",
-	"simpleblogpage-editor-title": "Titre de l'article du blog",
+	"simpleblogpage-editor-title": "Titre de l’article de blog",
 	"simpleblogpage-editor-title-exists": "Un article de blog avec ce titre existe déjà. S'il vous plaît choisissez un autre titre.",
 	"simpleblogpage-create-entry": "Créer un nouvel article de blog",
 	"simpleblogpage-filter-all": "Tous",
@@ -31,7 +32,7 @@
 	"simpleblogpage-create-dialog-button-submit": "Créer",
 	"simpleblogpage-create-dialog-button-cancel": "Annuler",
 	"simpleblogpage-blog-type-general": "Général",
-	"simpleblogpage-filter-section-global": "Blogues",
+	"simpleblogpage-filter-section-global": "Blogs",
 	"simpleblogpage-filter-section-user": "Blogs d'utilisateurs",
 	"simpleblogpage-user-blogoverview-label": "Mon blog",
 	"simpleblogpage-unwatch": "Ne plus suivre cet article",
@@ -39,5 +40,7 @@
 	"simpleblogpage-blog-type-user": "Blog utilisateur",
 	"simpleblogpage-create-blog-own": "Mon blog utilisateur",
 	"simpleblogpage-error-non-existing-root-page": "Le blog demandé n'existe pas encore, soyez le premier à publier !",
-	"simpleblogpage-no-posts": "Aucun article de blog pour le moment. Commencez par créer le premier !"
+	"simpleblogpage-no-posts": "Aucun article de blog pour le moment. Commencez par créer le premier !",
+	"simpleblogpage-config-mainlinks-blog-label": "Afficher le point d’entrée « Blog »",
+	"simpleblogpage-config-mainlinks-blog-help": "Afficher le lien du point d’entrée « Blog » dans le panneau de navigation à gauche"
 }

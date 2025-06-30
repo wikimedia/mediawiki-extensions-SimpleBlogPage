@@ -3,8 +3,8 @@
 		"authors": [
 			"Deltaspace",
 			"Kareyac",
-			"Rairakkumee",
-			"Okras"
+			"Okras",
+			"Rairakkumee"
 		]
 	},
 	"simpleblogpage-desc": "Система блогов с функциями комментирования и голосования, [[Special:CreateBlogPost|служебной страницей для создания постов в блоге]] и [[Special:ArticlesHome|служебной страницей со списком постов]]",

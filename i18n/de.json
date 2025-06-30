@@ -3,7 +3,8 @@
 		"authors": [
 			"Brettchenweber",
 			"Miriam Schlindwein",
-			"Mschlindwein"
+			"Mschlindwein",
+			"Vhoesl"
 		]
 	},
 	"simpleblogpage-desc": "Blogsystem mit Kommentar- und Abstimmungsfunktionen sowie einer [[Special:ArticlesHome|Spezialseite zur Auflistung von Blogbeiträgen]]",
@@ -38,5 +39,7 @@
 	"simpleblogpage-blog-type-user": "Benutzerblog",
 	"simpleblogpage-create-blog-own": "Mein Benutzerblog",
 	"simpleblogpage-error-non-existing-root-page": "Das gewünschte Blog existiert noch nicht; sei der Erste, der dort veröffentlicht!",
-	"simpleblogpage-no-posts": "Noch keine Blogeinträge. Starte mit der Erstellung des ersten Eintrags!"
+	"simpleblogpage-no-posts": "Noch keine Blogeinträge. Starte mit der Erstellung des ersten Eintrags!",
+	"simpleblogpage-config-mainlinks-blog-label": "Einstiegspunkt \"Blog\" anzeigen",
+	"simpleblogpage-config-mainlinks-blog-help": "Einstiegspunkt \"Blog\" in der linken Navigation anzeigen"
 }

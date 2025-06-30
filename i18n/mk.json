@@ -4,7 +4,7 @@
 			"Bjankuloski06"
 		]
 	},
-	"simpleblogpage-desc": "Систем за блогирање со можности за коментирање и гласање, [[Special:CreateBlogPost|службена страница за создавање на блоговски објави]] и [[Special:ArticlesHome|службена страница за нивно наведување во список]]",
+	"simpleblogpage-desc": "Систем за блогирање со можности за коментирање и гласање, како и [[Special:ArticlesHome|службена страница за нивно испишување во список]]",
 	"blogs": "Сите блоговски објави",
 	"right-createblogpost": "Создавање на нови блоговски објави",
 	"action-createblogpost": "создавање на нови блоговски објави",
@@ -36,5 +36,7 @@
 	"simpleblogpage-blog-type-user": "Кориснички блог",
 	"simpleblogpage-create-blog-own": "Мој кориснички блог",
 	"simpleblogpage-error-non-existing-root-page": "Бараниот блог сè уште не постои. Напишете ја првата објава!",
-	"simpleblogpage-no-posts": "Сè уште нема блоговски записи. Започнете со создавање на првиот!"
+	"simpleblogpage-no-posts": "Сè уште нема блоговски записи. Започнете со создавање на првиот!",
+	"simpleblogpage-config-mainlinks-blog-label": "Прикажувај пристапна точка „Блог“",
+	"simpleblogpage-config-mainlinks-blog-help": "Прикажувај пристапна точка „Блог“ во страничникот лево"
 }

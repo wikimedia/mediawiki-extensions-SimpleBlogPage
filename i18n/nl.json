@@ -38,5 +38,7 @@
 	"simpleblogpage-blog-type-user": "Gebruikersblog",
 	"simpleblogpage-create-blog-own": "Mijn gebruikersblog",
 	"simpleblogpage-error-non-existing-root-page": "Het gevraagde blog bestaat nog niet. Schrijf het eerste bericht!",
-	"simpleblogpage-no-posts": "Er zijn nog geen blogberichten. Begin het blog en schrijf het eerste artikel!"
+	"simpleblogpage-no-posts": "Er zijn nog geen blogberichten. Begin het blog en schrijf het eerste artikel!",
+	"simpleblogpage-config-mainlinks-blog-label": "Toegangspunt “Blog” weergeven",
+	"simpleblogpage-config-mainlinks-blog-help": "De koppeling naar het toegangspunt “Blog” weergeven in de navigatie aan de linkerkant"
 }

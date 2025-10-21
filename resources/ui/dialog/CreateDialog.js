@@ -17,7 +17,7 @@ ext.simpleBlogPage.ui.dialog.CreateDialog.static.actions = [
 	{
 		action: 'cancel',
 		label: mw.message( 'simpleblogpage-create-dialog-button-cancel' ).text(),
-		flags: [ 'safe' ]
+		flags: [ 'safe', 'close' ]
 	}
 ];
 

@@ -1,0 +1,42 @@
+{
+	"@metadata": {
+		"authors": [
+			"Toliño"
+		]
+	},
+	"simpleblogpage-desc": "Sistema de blogs con funcións de comentarios e votacións, así como unha [[Special:ArticlesHome|páxina especial para listar entradas do blog]]",
+	"blogs": "Todas as entradas do blog",
+	"right-createblogpost": "Crear novas entradas no blog",
+	"action-createblogpost": "crear novas entradas no blog",
+	"simpleblogpage-editor-blog-select": "Blog",
+	"simpleblogpage-editor-blog-select-new": "O blog que seleccionaches aínda non existe. Crearase cando gardes a publicación.",
+	"simpleblogpage-editor-title": "Título da entrada do blog",
+	"simpleblogpage-editor-title-exists": "Xa existe unha entrada no blog con este título. Escolle outro título.",
+	"simpleblogpage-create-entry": "Crear a nova entrada no blog",
+	"simpleblogpage-filter-all": "Todas",
+	"simpleblogpage-error-invalid-content": "O contido da páxina solicitada non é unha entrada de blog",
+	"simpleblogpage-error-invalid-target-page": "A páxina non é unha páxina de entrada de blog válida",
+	"simpleblogpage-error-invalid-root-page": "A páxina solicitada non é unha páxina de blog válida",
+	"simpleblogpage-create-root-summary": "Creación da páxina raíz do blog",
+	"simpleblogpage-edit-summary": "Edición da entrada do blog",
+	"simpleblogpage-error-rendering-failed": "Non se puido renderizar a entrada do blog",
+	"simpleblogpage-filter-root": "Filtro de tipo de blog",
+	"simpleblogpage-readmore": "Ler máis",
+	"simpleblogpage-no-blog-no-create": "Este blog non existe",
+	"simpleblogpage-articles-home-links": "Blogs",
+	"simpleblogpage-create-label": "Nova entrada no blog",
+	"simpleblogpage-create-dialog-button-submit": "Crear",
+	"simpleblogpage-create-dialog-button-cancel": "Cancelar",
+	"simpleblogpage-blog-type-general": "Xeral",
+	"simpleblogpage-filter-section-global": "Blogs",
+	"simpleblogpage-filter-section-user": "Blogs de usuarios",
+	"simpleblogpage-user-blogoverview-label": "O meu blog",
+	"simpleblogpage-unwatch": "Deixar de vixiar esta entrada",
+	"simpleblogpage-watch": "Vixiar esta entrada",
+	"simpleblogpage-blog-type-user": "Blog de usuario",
+	"simpleblogpage-create-blog-own": "O meu blog de usuario",
+	"simpleblogpage-error-non-existing-root-page": "O blog solicitado aínda non existe. Publica ti antes que ninguén!",
+	"simpleblogpage-no-posts": "Aínda non hai entradas no blog. Crea a primeira entrada!",
+	"simpleblogpage-config-mainlinks-blog-label": "Mostrar o punto de entrada «Blog»",
+	"simpleblogpage-config-mainlinks-blog-help": "Mostrar a ligazón ao punto de entrada «Blog» na navegación esquerda"
+}

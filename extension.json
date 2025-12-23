@@ -231,7 +231,7 @@
 		},
 		"addBlogLinks": {
 			"class": "MediaWiki\\Extension\\SimpleBlogPage\\Hook\\AddBlogLinks",
-			"services": [ "SpecialPageFactory", "PermissionManager", "MainConfig" ]
+			"services": [ "SpecialPageFactory", "PermissionManager", "MainConfig", "TitleFactory" ]
 		},
 		"addBlogLinksBlueSpiceDiscovery": {
 			"class": "MediaWiki\\Extension\\SimpleBlogPage\\Hook\\AddBlogLinksBlueSpiceDiscovery"

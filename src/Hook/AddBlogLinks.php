@@ -3,10 +3,12 @@
 namespace MediaWiki\Extension\SimpleBlogPage\Hook;
 
 use Config;
+use MediaWiki\Context\RequestContext;
 use MediaWiki\Extension\SimpleBlogPage\Integration\BlueSpiceDiscovery\ArticlesHomeLink;
 use MediaWiki\Hook\SkinTemplateNavigation__UniversalHook;
 use MediaWiki\Permissions\PermissionManager;
 use MediaWiki\SpecialPage\SpecialPageFactory;
+use MediaWiki\Title\TitleFactory;
 use MWStake\MediaWiki\Component\CommonUserInterface\Hook\MWStakeCommonUIRegisterSkinSlotComponents;
 
 class AddBlogLinks implements
@@ -27,17 +29,34 @@ class AddBlogLinks implements
 	 * @param SpecialPageFactory $spf
 	 * @param PermissionManager $permissionManager
 	 * @param Config $config
+	 * @param TitleFactory $titleFactory
 	 */
-	public function __construct( SpecialPageFactory $spf, PermissionManager $permissionManager, Config $config ) {
+	public function __construct(
+		SpecialPageFactory $spf, PermissionManager $permissionManager, Config $config, TitleFactory $titleFactory
+	) {
 		$this->spf = $spf;
 		$this->permissionManager = $permissionManager;
 		$this->config = $config;
+		$this->titleFactory = $titleFactory;
 	}
 
 	/**
 	 * @inheritDoc
 	 */
 	public function onMWStakeCommonUIRegisterSkinSlotComponents( $registry ): void {
+		$readBlog = $this->permissionManager->quickUserCan(
+			'read',
+			RequestContext::getMain()->getUser(),
+			$this->titleFactory->makeTitle( NS_BLOG, 'Dummy' )
+		);
+		$readUserBlog = $this->permissionManager->quickUserCan(
+			'read',
+			RequestContext::getMain()->getUser(),
+			$this->titleFactory->makeTitle( NS_USER_BLOG, 'Dummy' )
+		);
+		if ( !( $readBlog && $readUserBlog ) ) {
+			return;
+		}
 		if ( $this->config->get( 'SimpleBlogPageShowInMainLinks' ) ) {
 			$registry->register(
 				'MainLinksPanel',

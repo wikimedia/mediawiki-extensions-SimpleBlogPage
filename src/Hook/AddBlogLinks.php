@@ -25,6 +25,9 @@ class AddBlogLinks implements
 	/** @var Config */
 	private $config;
 
+	/** @var TitleFactory */
+	private $titleFactory;
+
 	/**
 	 * @param SpecialPageFactory $spf
 	 * @param PermissionManager $permissionManager

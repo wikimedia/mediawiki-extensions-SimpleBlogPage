@@ -378,7 +378,8 @@ class BlogFactory implements LoggerAwareInterface {
 			] );
 			throw new RuntimeException( Message::newFromKey( 'simpleblogpage-error-rendering-failed' ) );
 		}
-		return $po->getRawText();
+
+		return $this->sanitizeBlogEntryText( $po->getRawText() );
 	}
 
 	/**
@@ -411,5 +412,23 @@ class BlogFactory implements LoggerAwareInterface {
 			return $display;
 		}
 		return substr( $blogPage, strlen( $root->getText() . '/' ) );
+	}
+
+	/**
+	 * Remove section edit links manually
+	 * Its a workaround.
+	 * There could be a fundamental bug in internal parser, because
+	 * $parserOptions->setSuppressSectionEditLinks(); is not working
+	 *
+	 * @param string $text
+	 *
+	 * @return string
+	 */
+	private function sanitizeBlogEntryText( string $text ): string {
+		// Remove mw:editsection elements (both self-closing and with content)
+		$text = preg_replace( '/<mw:editsection[^>]*>.*?<\/mw:editsection>/s', '', $text );
+		$text = preg_replace( '/<mw:editsection[^>]*\/>/s', '', $text );
+
+		return $text;
 	}
 }

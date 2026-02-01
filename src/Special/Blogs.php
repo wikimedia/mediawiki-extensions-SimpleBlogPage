@@ -5,11 +5,11 @@ namespace MediaWiki\Extension\SimpleBlogPage\Special;
 use Exception;
 use MediaWiki\Extension\SimpleBlogPage\BlogFactory;
 use MediaWiki\Html\Html;
-use MediaWiki\SpecialPage\SpecialPage;
+use MediaWiki\SpecialPage\IncludableSpecialPage;
 use MediaWiki\Title\TitleFactory;
 use OOUI\MessageWidget;
 
-class Blogs extends SpecialPage {
+class Blogs extends IncludableSpecialPage {
 
 	/** @var BlogFactory */
 	private $blogFactory;
@@ -22,7 +22,7 @@ class Blogs extends SpecialPage {
 	 * @param TitleFactory $titleFactory
 	 */
 	public function __construct( BlogFactory $blogFactory, TitleFactory $titleFactory ) {
-		parent::__construct( 'Blogs', '', true, false, '', true );
+		parent::__construct( 'Blogs' );
 		$this->blogFactory = $blogFactory;
 		$this->titleFactory = $titleFactory;
 	}

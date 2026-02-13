@@ -6,11 +6,11 @@ use InvalidArgumentException;
 use MediaWiki\Content\JsonContent;
 use MediaWiki\Extension\SimpleBlogPage\BlogEntry;
 use MediaWiki\Extension\SimpleBlogPage\BlogFactory;
+use MediaWiki\Extension\SimpleBlogPage\BlogPermissionChecker;
 use MediaWiki\Extension\SimpleBlogPage\Content\BlogPostContent;
 use MediaWiki\Language\Language;
 use MediaWiki\Page\PageProps;
 use MediaWiki\Page\PageReference;
-use MediaWiki\Page\WikiPageFactory;
 use MediaWiki\Parser\ParserOutput;
 use MediaWiki\Permissions\Authority;
 use MediaWiki\Revision\RenderedRevision;
@@ -93,9 +93,9 @@ class BlogFactoryTest extends TestCase {
 			$revisionMock,
 			Title::newFromText( 'Blog:Foo' )
 		);
-		$blogFactory = $this->getBlogFactory();
 		$authority = $this->createMock( Authority::class );
-		$authority->method( 'isAllowedAll' )->willReturn( $isAllowed );
+		$permissionChecker = $this->getMockPermissionChecker( $isAllowed );
+		$blogFactory = $this->getBlogFactory( null, $permissionChecker );
 		$user = $this->createMock( User::class );
 		$user->method( 'getName' )->willReturn( 'John' );
 		if ( !$isAllowed ) {
@@ -240,9 +240,11 @@ class BlogFactoryTest extends TestCase {
 	}
 
 	/**
+	 * @param IDatabase|null $db
+	 * @param BlogPermissionChecker|null $permissionChecker
 	 * @return BlogFactory
 	 */
-	private function getBlogFactory( ?IDatabase $db = null, ?WikiPageFactory $wpFactory = null ) {
+	private function getBlogFactory( ?IDatabase $db = null, ?BlogPermissionChecker $permissionChecker = null ) {
 		return new BlogFactory(
 			$this->getLBMock( $db ),
 			$this->getTitleFactoryMock(),
@@ -250,7 +252,18 @@ class BlogFactoryTest extends TestCase {
 			$this->getRevisionRendererMock(),
 			$this->getPagePropsMock(),
 			$this->createMock( UserFactory::class ),
+			$permissionChecker ?? $this->getMockPermissionChecker()
 		);
+	}
+
+	/**
+	 * @return BlogPermissionChecker
+	 */
+	private function getMockPermissionChecker( bool $canRead = true ) {
+		$mock = $this->createMock( BlogPermissionChecker::class );
+		$mock->method( 'getGeneralReadPermissions' )->willReturn( [ NS_BLOG => true, NS_USER_BLOG => true ] );
+		$mock->method( 'userCanRead' )->willReturn( $canRead );
+		return $mock;
 	}
 
 	/**

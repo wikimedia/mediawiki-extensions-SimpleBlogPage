@@ -4,9 +4,9 @@ namespace MediaWiki\Extension\SimpleBlogPage\Hook;
 
 use Config;
 use MediaWiki\Context\RequestContext;
+use MediaWiki\Extension\SimpleBlogPage\BlogPermissionChecker;
 use MediaWiki\Extension\SimpleBlogPage\Integration\BlueSpiceDiscovery\ArticlesHomeLink;
 use MediaWiki\Hook\SkinTemplateNavigation__UniversalHook;
-use MediaWiki\Permissions\PermissionManager;
 use MediaWiki\SpecialPage\SpecialPageFactory;
 use MediaWiki\Title\TitleFactory;
 use MWStake\MediaWiki\Component\CommonUserInterface\Hook\MWStakeCommonUIRegisterSkinSlotComponents;
@@ -19,45 +19,43 @@ class AddBlogLinks implements
 	/** @var SpecialPageFactory */
 	private $spf;
 
-	/** @var PermissionManager */
-	private $permissionManager;
-
 	/** @var Config */
 	private $config;
 
 	/** @var TitleFactory */
 	private $titleFactory;
 
+	/** @var BlogPermissionChecker */
+	private $permissionChecker;
+
 	/**
 	 * @param SpecialPageFactory $spf
-	 * @param PermissionManager $permissionManager
 	 * @param Config $config
 	 * @param TitleFactory $titleFactory
+	 * @param BlogPermissionChecker $permissionChecker
 	 */
 	public function __construct(
-		SpecialPageFactory $spf, PermissionManager $permissionManager, Config $config, TitleFactory $titleFactory
+		SpecialPageFactory $spf, Config $config, TitleFactory $titleFactory, BlogPermissionChecker $permissionChecker
 	) {
 		$this->spf = $spf;
-		$this->permissionManager = $permissionManager;
 		$this->config = $config;
 		$this->titleFactory = $titleFactory;
+		$this->permissionChecker = $permissionChecker;
 	}
 
 	/**
 	 * @inheritDoc
 	 */
 	public function onMWStakeCommonUIRegisterSkinSlotComponents( $registry ): void {
-		$readBlog = $this->permissionManager->quickUserCan(
-			'read',
-			RequestContext::getMain()->getUser(),
-			$this->titleFactory->makeTitle( NS_BLOG, 'Dummy' )
-		);
-		$readUserBlog = $this->permissionManager->quickUserCan(
-			'read',
-			RequestContext::getMain()->getUser(),
-			$this->titleFactory->makeTitle( NS_USER_BLOG, 'Dummy' )
-		);
-		if ( !( $readBlog && $readUserBlog ) ) {
+		$canReadAnything = false;
+		$user = RequestContext::getMain()->getUser();
+		foreach ( $this->permissionChecker->getGeneralReadPermissions( $user ) as $canRead ) {
+			if ( $canRead ) {
+				$canReadAnything = true;
+				break;
+			}
+		}
+		if ( !$canReadAnything ) {
 			return;
 		}
 		if ( $this->config->get( 'SimpleBlogPageShowInMainLinks' ) ) {
@@ -87,8 +85,7 @@ class AddBlogLinks implements
 			'text' => $skinTemplate->msg( 'simpleblogpage-user-blogoverview-label' )->plain(),
 			'position' => 50,
 		];
-
-		if ( !$this->permissionManager->userHasRight( $user, 'createblogpost' ) ) {
+		if ( !$this->permissionChecker->canCreateBlogs( $user ) ) {
 			return;
 		}
 		$skinTemplate->getOutput()->addModules( [ 'ext.simpleBlogPage.bootstrap' ] );

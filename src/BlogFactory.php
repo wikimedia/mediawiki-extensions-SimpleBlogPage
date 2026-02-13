@@ -29,7 +29,7 @@ use Wikimedia\Rdbms\DBError;
 use Wikimedia\Rdbms\ILoadBalancer;
 use Wikimedia\Rdbms\IResultWrapper;
 
-class BlogFactory implements LoggerAwareInterface {
+final class BlogFactory implements LoggerAwareInterface {
 
 	/** @var LoggerInterface */
 	private $logger;
@@ -52,6 +52,9 @@ class BlogFactory implements LoggerAwareInterface {
 	/** @var UserFactory */
 	private $userFactory;
 
+	/** @var BlogPermissionChecker */
+	private BlogPermissionChecker $permissionChecker;
+
 	/**
 	 * @param ILoadBalancer $lb
 	 * @param TitleFactory $titleFactory
@@ -59,10 +62,11 @@ class BlogFactory implements LoggerAwareInterface {
 	 * @param RevisionRenderer $revisionRenderer
 	 * @param PageProps $pageProps
 	 * @param UserFactory $userFactory
+	 * @param BlogPermissionChecker $permissionChecker
 	 */
 	public function __construct(
 		ILoadBalancer $lb, TitleFactory $titleFactory, Language $language, RevisionRenderer $revisionRenderer,
-		PageProps $pageProps, UserFactory $userFactory
+		PageProps $pageProps, UserFactory $userFactory, BlogPermissionChecker $permissionChecker
 	) {
 		$this->lb = $lb;
 		$this->titleFactory = $titleFactory;
@@ -71,6 +75,7 @@ class BlogFactory implements LoggerAwareInterface {
 		$this->pageProps = $pageProps;
 		$this->userFactory = $userFactory;
 		$this->logger = new NullLogger();
+		$this->permissionChecker = $permissionChecker;
 	}
 
 	/**
@@ -160,7 +165,9 @@ class BlogFactory implements LoggerAwareInterface {
 	 * @throws PermissionsError
 	 */
 	public function serializeForOutput( BlogEntry $entry, Authority $forUser ): array {
-		$this->assertActorCan( 'read', $forUser );
+		if ( !$this->permissionChecker->userCanRead( $forUser, $entry->getTitle() ) ) {
+			throw new PermissionsError( 'read' );
+		}
 		$rendered = $this->renderText( $entry, $forUser );
 
 		try {
@@ -269,12 +276,7 @@ class BlogFactory implements LoggerAwareInterface {
 	 * @return bool
 	 */
 	public function canUserPostInBlog( User $user, ?Title $blogRoot ): bool {
-		if ( $blogRoot && $blogRoot->getNamespace() === NS_USER_BLOG ) {
-			if ( str_replace( ' ', '_', $user->getName() ) !== $blogRoot->getDBkey() ) {
-				return false;
-			}
-		}
-		return $user->isAllowed( 'createblogpost' );
+		return $this->permissionChecker->canUserPostInBlog( $user, $blogRoot );
 	}
 
 	/**
@@ -328,30 +330,6 @@ class BlogFactory implements LoggerAwareInterface {
 		$title = $this->titleFactory->castFromPageReference( $revisionRecord->getPage() );
 		$root = $this->getBlogRootPage( $title );
 		return new BlogEntry( $title, $content->getText(), $revisionRecord, $root );
-	}
-
-	/**
-	 * @param string $action
-	 * @param Authority $actor
-	 * @return void
-	 * @throws PermissionsError
-	 */
-	private function assertActorCan( string $action, Authority $actor ) {
-		$rights = [];
-		switch ( $action ) {
-			case 'create':
-				$rights = [ 'createblogpost' ];
-				break;
-			case 'read':
-				$rights = [ 'read' ];
-				break;
-		}
-		if ( empty( $rights ) ) {
-			return;
-		}
-		if ( !$actor->isAllowedAll( ...$rights ) ) {
-			throw new PermissionsError( $rights[0] );
-		}
 	}
 
 	/**

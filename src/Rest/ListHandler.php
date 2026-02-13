@@ -2,6 +2,8 @@
 
 namespace MediaWiki\Extension\SimpleBlogPage\Rest;
 
+use MediaWiki\Context\RequestContext;
+use MediaWiki\Extension\SimpleBlogPage\BlogPermissionChecker;
 use MediaWiki\Extension\SimpleBlogPage\QueryStore\BlogEntryStore;
 use MediaWiki\HookContainer\HookContainer;
 use MediaWiki\Title\TitleFactory;
@@ -22,25 +24,32 @@ class ListHandler extends QueryStore {
 	/** @var TitleFactory */
 	private $titleFactory;
 
+	/** @var BlogPermissionChecker */
+	private BlogPermissionChecker $permissionChecker;
+
 	/**
 	 * @param HookContainer $hookContainer
 	 * @param ILoadBalancer $lb
 	 * @param WatchedItemStore $watchedItemStore
 	 * @param TitleFactory $titleFactory
+	 * @param BlogPermissionChecker $permissionChecker
 	 */
 	public function __construct(
-		HookContainer $hookContainer, ILoadBalancer $lb, WatchedItemStore $watchedItemStore, TitleFactory $titleFactory
+		HookContainer $hookContainer, ILoadBalancer $lb, WatchedItemStore $watchedItemStore,
+		TitleFactory $titleFactory, BlogPermissionChecker $permissionChecker
 	) {
 		parent::__construct( $hookContainer );
 		$this->lb = $lb;
 		$this->watchedItemStore = $watchedItemStore;
 		$this->titleFactory = $titleFactory;
+		$this->permissionChecker = $permissionChecker;
 	}
 
 	/**
 	 * @return IStore
 	 */
 	protected function getStore(): IStore {
-		return new BlogEntryStore( $this->lb, $this->watchedItemStore, $this->titleFactory );
+		$permissions = $this->permissionChecker->getGeneralReadPermissions( RequestContext::getMain()->getUser() );
+		return new BlogEntryStore( $this->lb, $this->watchedItemStore, $this->titleFactory, $permissions );
 	}
 }

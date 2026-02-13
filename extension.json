@@ -229,7 +229,7 @@
 		},
 		"addBlogLinks": {
 			"class": "MediaWiki\\Extension\\SimpleBlogPage\\Hook\\AddBlogLinks",
-			"services": [ "SpecialPageFactory", "PermissionManager", "MainConfig" ]
+			"services": [ "SpecialPageFactory", "MainConfig", "TitleFactory", "SimpleBlogPage.PermissionChecker" ]
 		},
 		"addBlogLinksBlueSpiceDiscovery": {
 			"class": "MediaWiki\\Extension\\SimpleBlogPage\\Hook\\AddBlogLinksBlueSpiceDiscovery"
@@ -266,7 +266,7 @@
 			"path": "/simpleblogpage/v1/list",
 			"method": "GET",
 			"class": "MediaWiki\\Extension\\SimpleBlogPage\\Rest\\ListHandler",
-			"services": [ "HookContainer", "DBLoadBalancer", "WatchedItemStore", "TitleFactory" ]
+			"services": [ "HookContainer", "DBLoadBalancer", "WatchedItemStore", "TitleFactory", "SimpleBlogPage.PermissionChecker" ]
 		}, {
 			"path": "/simpleblogpage/v1/entry",
 			"method": "GET",

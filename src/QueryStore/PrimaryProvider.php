@@ -6,6 +6,7 @@ use MWStake\MediaWiki\Component\DataStore\Filter;
 use MWStake\MediaWiki\Component\DataStore\IBucketProvider;
 use MWStake\MediaWiki\Component\DataStore\PrimaryDatabaseDataProvider;
 use MWStake\MediaWiki\Component\DataStore\ReaderParams;
+use MWStake\MediaWiki\Component\DataStore\Schema;
 use Wikimedia\Rdbms\IDatabase;
 
 class PrimaryProvider extends PrimaryDatabaseDataProvider implements IBucketProvider {
@@ -14,6 +15,19 @@ class PrimaryProvider extends PrimaryDatabaseDataProvider implements IBucketProv
 	 * @var array
 	 */
 	private $buckets = [];
+
+	/** @var array */
+	private array $permissions;
+
+	/**
+	 * @param IDatabase $db
+	 * @param Schema $schema
+	 * @param array $permissions
+	 */
+	public function __construct( IDatabase $db, Schema $schema, array $permissions = [] ) {
+		parent::__construct( $db, $schema );
+		$this->permissions = $permissions;
+	}
 
 	/**
 	 * @return string[]
@@ -74,6 +88,11 @@ class PrimaryProvider extends PrimaryDatabaseDataProvider implements IBucketProv
 	 * @return void
 	 */
 	protected function appendRowToData( \stdClass $row ) {
+		$ns = (int)$row->namespace;
+		if ( isset( $this->permissions[$ns] ) && !$this->permissions[$ns] ) {
+			// Skip rows from namespaces the user doesn't have access to
+			return;
+		}
 		$item = new BlogEntryQueryRecord( (object)[
 			BlogEntryQueryRecord::BLOG_ENTRY_NAME => $this->getBlogName( $row->root ),
 			BlogEntryQueryRecord::BLOG_ENTRY_NAMESPACE => $row->namespace,

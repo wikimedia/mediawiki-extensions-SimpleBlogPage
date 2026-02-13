@@ -20,10 +20,16 @@ class BlogEntryStore implements IStore {
 	/** @var TitleFactory */
 	private $titleFactory;
 
-	public function __construct( ILoadBalancer $lb, WatchedItemStore $watchedItemStore, TitleFactory $titleFactory ) {
+	/** @var array */
+	private array $permissions;
+
+	public function __construct(
+		ILoadBalancer $lb, WatchedItemStore $watchedItemStore, TitleFactory $titleFactory, array $permissions = []
+	) {
 		$this->lb = $lb;
 		$this->watchedItemStore = $watchedItemStore;
 		$this->titleFactory = $titleFactory;
+		$this->permissions = $permissions;
 	}
 
 	/**
@@ -37,6 +43,6 @@ class BlogEntryStore implements IStore {
 	 * @return Reader
 	 */
 	public function getReader() {
-		return new Reader( $this->lb, $this->watchedItemStore, $this->titleFactory );
+		return new Reader( $this->lb, $this->watchedItemStore, $this->titleFactory, $this->permissions );
 	}
 }

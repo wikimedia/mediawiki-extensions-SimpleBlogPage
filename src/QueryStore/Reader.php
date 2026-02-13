@@ -20,16 +20,23 @@ class Reader extends \MWStake\MediaWiki\Component\DataStore\Reader {
 	/** @var TitleFactory */
 	private $titleFactory;
 
+	/** @var array */
+	private array $permissions;
+
 	/**
 	 * @param ILoadBalancer $lb
 	 * @param WatchedItemStore $watchedItemStore
 	 * @param TitleFactory $titleFactory
+	 * @param array $permissions
 	 */
-	public function __construct( ILoadBalancer $lb, WatchedItemStore $watchedItemStore, TitleFactory $titleFactory ) {
+	public function __construct(
+		ILoadBalancer $lb, WatchedItemStore $watchedItemStore, TitleFactory $titleFactory, array $permissions = []
+	) {
 		parent::__construct();
 		$this->lb = $lb;
 		$this->watchedItemStore = $watchedItemStore;
 		$this->titleFactory = $titleFactory;
+		$this->permissions = $permissions;
 	}
 
 	/**
@@ -46,7 +53,8 @@ class Reader extends \MWStake\MediaWiki\Component\DataStore\Reader {
 	protected function makePrimaryDataProvider( $params ) {
 		return new PrimaryProvider(
 			$this->lb->getConnection( DB_REPLICA ),
-			$this->getSchema()
+			$this->getSchema(),
+			$this->permissions
 		);
 	}
 

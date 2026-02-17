@@ -1,10 +1,11 @@
 {
 	"@metadata": {
 		"authors": [
-			"Sabelöga"
+			"Sabelöga",
+			"Stefan2255"
 		]
 	},
-	"simpleblogpage-desc": "Bloggsystem med kommentarer och röstningsfunktioner, [[Special:CreateBlogPost|en specialsida för att skapa blogginlägg]] och [[Special:ArticlesHome|en specialsida för att lista blogg inlägg]]",
-	"right-createblogpost": "[[Special:CreateBlogPost|Skapa nya blogginlägg]]",
+	"simpleblogpage-desc": "Bloggsystem med kommentars- och röstningsfunktioner samt en [[Special:ArticlesHome|en särskild sida för att lista blogginlägg]]",
+	"right-createblogpost": "Skapa nya blogginlägg",
 	"action-createblogpost": "skapa nya blogginlägg"
 }

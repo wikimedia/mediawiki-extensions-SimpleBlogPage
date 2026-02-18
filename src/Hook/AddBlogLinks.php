@@ -8,6 +8,7 @@ use MediaWiki\Extension\SimpleBlogPage\BlogPermissionChecker;
 use MediaWiki\Extension\SimpleBlogPage\Integration\BlueSpiceDiscovery\ArticlesHomeLink;
 use MediaWiki\Hook\SkinTemplateNavigation__UniversalHook;
 use MediaWiki\SpecialPage\SpecialPageFactory;
+use MediaWiki\Title\TitleFactory;
 use MWStake\MediaWiki\Component\CommonUserInterface\Hook\MWStakeCommonUIRegisterSkinSlotComponents;
 
 class AddBlogLinks implements

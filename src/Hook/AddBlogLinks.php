@@ -29,6 +29,9 @@ class AddBlogLinks implements
 	/** @var BlogPermissionChecker */
 	private $permissionChecker;
 
+	/** @var bool|null */
+	private ?bool $hasReadPermission = null;
+
 	/**
 	 * @param SpecialPageFactory $spf
 	 * @param Config $config
@@ -48,20 +51,11 @@ class AddBlogLinks implements
 	 * @inheritDoc
 	 */
 	public function onMWStakeCommonUIRegisterSkinSlotComponents( $registry ): void {
-		$canReadAnything = false;
-		$context = RequestContext::getMain();
-		$user = $context->getUser();
-		foreach ( $this->permissionChecker->getGeneralReadPermissions( $user ) as $canRead ) {
-			if ( $canRead ) {
-				$canReadAnything = true;
-				break;
-			}
-		}
-		if ( !$canReadAnything ) {
+		if ( !$this->canReadAnything() ) {
 			return;
 		}
 		if ( $this->config->get( 'SimpleBlogPageShowInMainLinks' ) ) {
-			$skin = $context->getSkin();
+			$skin = RequestContext::getMain()->getSkin();
 			$registry->register(
 				'MainLinksPanel',
 				[
@@ -83,6 +77,9 @@ class AddBlogLinks implements
 	 * @inheritDoc
 	 */
 	public function onSkinTemplateNavigation__Universal( $skinTemplate, &$links ): void {
+		if ( !$this->canReadAnything() ) {
+			return;
+		}
 		$user = $skinTemplate->getUser();
 		$overviewSpecial = $this->spf->getPage( 'Blogs' );
 		$links['user-menu']['simpleblog_myblog'] = [
@@ -101,5 +98,22 @@ class AddBlogLinks implements
 			'text' => $skinTemplate->getContext()->msg( 'simpleblogpage-create-label' )->text(),
 			'title' => $skinTemplate->getContext()->msg( 'simpleblogpage-create-label' )->text(),
 		];
+	}
+
+	/**
+	 * @return bool
+	 */
+	private function canReadAnything() {
+		if ( $this->hasReadPermission === null ) {
+			$this->hasReadPermission = false;
+			$user = RequestContext::getMain()->getUser();
+			foreach ( $this->permissionChecker->getGeneralReadPermissions( $user ) as $canRead ) {
+				if ( $canRead ) {
+					$this->hasReadPermission = true;
+					break;
+				}
+			}
+		}
+		return $this->hasReadPermission;
 	}
 }

@@ -6,6 +6,7 @@ use Config;
 use MediaWiki\Context\RequestContext;
 use MediaWiki\Extension\SimpleBlogPage\BlogPermissionChecker;
 use MediaWiki\Extension\SimpleBlogPage\Integration\BlueSpiceDiscovery\ArticlesHomeLink;
+use MediaWiki\Extension\SimpleBlogPage\Integration\BlueSpiceEclipse\ActionEntryPoint;
 use MediaWiki\Hook\SkinTemplateNavigation__UniversalHook;
 use MediaWiki\SpecialPage\SpecialPageFactory;
 use MediaWiki\Title\TitleFactory;
@@ -48,7 +49,8 @@ class AddBlogLinks implements
 	 */
 	public function onMWStakeCommonUIRegisterSkinSlotComponents( $registry ): void {
 		$canReadAnything = false;
-		$user = RequestContext::getMain()->getUser();
+		$context = RequestContext::getMain();
+		$user = $context->getUser();
 		foreach ( $this->permissionChecker->getGeneralReadPermissions( $user ) as $canRead ) {
 			if ( $canRead ) {
 				$canReadAnything = true;
@@ -59,11 +61,15 @@ class AddBlogLinks implements
 			return;
 		}
 		if ( $this->config->get( 'SimpleBlogPageShowInMainLinks' ) ) {
+			$skin = $context->getSkin();
 			$registry->register(
 				'MainLinksPanel',
 				[
 					'simpleblogpage-blog-overview' => [
-						'factory' => function () {
+						'factory' => function () use ( $skin ) {
+							if ( is_a( $skin, 'SkinBlueSpiceEclipseSkin', true ) ) {
+								return new ActionEntryPoint( $this->spf, $this->permissionChecker );
+							}
 							return new ArticlesHomeLink( $this->spf, [] );
 						},
 						'position' => 30

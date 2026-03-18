@@ -42,5 +42,6 @@
 	"simpleblogpage-error-non-existing-root-page": "Message shown when user tries to show posts of a non-existing blog",
 	"simpleblogpage-no-posts": "Notice when no blog posts exist",
 	"simpleblogpage-config-mainlinks-blog-label": "Configuration option in BlueSpiceConfigManager",
-	"simpleblogpage-config-mainlinks-blog-help": "Help for configuration option in BlueSpiceConfigManager"
+	"simpleblogpage-config-mainlinks-blog-help": "Help for configuration option in BlueSpiceConfigManager",
+	"simpleblogpage-entrypoints-action-blog-label": "Label for entrypoint action to create new blogpost"
 }

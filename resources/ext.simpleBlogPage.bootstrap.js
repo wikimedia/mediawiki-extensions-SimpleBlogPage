@@ -17,7 +17,7 @@ ext.simpleBlogPage = {
 	}
 };
 
-$( document ).on( 'click', '#ca-simpleblogpage-create', ( e ) => {
+$( document ).on( 'click', '#ca-simpleblogpage-create, .ca-simpleblogpage-create', ( e ) => {
 	e.preventDefault();
 	ext.simpleBlogPage.openCreateDialog();
 } );

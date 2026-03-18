@@ -41,5 +41,6 @@
 	"simpleblogpage-error-non-existing-root-page": "Das gewünschte Blog existiert noch nicht; sei der Erste, der dort veröffentlicht!",
 	"simpleblogpage-no-posts": "Noch keine Blogeinträge. Starte mit der Erstellung des ersten Eintrags!",
 	"simpleblogpage-config-mainlinks-blog-label": "Einstiegspunkt \"Blog\" anzeigen",
-	"simpleblogpage-config-mainlinks-blog-help": "Einstiegspunkt \"Blog\" in der linken Navigation anzeigen"
+	"simpleblogpage-config-mainlinks-blog-help": "Einstiegspunkt \"Blog\" in der linken Navigation anzeigen",
+	"simpleblogpage-entrypoints-action-blog-label": "Blogbeitrag erstellen"
 }

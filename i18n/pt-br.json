@@ -1,0 +1,27 @@
+{
+	"@metadata": {
+		"authors": [
+			"Eduardoaddad"
+		]
+	},
+	"simpleblogpage-desc": "Sistema de blog com recursos de comentários e votação, além de uma [[Special:ArticlesHome|página especial para listar as postagens do blog]]",
+	"blogs": "Todas as publicações do blog",
+	"right-createblogpost": "Criar novas postagens de blog",
+	"action-createblogpost": "criar novas postagens de blog",
+	"simpleblogpage-editor-blog-select": "Blog",
+	"simpleblogpage-create-entry": "Criar nova publicação no blog",
+	"simpleblogpage-readmore": "Leia mais",
+	"simpleblogpage-no-blog-no-create": "Este blog não existe",
+	"simpleblogpage-articles-home-links": "Blogs",
+	"simpleblogpage-create-label": "Nova publicação no blog",
+	"simpleblogpage-create-dialog-button-submit": "Criar",
+	"simpleblogpage-create-dialog-button-cancel": "Cancelar",
+	"simpleblogpage-blog-type-general": "Geral",
+	"simpleblogpage-filter-section-global": "Blogs",
+	"simpleblogpage-filter-section-user": "Blogs de usuário",
+	"simpleblogpage-user-blogoverview-label": "Meu blog",
+	"simpleblogpage-unwatch": "Parar de vigiar esse blog",
+	"simpleblogpage-watch": "Vigiar esse blog",
+	"simpleblogpage-blog-type-user": "Blog de usuário",
+	"simpleblogpage-create-blog-own": "Meu blog de usuário"
+}

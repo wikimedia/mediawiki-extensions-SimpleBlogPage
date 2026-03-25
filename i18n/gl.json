@@ -38,5 +38,6 @@
 	"simpleblogpage-error-non-existing-root-page": "O blog solicitado aínda non existe. Publica ti antes que ninguén!",
 	"simpleblogpage-no-posts": "Aínda non hai entradas no blog. Crea a primeira entrada!",
 	"simpleblogpage-config-mainlinks-blog-label": "Mostrar o punto de entrada «Blog»",
-	"simpleblogpage-config-mainlinks-blog-help": "Mostrar a ligazón ao punto de entrada «Blog» na navegación esquerda"
+	"simpleblogpage-config-mainlinks-blog-help": "Mostrar a ligazón ao punto de entrada «Blog» na navegación esquerda",
+	"simpleblogpage-entrypoints-action-blog-label": "Crear unha entrada de blog"
 }

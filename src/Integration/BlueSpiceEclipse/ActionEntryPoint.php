@@ -22,7 +22,6 @@ class ActionEntryPoint extends ActionLink {
 	}
 
 	/**
-	 *
 	 * @return string
 	 */
 	public function getId(): string {
@@ -30,7 +29,6 @@ class ActionEntryPoint extends ActionLink {
 	}
 
 	/**
-	 *
 	 * @return string[]
 	 */
 	public function getPermissions(): array {

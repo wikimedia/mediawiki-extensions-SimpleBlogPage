@@ -162,6 +162,9 @@
 			"styles": [
 				"ext.simpleBlogPage.blogList.less"
 			],
+			"skinStyles": {
+				"bluespiceeclipse": "ext.simpleBlogPage.blogList.eclipse.css"
+			},
 			"messages": [
 				"simpleblogpage-create-entry",
 				"simpleblogpage-filter-all",

@@ -68,7 +68,8 @@ ext.simpleBlogPage.ui.panel.BlogList.prototype.renderHeader = function () {
 			label: mw.msg( 'simpleblogpage-create-entry' ),
 			icon: 'add',
 			flags: [ 'progressive' ],
-			framed: false
+			framed: false,
+			classes: [ 'create-new-blog' ]
 		} );
 		this.createButton.connect( this, { click: 'onCreateClick' } );
 		this.$actions.append( this.createButton.$element );

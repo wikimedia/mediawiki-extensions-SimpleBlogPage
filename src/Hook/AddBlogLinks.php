@@ -5,6 +5,7 @@ namespace MediaWiki\Extension\SimpleBlogPage\Hook;
 use Config;
 use MediaWiki\Context\RequestContext;
 use MediaWiki\Extension\SimpleBlogPage\BlogPermissionChecker;
+use MediaWiki\Extension\SimpleBlogPage\Component\CreateBlogButton;
 use MediaWiki\Extension\SimpleBlogPage\Integration\BlueSpiceDiscovery\ArticlesHomeLink;
 use MediaWiki\Extension\SimpleBlogPage\Integration\BlueSpiceEclipse\ActionEntryPoint;
 use MediaWiki\Hook\SkinTemplateNavigation__UniversalHook;
@@ -32,6 +33,9 @@ class AddBlogLinks implements
 	/** @var bool|null */
 	private ?bool $hasReadPermission = null;
 
+	/** @var RequestContext */
+	private RequestContext $context;
+
 	/**
 	 * @param SpecialPageFactory $spf
 	 * @param Config $config
@@ -45,6 +49,7 @@ class AddBlogLinks implements
 		$this->config = $config;
 		$this->titleFactory = $titleFactory;
 		$this->permissionChecker = $permissionChecker;
+		$this->context = RequestContext::getMain();
 	}
 
 	/**
@@ -54,8 +59,8 @@ class AddBlogLinks implements
 		if ( !$this->canReadAnything() ) {
 			return;
 		}
+		$skin = $this->context->getSkin();
 		if ( $this->config->get( 'SimpleBlogPageShowInMainLinks' ) ) {
-			$skin = RequestContext::getMain()->getSkin();
 			$registry->register(
 				'MainLinksPanel',
 				[
@@ -67,6 +72,21 @@ class AddBlogLinks implements
 							return new ArticlesHomeLink( $this->spf, [] );
 						},
 						'position' => 30
+					]
+				]
+			);
+		}
+
+		$title = $this->context->getTitle();
+		if ( $title && $title->isSpecial( 'Blogs' ) &&
+			is_a( $skin, 'SkinBlueSpiceEclipseSkin', true ) ) {
+			$registry->register(
+				'TitleActions',
+				[
+					'create-blog-action' => [
+						'factory' => function () {
+							return new CreateBlogButton( $this->permissionChecker );
+						}
 					]
 				]
 			);
@@ -106,7 +126,7 @@ class AddBlogLinks implements
 	private function canReadAnything() {
 		if ( $this->hasReadPermission === null ) {
 			$this->hasReadPermission = false;
-			$user = RequestContext::getMain()->getUser();
+			$user = $this->context->getUser();
 			foreach ( $this->permissionChecker->getGeneralReadPermissions( $user ) as $canRead ) {
 				if ( $canRead ) {
 					$this->hasReadPermission = true;

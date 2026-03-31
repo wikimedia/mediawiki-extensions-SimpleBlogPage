@@ -2,7 +2,8 @@
 	"@metadata": {
 		"authors": [
 			"Suleiman the Magnificent Television",
-			"Ykhwong"
+			"Ykhwong",
+			"Bisang"
 		]
 	},
 	"blogs": "모든 블로그 게시물",
@@ -30,5 +31,6 @@
 	"simpleblogpage-unwatch": "이 글 주시 중단",
 	"simpleblogpage-watch": "이 글 주시하기",
 	"simpleblogpage-blog-type-user": "사용자 블로그",
-	"simpleblogpage-create-blog-own": "내 사용자 블로그"
+	"simpleblogpage-create-blog-own": "내 사용자 블로그",
+	"simpleblogpage-entrypoints-action-blog-label": "블로그 글 만들기"
 }

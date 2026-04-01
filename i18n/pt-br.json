@@ -9,6 +9,7 @@
 	"right-createblogpost": "Criar novas postagens de blog",
 	"action-createblogpost": "criar novas postagens de blog",
 	"simpleblogpage-editor-blog-select": "Blog",
+	"simpleblogpage-editor-blog-select-new": "O blog que você selecionou ainda não existe. Ele será criado quando você salvar a postagem.",
 	"simpleblogpage-create-entry": "Criar nova publicação no blog",
 	"simpleblogpage-readmore": "Leia mais",
 	"simpleblogpage-no-blog-no-create": "Este blog não existe",

@@ -5,5 +5,6 @@
 		]
 	},
 	"simpleblogpage-filter-all": "Tutto",
-	"simpleblogpage-create-dialog-button-cancel": "Annulla"
+	"simpleblogpage-create-dialog-button-cancel": "Annulla",
+	"simpleblogpage-entrypoints-action-blog-label": "Crea un post nel blog"
 }

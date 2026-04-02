@@ -38,5 +38,6 @@
 	"simpleblogpage-error-non-existing-root-page": "Бараниот блог сè уште не постои. Напишете ја првата објава!",
 	"simpleblogpage-no-posts": "Сè уште нема блоговски записи. Започнете со создавање на првиот!",
 	"simpleblogpage-config-mainlinks-blog-label": "Прикажувај пристапна точка „Блог“",
-	"simpleblogpage-config-mainlinks-blog-help": "Прикажувај пристапна точка „Блог“ во страничникот лево"
+	"simpleblogpage-config-mainlinks-blog-help": "Прикажувај пристапна точка „Блог“ во страничникот лево",
+	"simpleblogpage-entrypoints-action-blog-label": "Создај блоговска објава"
 }

@@ -9,6 +9,7 @@
 	"right-createblogpost": "Criar novas postagens de blog",
 	"action-createblogpost": "criar novas postagens de blog",
 	"simpleblogpage-editor-blog-select": "Blog",
+	"simpleblogpage-editor-blog-select-new": "O blog que você selecionou ainda não existe. Ele será criado quando você salvar a postagem.",
 	"simpleblogpage-create-entry": "Criar nova publicação no blog",
 	"simpleblogpage-readmore": "Leia mais",
 	"simpleblogpage-no-blog-no-create": "Este blog não existe",
@@ -23,6 +24,5 @@
 	"simpleblogpage-unwatch": "Parar de vigiar esse blog",
 	"simpleblogpage-watch": "Vigiar esse blog",
 	"simpleblogpage-blog-type-user": "Blog de usuário",
-	"simpleblogpage-create-blog-own": "Meu blog de usuário",
-	"simpleblogpage-editor-blog-select-new": "O blog que você selecionou ainda não existe. Ele será criado quando você salvar a postagem."
+	"simpleblogpage-create-blog-own": "Meu blog de usuário"
 }

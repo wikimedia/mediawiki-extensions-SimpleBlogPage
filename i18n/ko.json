@@ -3,20 +3,26 @@
 		"authors": [
 			"Bisang",
 			"Suleiman the Magnificent Television",
+			"Tensama0415",
 			"Ykhwong"
 		]
 	},
+	"simpleblogpage-desc": "댓글 및 투표 기능과 [[Special:ArticlesHome|블로그 게시물 목록을 보여주는 특수 문서]]를 갖춘 블로그 시스템입니다",
 	"blogs": "모든 블로그 게시물",
 	"right-createblogpost": "새 블로그 글을 만들기",
 	"action-createblogpost": "새 블로그 글을 만들",
 	"simpleblogpage-editor-blog-select": "블로그",
 	"simpleblogpage-editor-blog-select-new": "선택한 블로그는 아직 존재하지 않습니다. 게시물을 저장하면 생성됩니다.",
 	"simpleblogpage-editor-title": "블로그 게시물 제목",
+	"simpleblogpage-editor-title-exists": "이 제목의 블로그 게시물이 이미 존재합니다. 다른 제목을 선택해 주세요.",
 	"simpleblogpage-create-entry": "새 블로그 글 만들기",
 	"simpleblogpage-filter-all": "모두",
+	"simpleblogpage-error-invalid-content": "요청한 페이지의 내용은 블로그 게시물이 아닙니다",
 	"simpleblogpage-error-invalid-target-page": "문서는 유효한 블로그 게시물 문서가 아닙니다",
+	"simpleblogpage-error-invalid-root-page": "요청한 페이지는 유효한 블로그 페이지가 아닙니다",
 	"simpleblogpage-create-root-summary": "루트 블로그 문서를 생성했습니다",
 	"simpleblogpage-edit-summary": "블로그 글을 편집했습니다",
+	"simpleblogpage-error-rendering-failed": "블로그 게시물 렌더링에 실패했습니다",
 	"simpleblogpage-filter-root": "블로그 유형 필터",
 	"simpleblogpage-readmore": "더 읽어보기",
 	"simpleblogpage-no-blog-no-create": "이 블로그는 존재하지 않습니다",
@@ -32,5 +38,9 @@
 	"simpleblogpage-watch": "이 글 주시하기",
 	"simpleblogpage-blog-type-user": "사용자 블로그",
 	"simpleblogpage-create-blog-own": "내 사용자 블로그",
+	"simpleblogpage-error-non-existing-root-page": "요청한 블로그가 아직 존재하지 않습니다. 첫 번째 게시글을 작성해 보세요!",
+	"simpleblogpage-no-posts": "아직 블로그 게시물이 없습니다. 첫 번째 게시물을 작성해 보세요!",
+	"simpleblogpage-config-mainlinks-blog-label": "진입점 \"블로그\" 표시",
+	"simpleblogpage-config-mainlinks-blog-help": "왼쪽 둘러보기에 진입점 \"블로그\" 링크를 표시",
 	"simpleblogpage-entrypoints-action-blog-label": "블로그 글 만들기"
 }

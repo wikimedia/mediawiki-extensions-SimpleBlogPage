@@ -323,7 +323,7 @@ class BlogFactoryTest extends TestCase {
 		$mock = $this->createMock( RevisionRenderer::class );
 		$rrMock = $this->createMock( RenderedRevision::class );
 		$poMock = $this->createMock( ParserOutput::class );
-		$poMock->method( 'getRawText' )->willReturn( 'dummy' );
+		$poMock->method( 'getContentHolderText' )->willReturn( 'dummy' );
 		$rrMock->method( 'getRevisionParserOutput' )->willReturn( $poMock );
 		$mock->method( 'getRenderedRevision' )->willReturn( $rrMock );
 		return $mock;

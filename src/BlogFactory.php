@@ -357,7 +357,7 @@ final class BlogFactory implements LoggerAwareInterface {
 			throw new RuntimeException( Message::newFromKey( 'simpleblogpage-error-rendering-failed' ) );
 		}
 
-		return $this->sanitizeBlogEntryText( $po->getRawText() );
+		return $this->sanitizeBlogEntryText( $po->getContentHolderText() );
 	}
 
 	/**

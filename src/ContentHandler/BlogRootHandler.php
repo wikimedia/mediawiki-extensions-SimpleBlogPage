@@ -26,7 +26,7 @@ class BlogRootHandler extends WikitextContentHandler {
 		$title = Title::castFromPageReference( $cpoParams->getPage() );
 		parent::fillParserOutput( $content, $cpoParams, $parserOutput );
 		$parserOutput->addModules( [ 'ext.simpleBlogPage.render.rootPage' ] );
-		$parserOutput->setContentHolderText( $parserOutput->getRawText() . Html::element( 'div', [
+		$parserOutput->setContentHolderText( $parserOutput->getContentHolderText() . Html::element( 'div', [
 			'id' => 'blog-root',
 			'data-blog-page' => $title ? $title->getPrefixedText() : '',
 			'data-blog' => $title ? $title->getDBkey() : '',

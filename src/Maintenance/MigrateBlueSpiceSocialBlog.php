@@ -2,6 +2,7 @@
 
 namespace MediaWiki\Extension\SimpleBlogPage\Maintenance;
 
+use MediaWiki\Content\TextContent;
 use MediaWiki\Extension\SimpleBlogPage\Content\BlogPostContent;
 use MediaWiki\Maintenance\LoggedUpdateMaintenance;
 use MediaWiki\Message\Message;
@@ -105,10 +106,10 @@ class MigrateBlueSpiceSocialBlog extends LoggedUpdateMaintenance {
 	 */
 	private function getBlogRevisionDetails( RevisionRecord $revision ): ?array {
 		$content = $revision->getContent( SlotRecord::MAIN );
-		if ( !$content ) {
+		if ( !$content instanceof TextContent ) {
 			return null;
 		}
-		$text = $content->getNativeData();
+		$text = $content->getText();
 		$json = json_decode( $text, true );
 		if ( !$json ) {
 			return null;

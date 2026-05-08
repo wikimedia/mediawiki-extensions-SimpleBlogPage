@@ -9,7 +9,6 @@ use MediaWiki\Extension\SimpleBlogPage\Util\HtmlSnippetCreator;
 use MediaWiki\Language\Language;
 use MediaWiki\Message\Message;
 use MediaWiki\Page\PageIdentity;
-use MediaWiki\Page\PageProps;
 use MediaWiki\Permissions\Authority;
 use MediaWiki\Revision\RevisionRecord;
 use MediaWiki\Revision\RevisionRenderer;
@@ -19,6 +18,8 @@ use MediaWiki\Title\TitleFactory;
 use MediaWiki\User\User;
 use MediaWiki\User\UserFactory;
 use MediaWiki\User\UserIdentity;
+use MWStake\MediaWiki\Component\Utils\DisplayTitleHelper;
+use MWStake\MediaWiki\Component\Utils\UtilityFactory;
 use PermissionsError;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
@@ -46,36 +47,38 @@ final class BlogFactory implements LoggerAwareInterface {
 	/** @var RevisionRenderer */
 	private $revisionRenderer;
 
-	/** @var PageProps */
-	private $pageProps;
-
 	/** @var UserFactory */
 	private $userFactory;
 
 	/** @var BlogPermissionChecker */
 	private BlogPermissionChecker $permissionChecker;
 
+	/** @var DisplayTitleHelper */
+	private DisplayTitleHelper $displayNameHelper;
+	/** @var array */
+	private array $userCache = [];
+
 	/**
 	 * @param ILoadBalancer $lb
 	 * @param TitleFactory $titleFactory
 	 * @param Language $language
 	 * @param RevisionRenderer $revisionRenderer
-	 * @param PageProps $pageProps
 	 * @param UserFactory $userFactory
 	 * @param BlogPermissionChecker $permissionChecker
+	 * @param UtilityFactory $utilityFactory
 	 */
 	public function __construct(
 		ILoadBalancer $lb, TitleFactory $titleFactory, Language $language, RevisionRenderer $revisionRenderer,
-		PageProps $pageProps, UserFactory $userFactory, BlogPermissionChecker $permissionChecker
+		UserFactory $userFactory, BlogPermissionChecker $permissionChecker, UtilityFactory $utilityFactory
 	) {
 		$this->lb = $lb;
 		$this->titleFactory = $titleFactory;
 		$this->language = $language;
 		$this->revisionRenderer = $revisionRenderer;
-		$this->pageProps = $pageProps;
 		$this->userFactory = $userFactory;
 		$this->logger = new NullLogger();
 		$this->permissionChecker = $permissionChecker;
+		$this->displayNameHelper = $utilityFactory->getDisplayTitleHelper();
 	}
 
 	/**
@@ -366,16 +369,15 @@ final class BlogFactory implements LoggerAwareInterface {
 	 */
 	private function getPageDisplayTitle( Title $title ) {
 		if ( $title->getNamespace() === NS_USER_BLOG && !$title->isSubpage() ) {
-			$user = $this->userFactory->newFromName( $title->getText() );
+			if ( !isset( $this->userCache[$title->getText()] ) ) {
+				$this->userCache[$title->getText()] = $this->userFactory->newFromName( $title->getText() );
+			}
+			$user = $this->userCache[$title->getText()];
 			if ( $user && $user->isRegistered() ) {
 				return $user->getRealName() ?: $user->getName();
 			}
 		}
-		$props = $this->pageProps->getProperties( $title, [ 'displaytitle' ] );
-		if ( isset( $props[$title->getArticleID()]['displaytitle'] ) ) {
-			return $props[$title->getArticleID()]['displaytitle'];
-		}
-		return $title->getText();
+		return $this->displayNameHelper->getDisplayTitle( $title ) ?? $title->getText();
 	}
 
 	/**

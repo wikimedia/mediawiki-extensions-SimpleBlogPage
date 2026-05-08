@@ -9,7 +9,7 @@ use MediaWiki\Extension\SimpleBlogPage\BlogFactory;
 use MediaWiki\Extension\SimpleBlogPage\BlogPermissionChecker;
 use MediaWiki\Extension\SimpleBlogPage\Content\BlogPostContent;
 use MediaWiki\Language\Language;
-use MediaWiki\Page\PageProps;
+use MediaWiki\Page\PageIdentity;
 use MediaWiki\Page\PageReference;
 use MediaWiki\Parser\ParserOutput;
 use MediaWiki\Permissions\Authority;
@@ -20,6 +20,8 @@ use MediaWiki\Title\Title;
 use MediaWiki\Title\TitleFactory;
 use MediaWiki\User\User;
 use MediaWiki\User\UserFactory;
+use MWStake\MediaWiki\Component\Utils\DisplayTitleHelper;
+use MWStake\MediaWiki\Component\Utils\UtilityFactory;
 use PermissionsError;
 use PHPUnit\Framework\TestCase;
 use Wikimedia\Rdbms\FakeResultWrapper;
@@ -245,14 +247,26 @@ class BlogFactoryTest extends TestCase {
 	 * @return BlogFactory
 	 */
 	private function getBlogFactory( ?IDatabase $db = null, ?BlogPermissionChecker $permissionChecker = null ) {
+		$utilityFactory = $this->createMock( UtilityFactory::class );
+		$displayHelperMock = $this->createMock( DisplayTitleHelper::class );
+		$displayHelperMock->method( 'getDisplayTitle' )->willReturnCallback( static function ( PageIdentity $ref ) {
+			if ( $ref->getId() === 1 ) {
+				return 'DisplayFoo';
+			}
+			if ( $ref->getId() === 3 ) {
+				return 'DisplayBaz';
+			}
+			return null;
+		} );
+		$utilityFactory->method( 'getDisplayTitleHelper' )->willReturn( $displayHelperMock );
 		return new BlogFactory(
 			$this->getLBMock( $db ),
 			$this->getTitleFactoryMock(),
 			$this->getLanguageMock(),
 			$this->getRevisionRendererMock(),
-			$this->getPagePropsMock(),
 			$this->createMock( UserFactory::class ),
-			$permissionChecker ?? $this->getMockPermissionChecker()
+			$permissionChecker ?? $this->getMockPermissionChecker(),
+			$utilityFactory
 		);
 	}
 
@@ -284,6 +298,7 @@ class BlogFactoryTest extends TestCase {
 		$mock->method( 'newFromRow' )->willReturnCallback( function ( $row ) {
 			$titleMock = $this->createMock( Title::class );
 			$titleMock->method( 'getArticleID' )->willReturn( $row->page_id );
+			$titleMock->method( 'getId' )->willReturn( $row->page_id );
 			$titleMock->method( 'getNamespace' )->willReturn( $row->page_namespace );
 			$titleMock->method( 'getText' )->willReturn( $row->page_title );
 			$titleMock->method( 'getDBkey' )->willReturn( $row->page_title );
@@ -293,6 +308,7 @@ class BlogFactoryTest extends TestCase {
 		$mock->method( 'makeTitle' )->willReturnCallback( function ( $ns, $title ) {
 			$titleMock = $this->createMock( Title::class );
 			$titleMock->method( 'getArticleID' )->willReturn( 1 );
+			$titleMock->method( 'getId' )->willReturn( 1 );
 			$titleMock->method( 'getNamespace' )->willReturn( $ns );
 			$titleMock->method( 'getText' )->willReturn( $title );
 			$titleMock->method( 'getDBkey' )->willReturn( $title );
@@ -326,18 +342,6 @@ class BlogFactoryTest extends TestCase {
 		$poMock->method( 'getContentHolderText' )->willReturn( 'dummy' );
 		$rrMock->method( 'getRevisionParserOutput' )->willReturn( $poMock );
 		$mock->method( 'getRenderedRevision' )->willReturn( $rrMock );
-		return $mock;
-	}
-
-	/**
-	 * @return PageProps
-	 */
-	private function getPagePropsMock() {
-		$mock = $this->createMock( PageProps::class );
-		$mock->method( 'getProperties' )->willReturn( [
-			'1' => [ 'displaytitle' => 'DisplayFoo' ],
-			'3' => [ 'displaytitle' => 'DisplayBaz' ],
-		] );
 		return $mock;
 	}
 }

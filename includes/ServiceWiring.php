@@ -14,9 +14,9 @@ return [
 			$services->getTitleFactory(),
 			$context->getLanguage(),
 			$services->getRevisionRenderer(),
-			$services->getPageProps(),
 			$services->getUserFactory(),
-			$services->getService( 'SimpleBlogPage.PermissionChecker' )
+			$services->getService( 'SimpleBlogPage.PermissionChecker' ),
+			$services->getService( 'MWStakeCommonUtilsFactory' )
 		);
 		$factory->setLogger( LoggerFactory::getInstance( 'SimpleBlogPage' ) );
 		return $factory;

@@ -11,7 +11,7 @@
 	"simpleblogpage-desc": "댓글 및 투표 기능과 [[Special:ArticlesHome|블로그 게시물 목록을 보여주는 특수 문서]]를 갖춘 블로그 시스템입니다",
 	"blogs": "모든 블로그 게시물",
 	"right-createblogpost": "새 블로그 글을 만들기",
-	"action-createblogpost": "새 블로그 글을 만들",
+	"action-createblogpost": "새 블로그 글을 만들기",
 	"simpleblogpage-editor-blog-select": "블로그",
 	"simpleblogpage-editor-blog-select-new": "선택한 블로그는 아직 존재하지 않습니다. 게시물을 저장하면 생성됩니다.",
 	"simpleblogpage-editor-title": "블로그 게시물 제목",

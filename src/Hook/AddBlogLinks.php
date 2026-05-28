@@ -106,7 +106,7 @@ class AddBlogLinks implements
 			'id' => 'pt-simpleblog_myblog',
 			'href' => $overviewSpecial->getPageTitle( 'User_blog:' . $user->getName() )->getLocalURL(),
 			'text' => $skinTemplate->msg( 'simpleblogpage-user-blogoverview-label' )->plain(),
-			'position' => 50,
+			'position' => 300,
 		];
 		if ( !$this->permissionChecker->canCreateBlogs( $user ) ) {
 			return;

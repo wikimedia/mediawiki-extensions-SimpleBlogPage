@@ -48,6 +48,11 @@
 	"AvailableRights": [
 		"createblogpost"
 	],
+	"GrantPermissions": {
+		"editpage": {
+			"createblogpost": true
+		}
+	},
 	"callback": "MediaWiki\\Extension\\SimpleBlogPage\\Setup::callback",
 	"AutoloadNamespaces": {
 		"MediaWiki\\Extension\\SimpleBlogPage\\": "src/",

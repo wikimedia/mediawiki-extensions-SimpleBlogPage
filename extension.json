@@ -34,6 +34,13 @@
 			"ConfigDefinitionRegistry": {
 				"SimpleBlogPageShowInMainLinks": "\\MediaWiki\\Extension\\SimpleBlogPage\\Integration\\ConfigDefinition\\MainLinksBlog::getInstance"
 			}
+		},
+		"BlueSpiceDiscovery": {
+			"BreadcrumbDataProviderRegistry": {
+				"blogs-overview": {
+					"class": "MediaWiki\\Extension\\SimpleBlogPage\\BreadcrumbDataProvider\\BlogsOverviewProvider"
+				}
+			}
 		}
 	},
 	"ExtensionMessagesFiles": {

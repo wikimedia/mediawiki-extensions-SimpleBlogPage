@@ -39,7 +39,7 @@
 	"simpleblogpage-watch": "이 글 주시하기",
 	"simpleblogpage-blog-type-user": "사용자 블로그",
 	"simpleblogpage-create-blog-own": "내 사용자 블로그",
-	"simpleblogpage-error-non-existing-root-page": "요청한 블로그가 아직 존재하지 않습니다. 첫 번째 게시글을 작성해 보세요!",
+	"simpleblogpage-error-non-existing-root-page": "요청한 블로그가 아직 존재하지 않습니다. 첫 번째 게시물을 작성해 보세요!",
 	"simpleblogpage-no-posts": "아직 블로그 게시물이 없습니다. 첫 번째 게시물을 작성해 보세요!",
 	"simpleblogpage-config-mainlinks-blog-label": "진입점 \"블로그\" 표시",
 	"simpleblogpage-config-mainlinks-blog-help": "왼쪽 둘러보기에 진입점 \"블로그\" 링크를 표시",

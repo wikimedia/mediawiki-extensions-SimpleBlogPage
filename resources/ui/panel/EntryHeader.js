@@ -48,7 +48,7 @@ ext.simpleBlogPage.ui.panel.EntryHeader.prototype.render = function ( config ) {
 	}
 
 	if ( this.watchInfo.canWatch ) {
-		this.watchButton = new OO.ui.ButtonWidget( {
+		this.watchButton = new OO.ui.ButtonWidget( { // eslint-disable-line mediawiki/no-unlabeled-buttonwidget
 			icon: this.watchInfo.isWatching ? 'unStar' : 'star',
 			title: mw.msg( this.watchInfo.isWatching ? 'simpleblogpage-unwatch' : 'simpleblogpage-watch' ),
 			framed: false,

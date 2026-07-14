@@ -19,6 +19,9 @@ class GetAvailableBlogRootPagesHandler extends SimpleHandler {
 		$this->blogFactory = $blogFactory;
 	}
 
+	/**
+	 * @inheritDoc
+	 */
 	public function execute() {
 		$params = $this->getValidatedParams();
 		if ( $params['forCreation'] ) {

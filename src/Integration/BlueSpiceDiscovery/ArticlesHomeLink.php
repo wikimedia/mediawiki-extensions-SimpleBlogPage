@@ -21,7 +21,6 @@ class ArticlesHomeLink extends RestrictedTextLink {
 	}
 
 	/**
-	 *
 	 * @return string
 	 */
 	public function getId(): string {
@@ -29,7 +28,6 @@ class ArticlesHomeLink extends RestrictedTextLink {
 	}
 
 	/**
-	 *
 	 * @return string[]
 	 */
 	public function getPermissions(): array {

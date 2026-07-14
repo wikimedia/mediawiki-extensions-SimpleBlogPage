@@ -33,6 +33,9 @@ class GetEntryHandler extends SimpleHandler {
 		$this->revisionLookup = $revisionLookup;
 	}
 
+	/**
+	 * @inheritDoc
+	 */
 	public function execute() {
 		$params = $this->getValidatedParams();
 		try {

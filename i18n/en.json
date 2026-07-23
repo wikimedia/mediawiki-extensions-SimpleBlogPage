@@ -41,5 +41,7 @@
 	"simpleblogpage-no-posts": "No blog entries yet. Start by creating the first one!",
 	"simpleblogpage-config-mainlinks-blog-label": "Show entrypoint \"Blog\"",
 	"simpleblogpage-config-mainlinks-blog-help": "Show entrypoint \"Blog\" link in the left navigation",
-	"simpleblogpage-entrypoints-action-blog-label": "Create blog post"
+	"simpleblogpage-entrypoints-action-blog-label": "Create blog post",
+	"bs-extendedsearch-search-center-filter-document-type-blog_post-label": "Blog post",
+	"bs-extendedsearch-search-center-filter-document-type-blog_root-label": "User blog"
 }

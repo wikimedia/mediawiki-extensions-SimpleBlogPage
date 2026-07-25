@@ -43,5 +43,7 @@
 	"simpleblogpage-no-posts": "Notice when no blog posts exist",
 	"simpleblogpage-config-mainlinks-blog-label": "Configuration option in BlueSpiceConfigManager",
 	"simpleblogpage-config-mainlinks-blog-help": "Help for configuration option in BlueSpiceConfigManager",
-	"simpleblogpage-entrypoints-action-blog-label": "Label for entrypoint action to create new blogpost"
+	"simpleblogpage-entrypoints-action-blog-label": "Label for entrypoint action to create new blogpost",
+	"bs-extendedsearch-search-center-filter-document-type-blog_post-label": "Label for the document_type option for the \"blog_post\" content model",
+	"bs-extendedsearch-search-center-filter-document-type-blog_root-label": "Label for the document_type option for the \"blog_root\" content model"
 }

@@ -42,5 +42,7 @@
 	"simpleblogpage-no-posts": "Noch keine Blogeinträge. Starte mit der Erstellung des ersten Eintrags!",
 	"simpleblogpage-config-mainlinks-blog-label": "Einstiegspunkt \"Blog\" anzeigen",
 	"simpleblogpage-config-mainlinks-blog-help": "Einstiegspunkt \"Blog\" in der linken Navigation anzeigen",
-	"simpleblogpage-entrypoints-action-blog-label": "Blogbeitrag erstellen"
+	"simpleblogpage-entrypoints-action-blog-label": "Blogbeitrag erstellen",
+	"bs-extendedsearch-search-center-filter-document-type-blog_post-label": "Blogbeitrag",
+	"bs-extendedsearch-search-center-filter-document-type-blog_root-label": "Benutzerblog"
 }

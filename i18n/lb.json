@@ -35,5 +35,7 @@
 	"simpleblogpage-watch": "Dëse Bäitrag iwwerwaachen",
 	"simpleblogpage-blog-type-user": "Benotzerblog",
 	"simpleblogpage-create-blog-own": "Mäi Benotzerblog",
-	"simpleblogpage-error-non-existing-root-page": "Den ugefrote Blog gëtt et nach net. Schreift elo den éischte Bäiträg!"
+	"simpleblogpage-error-non-existing-root-page": "Den ugefrote Blog gëtt et nach net. Schreift elo den éischte Bäiträg!",
+	"bs-extendedsearch-search-center-filter-document-type-blog_post-label": "Blogbäitrag",
+	"bs-extendedsearch-search-center-filter-document-type-blog_root-label": "Benotzerblog"
 }

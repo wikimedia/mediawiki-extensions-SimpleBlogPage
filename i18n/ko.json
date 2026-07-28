@@ -5,7 +5,8 @@
 			"Suleiman the Magnificent Television",
 			"Tensama0415",
 			"Ykhwong",
-			"解浪"
+			"解浪",
+			"YeBoy371"
 		]
 	},
 	"simpleblogpage-desc": "댓글 및 투표 기능과 [[Special:ArticlesHome|블로그 게시물 목록을 보여주는 특수 문서]]를 갖춘 블로그 시스템입니다",
@@ -43,5 +44,7 @@
 	"simpleblogpage-no-posts": "아직 블로그 게시물이 없습니다. 첫 번째 게시물을 작성해 보세요!",
 	"simpleblogpage-config-mainlinks-blog-label": "진입점 \"블로그\" 표시",
 	"simpleblogpage-config-mainlinks-blog-help": "왼쪽 둘러보기에 진입점 \"블로그\" 링크를 표시",
-	"simpleblogpage-entrypoints-action-blog-label": "블로그 글 만들기"
+	"simpleblogpage-entrypoints-action-blog-label": "블로그 글 만들기",
+	"bs-extendedsearch-search-center-filter-document-type-blog_post-label": "블로그 게시물",
+	"bs-extendedsearch-search-center-filter-document-type-blog_root-label": "사용자 블로그"
 }

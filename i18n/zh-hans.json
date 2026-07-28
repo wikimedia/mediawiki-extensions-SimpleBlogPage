@@ -41,5 +41,7 @@
 	"simpleblogpage-no-posts": "还没有博客文章。请先创建第一篇！",
 	"simpleblogpage-config-mainlinks-blog-label": "显示“博客”入口点",
 	"simpleblogpage-config-mainlinks-blog-help": "在左侧导航中显示“博客”链接入口点",
-	"simpleblogpage-entrypoints-action-blog-label": "创建博客文章"
+	"simpleblogpage-entrypoints-action-blog-label": "创建博客文章",
+	"bs-extendedsearch-search-center-filter-document-type-blog_post-label": "博客文章",
+	"bs-extendedsearch-search-center-filter-document-type-blog_root-label": "用户博客"
 }

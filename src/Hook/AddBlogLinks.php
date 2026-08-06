@@ -2,7 +2,7 @@
 
 namespace MediaWiki\Extension\SimpleBlogPage\Hook;
 
-use Config;
+use MediaWiki\Config\Config;
 use MediaWiki\Context\RequestContext;
 use MediaWiki\Extension\SimpleBlogPage\BlogPermissionChecker;
 use MediaWiki\Extension\SimpleBlogPage\Component\CreateBlogButton;

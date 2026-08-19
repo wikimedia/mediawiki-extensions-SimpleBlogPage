@@ -35,7 +35,6 @@ ext.simpleBlogPage.ui.panel.BlogList = function ( cfg ) {
 	} );
 
 	this.store.load().done( () => {
-		this.paginator.init();
 		if ( !this.filtersInitialized ) {
 			this.buckets = this.store.getBuckets() || {};
 			this.filtersInitialized = true;

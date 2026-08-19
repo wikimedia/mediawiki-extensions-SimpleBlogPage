@@ -6,12 +6,21 @@ class Setup {
 	public static function callback() {
 		mwsInitComponents();
 
-		if ( isset( $GLOBALS['wgVisualEditorAvailableContentModels'] ) ) {
-			$GLOBALS['wgVisualEditorAvailableContentModels']['blog_post'] = 'article';
-			$GLOBALS['wgVisualEditorAvailableContentModels']['blog_root'] = 'article';
+		if (
+			!isset( $GLOBALS['wgVisualEditorAvailableContentModels'] ) ||
+			!is_array( $GLOBALS['wgVisualEditorAvailableContentModels'] )
+		) {
+			$GLOBALS['wgVisualEditorAvailableContentModels'] = [];
 		}
+		$GLOBALS['wgVisualEditorAvailableContentModels']['blog_post'] = 'article';
+		$GLOBALS['wgVisualEditorAvailableContentModels']['blog_root'] = 'article';
 
 		$GLOBALS['wgExtensionFunctions'][] = static function () {
+			if ( is_array( $GLOBALS['wgVisualEditorAvailableNamespaces'] ?? null ) ) {
+				$GLOBALS['wgVisualEditorAvailableNamespaces']['Blog'] = true;
+				$GLOBALS['wgVisualEditorAvailableNamespaces']['User_blog'] = true;
+			}
+
 			if (
 				isset( $GLOBALS['wgCommentStreamsAllowedNamespaces'] ) &&
 				is_array( $GLOBALS['wgCommentStreamsAllowedNamespaces'] )

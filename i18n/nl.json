@@ -41,5 +41,7 @@
 	"simpleblogpage-no-posts": "Er zijn nog geen blogberichten. Begin het blog en schrijf het eerste artikel!",
 	"simpleblogpage-config-mainlinks-blog-label": "Toegangspunt “Blog” weergeven",
 	"simpleblogpage-config-mainlinks-blog-help": "De koppeling naar het toegangspunt “Blog” weergeven in de navigatie aan de linkerkant",
-	"simpleblogpage-entrypoints-action-blog-label": "Blogbericht aanmaken"
+	"simpleblogpage-entrypoints-action-blog-label": "Blogbericht aanmaken",
+	"bs-extendedsearch-search-center-filter-document-type-blog_post-label": "Blogbericht",
+	"bs-extendedsearch-search-center-filter-document-type-blog_root-label": "Gebruikersblog"
 }

@@ -16,3 +16,11 @@ $namespaceNames['en'] = [
 	NS_BLOG => 'Blog',
 	NS_BLOG_TALK => 'Blog_talk',
 ];
+
+/** German */
+$namespaceNames['de'] = [
+	NS_USER_BLOG => 'Benutzer_Blog',
+	NS_USER_BLOG_TALK => 'Benutzer_Blog_Diskussion',
+	NS_BLOG => 'Blog',
+	NS_BLOG_TALK => 'Blog_Diskussion',
+];

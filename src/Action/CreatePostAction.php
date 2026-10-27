@@ -2,11 +2,12 @@
 
 namespace MediaWiki\Extension\SimpleBlogPage\Action;
 
+use MediaWiki\Actions\EditAction;
 use MediaWiki\Extension\SimpleBlogPage\BlogFactory;
 use MediaWiki\MediaWikiServices;
 use SpecialPage;
 
-class CreatePostAction extends \EditAction {
+class CreatePostAction extends EditAction {
 
 	/**
 	 * @return void

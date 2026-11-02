@@ -4,6 +4,7 @@ namespace MediaWiki\Extension\SimpleBlogPage\Tests;
 
 use InvalidArgumentException;
 use MediaWiki\Content\JsonContent;
+use MediaWiki\Exception\PermissionsError;
 use MediaWiki\Extension\SimpleBlogPage\BlogEntry;
 use MediaWiki\Extension\SimpleBlogPage\BlogFactory;
 use MediaWiki\Extension\SimpleBlogPage\BlogPermissionChecker;
@@ -22,7 +23,6 @@ use MediaWiki\User\User;
 use MediaWiki\User\UserFactory;
 use MWStake\MediaWiki\Component\Utils\DisplayTitleHelper;
 use MWStake\MediaWiki\Component\Utils\UtilityFactory;
-use PermissionsError;
 use PHPUnit\Framework\TestCase;
 use Wikimedia\Rdbms\FakeResultWrapper;
 use Wikimedia\Rdbms\IDatabase;

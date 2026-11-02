@@ -4,6 +4,7 @@ namespace MediaWiki\Extension\SimpleBlogPage;
 
 use InvalidArgumentException;
 use MediaWiki\Content\WikitextContent;
+use MediaWiki\Exception\PermissionsError;
 use MediaWiki\Extension\SimpleBlogPage\Content\BlogPostContent;
 use MediaWiki\Extension\SimpleBlogPage\Util\HtmlSnippetCreator;
 use MediaWiki\Language\Language;
@@ -20,7 +21,6 @@ use MediaWiki\User\UserFactory;
 use MediaWiki\User\UserIdentity;
 use MWStake\MediaWiki\Component\Utils\DisplayTitleHelper;
 use MWStake\MediaWiki\Component\Utils\UtilityFactory;
-use PermissionsError;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
